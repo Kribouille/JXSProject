@@ -26,15 +26,9 @@ export class TemplateRef {
     get elementRef() { return null; }
 }
 export class TemplateRef_ extends TemplateRef {
-    constructor(_appElement, _viewFactory) {
+    constructor(_elementRef) {
         super();
-        this._appElement = _appElement;
-        this._viewFactory = _viewFactory;
+        this._elementRef = _elementRef;
     }
-    createEmbeddedView() {
-        var view = this._viewFactory(this._appElement.parentView.viewUtils, this._appElement.parentInjector, this._appElement);
-        view.create(null, null);
-        return view.ref;
-    }
-    get elementRef() { return this._appElement.elementRef; }
+    get elementRef() { return this._elementRef; }
 }

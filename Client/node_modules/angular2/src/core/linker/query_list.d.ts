@@ -7,7 +7,7 @@ import { Observable } from 'angular2/src/facade/async';
  *
  * Implements an iterable interface, therefore it can be used in both ES6
  * javascript `for (var i of items)` loops as well as in Angular templates with
- * `*ngFor="let i of myList"`.
+ * `*ngFor="#i of myList"`.
  *
  * Changes can be observed by subscribing to the changes `Observable`.
  *
@@ -24,7 +24,6 @@ import { Observable } from 'angular2/src/facade/async';
  * ```
  */
 export declare class QueryList<T> {
-    private _dirty;
     private _results;
     private _emitter;
     changes: Observable<any>;
@@ -52,8 +51,4 @@ export declare class QueryList<T> {
      */
     toArray(): T[];
     toString(): string;
-    /** internal */
-    setDirty(): void;
-    /** internal */
-    dirty: boolean;
 }

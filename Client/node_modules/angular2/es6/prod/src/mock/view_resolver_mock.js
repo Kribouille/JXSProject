@@ -7,13 +7,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { resolveForwardRef } from 'angular2/src/core/di';
 import { Injectable } from 'angular2/src/core/di';
-import { Map } from 'angular2/src/facade/collection';
-import { isPresent, isArray, stringify, isBlank } from 'angular2/src/facade/lang';
+import { Map, ListWrapper } from 'angular2/src/facade/collection';
+import { isPresent, stringify, isBlank } from 'angular2/src/facade/lang';
 import { BaseException } from 'angular2/src/facade/exceptions';
 import { ViewMetadata } from '../core/metadata';
-import { ViewResolver } from 'angular2/src/compiler/view_resolver';
+import { ViewResolver } from 'angular2/src/core/linker/view_resolver';
 export let MockViewResolver = class MockViewResolver extends ViewResolver {
     constructor() {
         super();
@@ -81,10 +80,10 @@ export let MockViewResolver = class MockViewResolver extends ViewResolver {
         if (isBlank(view)) {
             view = super.resolve(component);
         }
-        var directives = [];
+        var directives = view.directives;
         var overrides = this._directiveOverrides.get(component);
-        if (isPresent(overrides) && isPresent(view.directives)) {
-            flattenArray(view.directives, directives);
+        if (isPresent(overrides) && isPresent(directives)) {
+            directives = ListWrapper.clone(view.directives);
             overrides.forEach((to, from) => {
                 var srcIndex = directives.indexOf(from);
                 if (srcIndex == -1) {
@@ -122,14 +121,3 @@ MockViewResolver = __decorate([
     Injectable(), 
     __metadata('design:paramtypes', [])
 ], MockViewResolver);
-function flattenArray(tree, out) {
-    for (var i = 0; i < tree.length; i++) {
-        var item = resolveForwardRef(tree[i]);
-        if (isArray(item)) {
-            flattenArray(item, out);
-        }
-        else {
-            out.push(item);
-        }
-    }
-}

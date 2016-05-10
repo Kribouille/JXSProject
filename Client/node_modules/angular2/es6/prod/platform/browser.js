@@ -1,9 +1,9 @@
-export * from 'angular2/src/core/angular_entrypoint';
+export { AngularEntrypoint } from 'angular2/src/core/angular_entrypoint';
 export { BROWSER_PROVIDERS, CACHED_TEMPLATE_PROVIDER, ELEMENT_PROBE_PROVIDERS, ELEMENT_PROBE_PROVIDERS_PROD_MODE, inspectNativeElement, BrowserDomAdapter, By, Title, DOCUMENT, enableDebugTools, disableDebugTools } from 'angular2/src/platform/browser_common';
-import { isPresent, isBlank, CONST_EXPR } from 'angular2/src/facade/lang';
-import { BROWSER_PROVIDERS, BROWSER_APP_COMMON_PROVIDERS, BROWSER_PLATFORM_MARKER } from 'angular2/src/platform/browser_common';
+import { isPresent, CONST_EXPR } from 'angular2/src/facade/lang';
+import { BROWSER_PROVIDERS, BROWSER_APP_COMMON_PROVIDERS } from 'angular2/src/platform/browser_common';
 import { COMPILER_PROVIDERS } from 'angular2/compiler';
-import { coreLoadAndBootstrap, reflector, ReflectiveInjector, getPlatform, createPlatform, assertPlatform } from 'angular2/core';
+import { platform, reflector } from 'angular2/core';
 import { ReflectionCapabilities } from 'angular2/src/core/reflection/reflection_capabilities';
 import { XHRImpl } from "angular2/src/platform/browser/xhr_impl";
 import { XHR } from 'angular2/compiler';
@@ -16,12 +16,6 @@ export const BROWSER_APP_PROVIDERS = CONST_EXPR([
     COMPILER_PROVIDERS,
     new Provider(XHR, { useClass: XHRImpl }),
 ]);
-export function browserPlatform() {
-    if (isBlank(getPlatform())) {
-        createPlatform(ReflectiveInjector.resolveAndCreate(BROWSER_PROVIDERS));
-    }
-    return assertPlatform(BROWSER_PLATFORM_MARKER);
-}
 /**
  * Bootstrapping for Angular applications.
  *
@@ -92,6 +86,6 @@ export function browserPlatform() {
  */
 export function bootstrap(appComponentType, customProviders) {
     reflector.reflectionCapabilities = new ReflectionCapabilities();
-    var appInjector = ReflectiveInjector.resolveAndCreate([BROWSER_APP_PROVIDERS, isPresent(customProviders) ? customProviders : []], browserPlatform().injector);
-    return coreLoadAndBootstrap(appInjector, appComponentType);
+    let appProviders = isPresent(customProviders) ? [BROWSER_APP_PROVIDERS, customProviders] : BROWSER_APP_PROVIDERS;
+    return platform(BROWSER_PROVIDERS).application(appProviders).bootstrap(appComponentType);
 }

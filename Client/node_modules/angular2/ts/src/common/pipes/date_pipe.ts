@@ -101,13 +101,14 @@ export class DatePipe implements PipeTransform {
   };
 
 
-  transform(value: any, pattern: string = 'mediumDate'): string {
+  transform(value: any, args: any[]): string {
     if (isBlank(value)) return null;
 
     if (!this.supports(value)) {
       throw new InvalidPipeArgumentException(DatePipe, value);
     }
 
+    var pattern: string = isPresent(args) && args.length > 0 ? args[0] : 'mediumDate';
     if (isNumber(value)) {
       value = DateWrapper.fromMillis(value);
     }

@@ -132,7 +132,6 @@ export declare function normalizeBlank(obj: Object): any;
 export declare function normalizeBool(obj: boolean): boolean;
 export declare function isJsObject(o: any): boolean;
 export declare function print(obj: Error | Object): void;
-export declare function warn(obj: Error | Object): void;
 export declare class Json {
     static parse(s: string): Object;
     static stringify(data: Object): string;

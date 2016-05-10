@@ -157,7 +157,6 @@ export class UpgradeNg1ComponentAdapterBuilder {
 }
 class UpgradeNg1ComponentAdapter {
     constructor(linkFn, scope, directive, elementRef, $controller, inputs, outputs, propOuts, checkProperties, propertyMap) {
-        this.linkFn = linkFn;
         this.directive = directive;
         this.inputs = inputs;
         this.outputs = outputs;
@@ -166,13 +165,19 @@ class UpgradeNg1ComponentAdapter {
         this.propertyMap = propertyMap;
         this.destinationObj = null;
         this.checkLastValues = [];
-        this.element = elementRef.nativeElement;
-        this.componentScope = scope.$new(!!directive.scope);
-        var $element = angular.element(this.element);
+        var element = elementRef.nativeElement;
+        var childNodes = [];
+        var childNode;
+        while (childNode = element.firstChild) {
+            element.removeChild(childNode);
+            childNodes.push(childNode);
+        }
+        var componentScope = scope.$new(!!directive.scope);
+        var $element = angular.element(element);
         var controllerType = directive.controller;
         var controller = null;
         if (controllerType) {
-            var locals = { $scope: this.componentScope, $element: $element };
+            var locals = { $scope: componentScope, $element: $element };
             controller = $controller(controllerType, locals, null, directive.controllerAs);
             $element.data(controllerKey(directive.name), controller);
         }
@@ -183,10 +188,14 @@ class UpgradeNg1ComponentAdapter {
             var attrs = NOT_SUPPORTED;
             var transcludeFn = NOT_SUPPORTED;
             var linkController = this.resolveRequired($element, directive.require);
-            directive.link(this.componentScope, $element, attrs, linkController, transcludeFn);
+            directive.link(componentScope, $element, attrs, linkController, transcludeFn);
         }
-        this.destinationObj =
-            directive.bindToController && controller ? controller : this.componentScope;
+        this.destinationObj = directive.bindToController && controller ? controller : componentScope;
+        linkFn(componentScope, (clonedElement, scope) => {
+            for (var i = 0, ii = clonedElement.length; i < ii; i++) {
+                element.appendChild(clonedElement[i]);
+            }
+        }, { parentBoundTranscludeFn: (scope, cloneAttach) => { cloneAttach(childNodes); } });
         for (var i = 0; i < inputs.length; i++) {
             this[inputs[i]] = null;
         }
@@ -200,17 +209,6 @@ class UpgradeNg1ComponentAdapter {
         }
     }
     ngOnInit() {
-        var childNodes = [];
-        var childNode;
-        while (childNode = this.element.firstChild) {
-            this.element.removeChild(childNode);
-            childNodes.push(childNode);
-        }
-        this.linkFn(this.componentScope, (clonedElement, scope) => {
-            for (var i = 0, ii = clonedElement.length; i < ii; i++) {
-                this.element.appendChild(clonedElement[i]);
-            }
-        }, { parentBoundTranscludeFn: (scope, cloneAttach) => { cloneAttach(childNodes); } });
         if (this.destinationObj.$onInit) {
             this.destinationObj.$onInit();
         }

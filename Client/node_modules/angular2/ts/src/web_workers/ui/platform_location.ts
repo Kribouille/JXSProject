@@ -1,7 +1,4 @@
-import {
-  BrowserPlatformLocation
-} from 'angular2/src/platform/browser/location/browser_platform_location';
-import {UrlChangeListener} from 'angular2/platform/common';
+import {BrowserPlatformLocation} from 'angular2/src/router/location/browser_platform_location';
 import {Injectable} from 'angular2/src/core/di';
 import {ROUTER_CHANNEL} from 'angular2/src/web_workers/shared/messaging_api';
 import {
@@ -13,6 +10,7 @@ import {bind} from './bind';
 import {LocationType} from 'angular2/src/web_workers/shared/serialized_types';
 import {MessageBus} from 'angular2/src/web_workers/shared/message_bus';
 import {EventEmitter, ObservableWrapper, PromiseWrapper} from 'angular2/src/facade/async';
+import {UrlChangeListener} from 'angular2/src/router/location/platform_location';
 
 @Injectable()
 export class MessageBasedPlatformLocation {

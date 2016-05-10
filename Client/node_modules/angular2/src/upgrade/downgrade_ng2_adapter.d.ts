@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Injector, ComponentFactory, ComponentRef, SimpleChange } from 'angular2/core';
+import { AppViewManager, ChangeDetectorRef, HostViewRef, Injector, HostViewFactoryRef, SimpleChange } from 'angular2/core';
 import { ComponentInfo } from './metadata';
 import * as angular from './angular_js';
 export declare class DowngradeNg2ComponentAdapter {
@@ -9,18 +9,19 @@ export declare class DowngradeNg2ComponentAdapter {
     private scope;
     private parentInjector;
     private parse;
-    private componentFactory;
+    private viewManager;
+    private hostViewFactory;
     component: any;
     inputChangeCount: number;
     inputChanges: {
         [key: string]: SimpleChange;
     };
-    componentRef: ComponentRef;
+    hostViewRef: HostViewRef;
     changeDetector: ChangeDetectorRef;
     componentScope: angular.IScope;
     childNodes: Node[];
     contentInsertionPoint: Node;
-    constructor(id: string, info: ComponentInfo, element: angular.IAugmentedJQuery, attrs: angular.IAttributes, scope: angular.IScope, parentInjector: Injector, parse: angular.IParseService, componentFactory: ComponentFactory);
+    constructor(id: string, info: ComponentInfo, element: angular.IAugmentedJQuery, attrs: angular.IAttributes, scope: angular.IScope, parentInjector: Injector, parse: angular.IParseService, viewManager: AppViewManager, hostViewFactory: HostViewFactoryRef);
     bootstrapNg2(): void;
     setupInputs(): void;
     projectContent(): void;

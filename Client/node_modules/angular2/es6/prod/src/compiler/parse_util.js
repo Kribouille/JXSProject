@@ -22,16 +22,10 @@ export class ParseSourceSpan {
         return this.start.file.content.substring(this.start.offset, this.end.offset);
     }
 }
-export var ParseErrorLevel;
-(function (ParseErrorLevel) {
-    ParseErrorLevel[ParseErrorLevel["WARNING"] = 0] = "WARNING";
-    ParseErrorLevel[ParseErrorLevel["FATAL"] = 1] = "FATAL";
-})(ParseErrorLevel || (ParseErrorLevel = {}));
 export class ParseError {
-    constructor(span, msg, level = ParseErrorLevel.FATAL) {
+    constructor(span, msg) {
         this.span = span;
         this.msg = msg;
-        this.level = level;
     }
     toString() {
         var source = this.span.start.file.content;

@@ -2,8 +2,7 @@ import { Provider } from 'angular2/src/core/di';
 /**
  * Create a {@link UrlResolver} with no package prefix.
  */
-export declare function createUrlResolverWithoutPackagePrefix(): UrlResolver;
-export declare function createOfflineCompileUrlResolver(): UrlResolver;
+export declare function createWithoutPackagePrefix(): UrlResolver;
 /**
  * A default provider for {@link PACKAGE_ROOT_URL} that maps to '/'.
  */
@@ -21,7 +20,7 @@ export declare var DEFAULT_PACKAGE_URL_PROVIDER: Provider;
  */
 export declare class UrlResolver {
     private _packagePrefix;
-    constructor(_packagePrefix?: string);
+    constructor(packagePrefix?: string);
     /**
      * Resolves the `url` given the `baseUrl`:
      * - when the `url` is null, the `baseUrl` is returned,

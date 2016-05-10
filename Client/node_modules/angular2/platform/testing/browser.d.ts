@@ -4,7 +4,7 @@
  */
 export { CACHED_TEMPLATE_PROVIDER } from 'angular2/platform/browser';
 /**
- * Default platform providers for testing.
+ * Default patform providers for testing.
  */
 export declare const TEST_BROWSER_PLATFORM_PROVIDERS: Array<any>;
 /**

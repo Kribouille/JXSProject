@@ -14,8 +14,6 @@ import {
   HtmlElementAst,
   HtmlTextAst,
   HtmlCommentAst,
-  HtmlExpansionAst,
-  HtmlExpansionCaseAst,
   HtmlAst
 } from './html_ast';
 import {HtmlParser, HtmlParseTreeResult} from './html_parser';
@@ -85,14 +83,6 @@ export class LegacyHtmlAstTransformer implements HtmlAstVisitor {
   }
 
   visitText(ast: HtmlTextAst, context: any): HtmlTextAst { return ast; }
-
-  visitExpansion(ast: HtmlExpansionAst, context: any): any {
-    let cases = ast.cases.map(c => c.visit(this, null));
-    return new HtmlExpansionAst(ast.switchValue, ast.type, cases, ast.sourceSpan,
-                                ast.switchValueSourceSpan);
-  }
-
-  visitExpansionCase(ast: HtmlExpansionCaseAst, context: any): any { return ast; }
 
   private _rewriteLongSyntax(ast: HtmlAttrAst): HtmlAttrAst {
     let m = RegExpWrapper.firstMatch(LONG_SYNTAX_REGEXP, ast.name);
@@ -221,10 +211,9 @@ export class LegacyHtmlAstTransformer implements HtmlAstVisitor {
 
 @Injectable()
 export class LegacyHtmlParser extends HtmlParser {
-  parse(sourceContent: string, sourceUrl: string,
-        parseExpansionForms: boolean = false): HtmlParseTreeResult {
+  parse(sourceContent: string, sourceUrl: string): HtmlParseTreeResult {
     let transformer = new LegacyHtmlAstTransformer();
-    let htmlParseTreeResult = super.parse(sourceContent, sourceUrl, parseExpansionForms);
+    let htmlParseTreeResult = super.parse(sourceContent, sourceUrl);
 
     let rootNodes = htmlParseTreeResult.rootNodes.map(node => node.visit(transformer, null));
 

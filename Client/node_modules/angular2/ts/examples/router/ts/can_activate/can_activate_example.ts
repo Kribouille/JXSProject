@@ -1,7 +1,12 @@
 import {provide, Component} from 'angular2/core';
 import {bootstrap} from 'angular2/platform/browser';
-import {CanActivate, RouteConfig, ComponentInstruction, ROUTER_DIRECTIVES} from 'angular2/router';
-import {APP_BASE_HREF} from 'angular2/platform/common';
+import {
+  CanActivate,
+  RouteConfig,
+  ComponentInstruction,
+  APP_BASE_HREF,
+  ROUTER_DIRECTIVES
+} from 'angular2/router';
 
 function checkIfWeHavePermission(instruction: ComponentInstruction) {
   return instruction.params['id'] == '1';

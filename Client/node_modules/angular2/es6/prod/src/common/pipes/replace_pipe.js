@@ -8,6 +8,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { isBlank, isString, isNumber, isFunction, RegExpWrapper, StringWrapper } from 'angular2/src/facade/lang';
+import { BaseException } from 'angular2/src/facade/exceptions';
 import { Injectable, Pipe } from 'angular2/core';
 import { InvalidPipeArgumentException } from './invalid_pipe_argument_exception';
 /**
@@ -37,7 +38,10 @@ import { InvalidPipeArgumentException } from './invalid_pipe_argument_exception'
  */
 let ReplacePipe_1;
 export let ReplacePipe = ReplacePipe_1 = class ReplacePipe {
-    transform(value, pattern, replacement) {
+    transform(value, args) {
+        if (isBlank(args) || args.length !== 2) {
+            throw new BaseException('ReplacePipe requires two arguments');
+        }
         if (isBlank(value)) {
             return value;
         }
@@ -45,6 +49,8 @@ export let ReplacePipe = ReplacePipe_1 = class ReplacePipe {
             throw new InvalidPipeArgumentException(ReplacePipe_1, value);
         }
         var input = value.toString();
+        var pattern = args[0];
+        var replacement = args[1];
         if (!this._supportedPattern(pattern)) {
             throw new InvalidPipeArgumentException(ReplacePipe_1, pattern);
         }

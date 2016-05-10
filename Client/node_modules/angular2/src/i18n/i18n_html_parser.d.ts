@@ -1,7 +1,7 @@
 import { HtmlParser, HtmlParseTreeResult } from 'angular2/src/compiler/html_parser';
 import { ParseError } from 'angular2/src/compiler/parse_util';
 import { HtmlAst } from 'angular2/src/compiler/html_ast';
-import { Parser } from 'angular2/src/compiler/expression_parser/parser';
+import { Parser } from 'angular2/src/core/change_detection/parser/parser';
 /**
  * Creates an i18n-ed version of the parsed template.
  *
@@ -91,7 +91,7 @@ export declare class I18nHtmlParser implements HtmlParser {
     constructor(_htmlParser: HtmlParser, _parser: Parser, _messagesContent: string, _messages: {
         [key: string]: HtmlAst[];
     });
-    parse(sourceContent: string, sourceUrl: string, parseExpansionForms?: boolean): HtmlParseTreeResult;
+    parse(sourceContent: string, sourceUrl: string): HtmlParseTreeResult;
     private _processI18nPart(p);
     private _mergeI18Part(p);
     private _recurseIntoI18nPart(p);
@@ -105,6 +105,5 @@ export declare class I18nHtmlParser implements HtmlParser {
     private _i18nAttributes(el);
     private _replaceInterpolationInAttr(attr, msg);
     private _replacePlaceholdersWithExpressions(message, exps, sourceSpan);
-    private _buildExprMap(exps);
-    private _convertIntoExpression(name, expMap, sourceSpan);
+    private _convertIntoExpression(index, exps, sourceSpan);
 }

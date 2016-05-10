@@ -10,10 +10,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { PromiseWrapper, EventEmitter } from 'angular2/src/facade/async';
+import { PromiseWrapper } from 'angular2/src/facade/async';
 import { StringMapWrapper } from 'angular2/src/facade/collection';
 import { isBlank, isPresent } from 'angular2/src/facade/lang';
-import { Directive, Attribute, DynamicComponentLoader, ViewContainerRef, provide, ReflectiveInjector, Output } from 'angular2/core';
+import { Directive, Attribute, DynamicComponentLoader, ElementRef, Injector, provide } from 'angular2/core';
 import * as routerMod from '../router';
 import { RouteParams, RouteData } from '../instruction';
 import * as hookMod from '../lifecycle/lifecycle_annotations';
@@ -29,14 +29,13 @@ let _resolveToTrue = PromiseWrapper.resolve(true);
  * ```
  */
 export let RouterOutlet = class RouterOutlet {
-    constructor(_viewContainerRef, _loader, _parentRouter, nameAttr) {
-        this._viewContainerRef = _viewContainerRef;
+    constructor(_elementRef, _loader, _parentRouter, nameAttr) {
+        this._elementRef = _elementRef;
         this._loader = _loader;
         this._parentRouter = _parentRouter;
         this.name = null;
         this._componentRef = null;
         this._currentInstruction = null;
-        this.activateEvents = new EventEmitter();
         if (isPresent(nameAttr)) {
             this.name = nameAttr;
             this._parentRouter.registerAuxOutlet(this);
@@ -54,15 +53,14 @@ export let RouterOutlet = class RouterOutlet {
         this._currentInstruction = nextInstruction;
         var componentType = nextInstruction.componentType;
         var childRouter = this._parentRouter.childRouter(componentType);
-        var providers = ReflectiveInjector.resolve([
+        var providers = Injector.resolve([
             provide(RouteData, { useValue: nextInstruction.routeData }),
             provide(RouteParams, { useValue: new RouteParams(nextInstruction.params) }),
             provide(routerMod.Router, { useValue: childRouter })
         ]);
         this._componentRef =
-            this._loader.loadNextToLocation(componentType, this._viewContainerRef, providers);
+            this._loader.loadNextToLocation(componentType, this._elementRef, providers);
         return this._componentRef.then((componentRef) => {
-            this.activateEvents.emit(componentRef.instance);
             if (hasLifecycleHook(hookMod.routerOnActivate, componentType)) {
                 return this._componentRef.then((ref) => ref.instance.routerOnActivate(nextInstruction, previousInstruction));
             }
@@ -104,7 +102,7 @@ export let RouterOutlet = class RouterOutlet {
         }
         return next.then((_) => {
             if (isPresent(this._componentRef)) {
-                var onDispose = this._componentRef.then((ref) => ref.destroy());
+                var onDispose = this._componentRef.then((ref) => ref.dispose());
                 this._componentRef = null;
                 return onDispose;
             }
@@ -158,12 +156,8 @@ export let RouterOutlet = class RouterOutlet {
     }
     ngOnDestroy() { this._parentRouter.unregisterPrimaryOutlet(this); }
 };
-__decorate([
-    Output('activate'), 
-    __metadata('design:type', Object)
-], RouterOutlet.prototype, "activateEvents", void 0);
 RouterOutlet = __decorate([
     Directive({ selector: 'router-outlet' }),
     __param(3, Attribute('name')), 
-    __metadata('design:paramtypes', [ViewContainerRef, DynamicComponentLoader, routerMod.Router, String])
+    __metadata('design:paramtypes', [ElementRef, DynamicComponentLoader, routerMod.Router, String])
 ], RouterOutlet);

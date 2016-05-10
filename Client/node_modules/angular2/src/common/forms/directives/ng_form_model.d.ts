@@ -98,5 +98,4 @@ export declare class NgFormModel extends ControlContainer implements Form, OnCha
     getControlGroup(dir: NgControlGroup): ControlGroup;
     updateModel(dir: NgControl, value: any): void;
     onSubmit(): boolean;
-    private _checkFormPresent();
 }

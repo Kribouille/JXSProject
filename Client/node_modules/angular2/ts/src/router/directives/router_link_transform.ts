@@ -13,10 +13,10 @@ import {
   LiteralArray,
   LiteralPrimitive,
   ASTWithSource
-} from 'angular2/src/compiler/expression_parser/ast';
+} from 'angular2/src/core/change_detection/parser/ast';
 import {BaseException} from 'angular2/src/facade/exceptions';
 import {Injectable} from 'angular2/core';
-import {Parser} from 'angular2/src/compiler/expression_parser/parser';
+import {Parser} from 'angular2/src/core/change_detection/parser/parser';
 
 /**
  * e.g., './User', 'Modal' in ./User[Modal(param: value)]
@@ -154,11 +154,11 @@ class RouterLinkAstGenerator {
 class RouterLinkAstTransformer extends AstTransformer {
   constructor(private parser: Parser) { super(); }
 
-  visitQuote(ast: Quote, context: any): AST {
+  visitQuote(ast: Quote): AST {
     if (ast.prefix == "route") {
       return parseRouterLinkExpression(this.parser, ast.uninterpretedExpression);
     } else {
-      return super.visitQuote(ast, context);
+      return super.visitQuote(ast);
     }
   }
 }
@@ -185,12 +185,9 @@ export class RouterLinkTransform implements TemplateAstVisitor {
     let updatedChildren = ast.children.map(c => c.visit(this, context));
     let updatedInputs = ast.inputs.map(c => c.visit(this, context));
     let updatedDirectives = ast.directives.map(c => c.visit(this, context));
-    return new ElementAst(ast.name, ast.attrs, updatedInputs, ast.outputs, ast.references,
-                          updatedDirectives, ast.providers, ast.hasViewContainer, updatedChildren,
-                          ast.ngContentIndex, ast.sourceSpan);
+    return new ElementAst(ast.name, ast.attrs, updatedInputs, ast.outputs, ast.exportAsVars,
+                          updatedDirectives, updatedChildren, ast.ngContentIndex, ast.sourceSpan);
   }
-
-  visitReference(ast: any, context: any): any { return ast; }
 
   visitVariable(ast: any, context: any): any { return ast; }
 
@@ -207,7 +204,7 @@ export class RouterLinkTransform implements TemplateAstVisitor {
   visitDirective(ast: DirectiveAst, context: any): any {
     let updatedInputs = ast.inputs.map(c => c.visit(this, context));
     return new DirectiveAst(ast.directive, updatedInputs, ast.hostProperties, ast.hostEvents,
-                            ast.sourceSpan);
+                            ast.exportAsVars, ast.sourceSpan);
   }
 
   visitDirectiveProperty(ast: BoundDirectivePropertyAst, context: any): any {

@@ -17,14 +17,9 @@ export declare class ParseSourceSpan {
     constructor(start: ParseLocation, end: ParseLocation);
     toString(): string;
 }
-export declare enum ParseErrorLevel {
-    WARNING = 0,
-    FATAL = 1,
-}
 export declare abstract class ParseError {
     span: ParseSourceSpan;
     msg: string;
-    level: ParseErrorLevel;
-    constructor(span: ParseSourceSpan, msg: string, level?: ParseErrorLevel);
+    constructor(span: ParseSourceSpan, msg: string);
     toString(): string;
 }

@@ -11,7 +11,7 @@ import {Observable, EventEmitter} from 'angular2/src/facade/async';
  *
  * Implements an iterable interface, therefore it can be used in both ES6
  * javascript `for (var i of items)` loops as well as in Angular templates with
- * `*ngFor="let i of myList"`.
+ * `*ngFor="#i of myList"`.
  *
  * Changes can be observed by subscribing to the changes `Observable`.
  *
@@ -28,7 +28,6 @@ import {Observable, EventEmitter} from 'angular2/src/facade/async';
  * ```
  */
 export class QueryList<T> {
-  private _dirty = true;
   private _results: Array<T> = [];
   private _emitter = new EventEmitter();
 
@@ -69,17 +68,8 @@ export class QueryList<T> {
   /**
    * @internal
    */
-  reset(res: Array<T | any[]>): void {
-    this._results = ListWrapper.flatten(res);
-    this._dirty = false;
-  }
+  reset(res: T[]): void { this._results = res; }
 
   /** @internal */
   notifyOnChanges(): void { this._emitter.emit(this); }
-
-  /** internal */
-  setDirty() { this._dirty = true; }
-
-  /** internal */
-  get dirty() { return this._dirty; }
 }

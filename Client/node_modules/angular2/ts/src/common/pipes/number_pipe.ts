@@ -11,6 +11,7 @@ import {
 import {BaseException, WrappedException} from 'angular2/src/facade/exceptions';
 import {NumberFormatter, NumberFormatStyle} from 'angular2/src/facade/intl';
 import {Injectable, PipeTransform, WrappedValue, Pipe} from 'angular2/core';
+import {ListWrapper} from 'angular2/src/facade/collection';
 
 import {InvalidPipeArgumentException} from './invalid_pipe_argument_exception';
 
@@ -86,7 +87,8 @@ export class NumberPipe {
 @Pipe({name: 'number'})
 @Injectable()
 export class DecimalPipe extends NumberPipe implements PipeTransform {
-  transform(value: any, digits: string = null): string {
+  transform(value: any, args: any[]): string {
+    var digits: string = ListWrapper.first(args);
     return NumberPipe._format(value, NumberFormatStyle.Decimal, digits);
   }
 }
@@ -111,7 +113,8 @@ export class DecimalPipe extends NumberPipe implements PipeTransform {
 @Pipe({name: 'percent'})
 @Injectable()
 export class PercentPipe extends NumberPipe implements PipeTransform {
-  transform(value: any, digits: string = null): string {
+  transform(value: any, args: any[]): string {
+    var digits: string = ListWrapper.first(args);
     return NumberPipe._format(value, NumberFormatStyle.Percent, digits);
   }
 }
@@ -140,8 +143,10 @@ export class PercentPipe extends NumberPipe implements PipeTransform {
 @Pipe({name: 'currency'})
 @Injectable()
 export class CurrencyPipe extends NumberPipe implements PipeTransform {
-  transform(value: any, currencyCode: string = 'USD', symbolDisplay: boolean = false,
-            digits: string = null): string {
+  transform(value: any, args: any[]): string {
+    var currencyCode: string = isPresent(args) && args.length > 0 ? args[0] : 'USD';
+    var symbolDisplay: boolean = isPresent(args) && args.length > 1 ? args[1] : false;
+    var digits: string = isPresent(args) && args.length > 2 ? args[2] : null;
     return NumberPipe._format(value, NumberFormatStyle.Currency, digits, currencyCode,
                               symbolDisplay);
   }

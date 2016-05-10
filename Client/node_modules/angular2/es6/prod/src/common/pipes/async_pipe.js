@@ -65,7 +65,7 @@ export let AsyncPipe = AsyncPipe_1 = class AsyncPipe {
             this._dispose();
         }
     }
-    transform(obj) {
+    transform(obj, args) {
         if (isBlank(this._obj)) {
             if (isPresent(obj)) {
                 this._subscribe(obj);

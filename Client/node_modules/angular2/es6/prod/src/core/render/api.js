@@ -1,19 +1,17 @@
-import { unimplemented } from 'angular2/src/facade/exceptions';
 export class RenderComponentType {
-    constructor(id, templateUrl, slotCount, encapsulation, styles) {
+    constructor(id, encapsulation, styles) {
         this.id = id;
-        this.templateUrl = templateUrl;
-        this.slotCount = slotCount;
         this.encapsulation = encapsulation;
         this.styles = styles;
     }
 }
 export class RenderDebugInfo {
-    get injector() { return unimplemented(); }
-    get component() { return unimplemented(); }
-    get providerTokens() { return unimplemented(); }
-    get locals() { return unimplemented(); }
-    get source() { return unimplemented(); }
+    constructor(injector, component, providerTokens, locals) {
+        this.injector = injector;
+        this.component = component;
+        this.providerTokens = providerTokens;
+        this.locals = locals;
+    }
 }
 export class Renderer {
 }

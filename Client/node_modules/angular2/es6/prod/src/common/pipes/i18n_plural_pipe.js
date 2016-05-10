@@ -44,9 +44,10 @@ var interpolationExp = RegExpWrapper.create('#');
  */
 let I18nPluralPipe_1;
 export let I18nPluralPipe = I18nPluralPipe_1 = class I18nPluralPipe {
-    transform(value, pluralMap) {
+    transform(value, args = null) {
         var key;
         var valueStr;
+        var pluralMap = (args[0]);
         if (!isStringMap(pluralMap)) {
             throw new InvalidPipeArgumentException(I18nPluralPipe_1, pluralMap);
         }

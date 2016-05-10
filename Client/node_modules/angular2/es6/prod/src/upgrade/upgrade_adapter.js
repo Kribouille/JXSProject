@@ -1,10 +1,10 @@
-import { provide, ApplicationRef, ComponentResolver, NgZone, ReflectiveInjector, Testability } from 'angular2/core';
+import { provide, platform, AppViewManager, Compiler, NgZone, Testability } from 'angular2/core';
 import { global } from 'angular2/src/facade/lang';
 import { ObservableWrapper } from 'angular2/src/facade/async';
-import { BROWSER_APP_PROVIDERS, browserPlatform } from 'angular2/platform/browser';
+import { BROWSER_PROVIDERS, BROWSER_APP_PROVIDERS } from 'angular2/platform/browser';
 import { getComponentInfo } from './metadata';
 import { onError, controllerKey } from './util';
-import { NG1_COMPILE, NG1_INJECTOR, NG1_PARSE, NG1_ROOT_SCOPE, NG1_TESTABILITY, NG2_COMPILER, NG2_INJECTOR, NG2_COMPONENT_FACTORY_REF_MAP, NG2_ZONE, REQUIRE_INJECTOR } from './constants';
+import { NG1_COMPILE, NG1_INJECTOR, NG1_PARSE, NG1_ROOT_SCOPE, NG1_TESTABILITY, NG2_APP_VIEW_MANAGER, NG2_COMPILER, NG2_INJECTOR, NG2_HOST_VIEW_FACTORY_REF_MAP, NG2_ZONE, REQUIRE_INJECTOR } from './constants';
 import { DowngradeNg2ComponentAdapter } from './downgrade_ng2_adapter';
 import { UpgradeNg1ComponentAdapterBuilder } from './upgrade_ng1_adapter';
 import * as angular from './angular_js';
@@ -265,29 +265,29 @@ export class UpgradeAdapter {
     bootstrap(element, modules, config) {
         var upgrade = new UpgradeAdapterRef();
         var ng1Injector = null;
-        var platformRef = browserPlatform();
-        var applicationRef = ReflectiveInjector.resolveAndCreate([
+        var platformRef = platform(BROWSER_PROVIDERS);
+        var applicationRef = platformRef.application([
             BROWSER_APP_PROVIDERS,
             provide(NG1_INJECTOR, { useFactory: () => ng1Injector }),
             provide(NG1_COMPILE, { useFactory: () => ng1Injector.get(NG1_COMPILE) }),
             this.providers
-        ], platformRef.injector)
-            .get(ApplicationRef);
+        ]);
         var injector = applicationRef.injector;
         var ngZone = injector.get(NgZone);
-        var compiler = injector.get(ComponentResolver);
+        var compiler = injector.get(Compiler);
         var delayApplyExps = [];
         var original$applyFn;
         var rootScopePrototype;
         var rootScope;
-        var componentFactoryRefMap = {};
+        var hostViewFactoryRefMap = {};
         var ng1Module = angular.module(this.idPrefix, modules);
         var ng1BootstrapPromise = null;
         var ng1compilePromise = null;
         ng1Module.value(NG2_INJECTOR, injector)
             .value(NG2_ZONE, ngZone)
             .value(NG2_COMPILER, compiler)
-            .value(NG2_COMPONENT_FACTORY_REF_MAP, componentFactoryRefMap)
+            .value(NG2_HOST_VIEW_FACTORY_REF_MAP, hostViewFactoryRefMap)
+            .value(NG2_APP_VIEW_MANAGER, injector.get(AppViewManager))
             .config([
             '$provide',
                 (provide) => {
@@ -358,7 +358,7 @@ export class UpgradeAdapter {
             }
         });
         Promise.all([
-            this.compileNg2Components(compiler, componentFactoryRefMap),
+            this.compileNg2Components(compiler, hostViewFactoryRefMap),
             ng1BootstrapPromise,
             ng1compilePromise
         ])
@@ -480,27 +480,28 @@ export class UpgradeAdapter {
         return factory;
     }
     /* @internal */
-    compileNg2Components(compiler, componentFactoryRefMap) {
+    compileNg2Components(compiler, hostViewFactoryRefMap) {
         var promises = [];
         var types = this.upgradedComponents;
         for (var i = 0; i < types.length; i++) {
-            promises.push(compiler.resolveComponent(types[i]));
+            promises.push(compiler.compileInHost(types[i]));
         }
-        return Promise.all(promises).then((componentFactories) => {
+        return Promise.all(promises).then((hostViewFactories) => {
             var types = this.upgradedComponents;
-            for (var i = 0; i < componentFactories.length; i++) {
-                componentFactoryRefMap[getComponentInfo(types[i]).selector] = componentFactories[i];
+            for (var i = 0; i < hostViewFactories.length; i++) {
+                hostViewFactoryRefMap[getComponentInfo(types[i]).selector] = hostViewFactories[i];
             }
-            return componentFactoryRefMap;
+            return hostViewFactoryRefMap;
         }, onError);
     }
 }
 function ng1ComponentDirective(info, idPrefix) {
-    directiveFactory.$inject = [NG2_COMPONENT_FACTORY_REF_MAP, NG1_PARSE];
-    function directiveFactory(componentFactoryRefMap, parse) {
-        var componentFactory = componentFactoryRefMap[info.selector];
-        if (!componentFactory)
-            throw new Error('Expecting ComponentFactory for: ' + info.selector);
+    directiveFactory.$inject =
+        [NG2_HOST_VIEW_FACTORY_REF_MAP, NG2_APP_VIEW_MANAGER, NG1_PARSE];
+    function directiveFactory(hostViewFactoryRefMap, viewManager, parse) {
+        var hostViewFactory = hostViewFactoryRefMap[info.selector];
+        if (!hostViewFactory)
+            throw new Error('Expecting HostViewFactoryRef for: ' + info.selector);
         var idCount = 0;
         return {
             restrict: 'E',
@@ -508,7 +509,7 @@ function ng1ComponentDirective(info, idPrefix) {
             link: {
                 post: (scope, element, attrs, parentInjector, transclude) => {
                     var domElement = element[0];
-                    var facade = new DowngradeNg2ComponentAdapter(idPrefix + (idCount++), info, element, attrs, scope, parentInjector, parse, componentFactory);
+                    var facade = new DowngradeNg2ComponentAdapter(idPrefix + (idCount++), info, element, attrs, scope, parentInjector, parse, viewManager, hostViewFactory);
                     facade.setupInputs();
                     facade.bootstrapNg2();
                     facade.projectContent();

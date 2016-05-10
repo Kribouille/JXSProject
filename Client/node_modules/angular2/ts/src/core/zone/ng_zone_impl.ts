@@ -94,7 +94,6 @@ export class NgZoneImpl {
     }
   }
 
-  runInner(fn: () => any): any { return this.inner.run(fn); };
-  runInnerGuarded(fn: () => any): any { return this.inner.runGuarded(fn); };
+  runInner(fn: () => any): any { return this.inner.runGuarded(fn); };
   runOuter(fn: () => any): any { return this.outer.run(fn); };
 }

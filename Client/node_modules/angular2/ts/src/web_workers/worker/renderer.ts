@@ -90,19 +90,23 @@ export class WebWorkerRenderer implements Renderer, RenderStoreObject {
   constructor(private _rootRenderer: WebWorkerRootRenderer,
               private _componentType: RenderComponentType) {}
 
+  renderComponent(componentType: RenderComponentType): Renderer {
+    return this._rootRenderer.renderComponent(componentType);
+  }
+
   private _runOnService(fnName: string, fnArgs: FnArg[]) {
     var fnArgsWithRenderer = [new FnArg(this, RenderStoreObject)].concat(fnArgs);
     this._rootRenderer.runOnService(fnName, fnArgsWithRenderer);
   }
 
-  selectRootElement(selectorOrNode: string, debugInfo: RenderDebugInfo): any {
+  selectRootElement(selector: string): any {
     var node = this._rootRenderer.allocateNode();
     this._runOnService('selectRootElement',
-                       [new FnArg(selectorOrNode, null), new FnArg(node, RenderStoreObject)]);
+                       [new FnArg(selector, null), new FnArg(node, RenderStoreObject)]);
     return node;
   }
 
-  createElement(parentElement: any, name: string, debugInfo: RenderDebugInfo): any {
+  createElement(parentElement: any, name: string): any {
     var node = this._rootRenderer.allocateNode();
     this._runOnService('createElement', [
       new FnArg(parentElement, RenderStoreObject),
@@ -122,7 +126,7 @@ export class WebWorkerRenderer implements Renderer, RenderStoreObject {
     return viewRoot;
   }
 
-  createTemplateAnchor(parentElement: any, debugInfo: RenderDebugInfo): any {
+  createTemplateAnchor(parentElement: any): any {
     var node = this._rootRenderer.allocateNode();
     this._runOnService(
         'createTemplateAnchor',
@@ -130,7 +134,7 @@ export class WebWorkerRenderer implements Renderer, RenderStoreObject {
     return node;
   }
 
-  createText(parentElement: any, value: string, debugInfo: RenderDebugInfo): any {
+  createText(parentElement: any, value: string): any {
     var node = this._rootRenderer.allocateNode();
     this._runOnService('createText', [
       new FnArg(parentElement, RenderStoreObject),
@@ -186,6 +190,8 @@ export class WebWorkerRenderer implements Renderer, RenderStoreObject {
       new FnArg(propertyValue, null)
     ]);
   }
+
+  setElementDebugInfo(renderElement: any, info: RenderDebugInfo) {}
 
   setElementClass(renderElement: any, className: string, isAdd: boolean) {
     this._runOnService('setElementClass', [

@@ -17,4 +17,4 @@ MyAppComponent = __decorate([
 ], MyAppComponent);
 // #docregion providers
 bootstrap(MyAppComponent, [ELEMENT_PROBE_PROVIDERS]);
-// #enddocregion
+// #enddocregion 

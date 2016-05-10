@@ -1,10 +1,10 @@
-import { provide, ReflectiveInjector } from 'angular2/core';
+import { provide } from 'angular2/core';
 import { NG1_SCOPE } from './constants';
 const INITIAL_VALUE = {
     __UNINITIALIZED__: true
 };
 export class DowngradeNg2ComponentAdapter {
-    constructor(id, info, element, attrs, scope, parentInjector, parse, componentFactory) {
+    constructor(id, info, element, attrs, scope, parentInjector, parse, viewManager, hostViewFactory) {
         this.id = id;
         this.info = info;
         this.element = element;
@@ -12,11 +12,12 @@ export class DowngradeNg2ComponentAdapter {
         this.scope = scope;
         this.parentInjector = parentInjector;
         this.parse = parse;
-        this.componentFactory = componentFactory;
+        this.viewManager = viewManager;
+        this.hostViewFactory = hostViewFactory;
         this.component = null;
         this.inputChangeCount = 0;
         this.inputChanges = null;
-        this.componentRef = null;
+        this.hostViewRef = null;
         this.changeDetector = null;
         this.contentInsertionPoint = null;
         this.element[0].id = id;
@@ -24,12 +25,12 @@ export class DowngradeNg2ComponentAdapter {
         this.childNodes = element.contents();
     }
     bootstrapNg2() {
-        var childInjector = ReflectiveInjector.resolveAndCreate([provide(NG1_SCOPE, { useValue: this.componentScope })], this.parentInjector);
+        var childInjector = this.parentInjector.resolveAndCreateChild([provide(NG1_SCOPE, { useValue: this.componentScope })]);
         this.contentInsertionPoint = document.createComment('ng1 insertion point');
-        this.componentRef =
-            this.componentFactory.create(childInjector, [[this.contentInsertionPoint]], '#' + this.id);
-        this.changeDetector = this.componentRef.changeDetectorRef;
-        this.component = this.componentRef.instance;
+        this.hostViewRef = this.viewManager.createRootHostView(this.hostViewFactory, '#' + this.id, childInjector, [[this.contentInsertionPoint]]);
+        var hostElement = this.viewManager.getHostElement(this.hostViewRef);
+        this.changeDetector = this.hostViewRef.changeDetectorRef;
+        this.component = this.viewManager.getComponent(hostElement);
     }
     setupInputs() {
         var attrs = this.attrs;
@@ -141,10 +142,7 @@ export class DowngradeNg2ComponentAdapter {
         }
     }
     registerCleanup() {
-        this.element.bind('$destroy', () => {
-            this.componentScope.$destroy();
-            this.componentRef.destroy();
-        });
+        this.element.bind('$destroy', () => this.viewManager.destroyRootHostView(this.hostViewRef));
     }
 }
 class Ng1Change {

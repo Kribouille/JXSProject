@@ -8,5 +8,4 @@ export declare abstract class ReflectorReader {
     abstract propMetadata(typeOrFunc: any): {
         [key: string]: any[];
     };
-    abstract importUri(typeOrFunc: any): string;
 }

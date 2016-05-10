@@ -123,14 +123,12 @@ export let Serializer = class Serializer {
     _serializeRenderComponentType(obj) {
         return {
             'id': obj.id,
-            'templateUrl': obj.templateUrl,
-            'slotCount': obj.slotCount,
             'encapsulation': this.serialize(obj.encapsulation, ViewEncapsulation),
             'styles': this.serialize(obj.styles, PRIMITIVE)
         };
     }
     _deserializeRenderComponentType(map) {
-        return new RenderComponentType(map['id'], map['templateUrl'], map['slotCount'], this.deserialize(map['encapsulation'], ViewEncapsulation), this.deserialize(map['styles'], PRIMITIVE));
+        return new RenderComponentType(map['id'], this.deserialize(map['encapsulation'], ViewEncapsulation), this.deserialize(map['styles'], PRIMITIVE));
     }
 };
 Serializer = __decorate([

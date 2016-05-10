@@ -83,16 +83,19 @@ export class WebWorkerRenderer {
         this._rootRenderer = _rootRenderer;
         this._componentType = _componentType;
     }
+    renderComponent(componentType) {
+        return this._rootRenderer.renderComponent(componentType);
+    }
     _runOnService(fnName, fnArgs) {
         var fnArgsWithRenderer = [new FnArg(this, RenderStoreObject)].concat(fnArgs);
         this._rootRenderer.runOnService(fnName, fnArgsWithRenderer);
     }
-    selectRootElement(selectorOrNode, debugInfo) {
+    selectRootElement(selector) {
         var node = this._rootRenderer.allocateNode();
-        this._runOnService('selectRootElement', [new FnArg(selectorOrNode, null), new FnArg(node, RenderStoreObject)]);
+        this._runOnService('selectRootElement', [new FnArg(selector, null), new FnArg(node, RenderStoreObject)]);
         return node;
     }
-    createElement(parentElement, name, debugInfo) {
+    createElement(parentElement, name) {
         var node = this._rootRenderer.allocateNode();
         this._runOnService('createElement', [
             new FnArg(parentElement, RenderStoreObject),
@@ -108,12 +111,12 @@ export class WebWorkerRenderer {
         this._runOnService('createViewRoot', [new FnArg(hostElement, RenderStoreObject), new FnArg(viewRoot, RenderStoreObject)]);
         return viewRoot;
     }
-    createTemplateAnchor(parentElement, debugInfo) {
+    createTemplateAnchor(parentElement) {
         var node = this._rootRenderer.allocateNode();
         this._runOnService('createTemplateAnchor', [new FnArg(parentElement, RenderStoreObject), new FnArg(node, RenderStoreObject)]);
         return node;
     }
-    createText(parentElement, value, debugInfo) {
+    createText(parentElement, value) {
         var node = this._rootRenderer.allocateNode();
         this._runOnService('createText', [
             new FnArg(parentElement, RenderStoreObject),
@@ -156,6 +159,7 @@ export class WebWorkerRenderer {
             new FnArg(propertyValue, null)
         ]);
     }
+    setElementDebugInfo(renderElement, info) { }
     setElementClass(renderElement, className, isAdd) {
         this._runOnService('setElementClass', [
             new FnArg(renderElement, RenderStoreObject),

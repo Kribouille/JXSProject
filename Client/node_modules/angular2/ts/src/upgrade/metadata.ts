@@ -1,5 +1,4 @@
-import {Type, DirectiveMetadata} from 'angular2/core';
-import {DirectiveResolver} from 'angular2/compiler';
+import {Type, DirectiveResolver, DirectiveMetadata} from 'angular2/core';
 import {stringify} from './util';
 
 var COMPONENT_SELECTOR = /^[\w|-]*$/;

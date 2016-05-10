@@ -9,15 +9,6 @@ import './metadata/view.dart';
 export './metadata/di.dart';
 export './metadata/directives.dart';
 export './metadata/view.dart' hide VIEW_ENCAPSULATION_VALUES;
-export './metadata/lifecycle_hooks.dart' show
-  AfterContentInit,
-  AfterContentChecked,
-  AfterViewInit,
-  AfterViewChecked,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  DoCheck;
 
 /**
  * See: [DirectiveMetadata] for docs.
@@ -145,9 +136,8 @@ class Attribute extends AttributeMetadata {
  */
 @Deprecated("Use ContentChildren/ContentChild instead")
 class Query extends QueryMetadata {
-  const Query(dynamic /*Type | string*/ selector,
-      {bool descendants: false, dynamic read: null})
-      : super(selector, descendants: descendants, read: read);
+  const Query(dynamic /*Type | string*/ selector, {bool descendants: false})
+      : super(selector, descendants: descendants);
 }
 
 /**
@@ -155,15 +145,15 @@ class Query extends QueryMetadata {
  */
 class ContentChildren extends ContentChildrenMetadata {
   const ContentChildren(dynamic /*Type | string*/ selector,
-      {bool descendants: false, dynamic read: null})
-      : super(selector, descendants: descendants, read: read);
+      {bool descendants: false})
+      : super(selector, descendants: descendants);
 }
 
 /**
  * See: [ContentChildMetadata] for docs.
  */
 class ContentChild extends ContentChildMetadata {
-  const ContentChild(dynamic /*Type | string*/ selector, {dynamic read: null}) : super(selector, read: read);
+  const ContentChild(dynamic /*Type | string*/ selector) : super(selector);
 }
 
 /**
@@ -171,22 +161,22 @@ class ContentChild extends ContentChildMetadata {
  */
 @Deprecated("Use ViewChildren/ViewChild instead")
 class ViewQuery extends ViewQueryMetadata {
-  const ViewQuery(dynamic /*Type | string*/ selector, {dynamic read: null})
-      : super(selector, descendants: true, read: read);
+  const ViewQuery(dynamic /*Type | string*/ selector)
+      : super(selector, descendants: true);
 }
 
 /**
  * See: [ViewChildrenMetadata] for docs.
  */
 class ViewChildren extends ViewChildrenMetadata {
-  const ViewChildren(dynamic /*Type | string*/ selector, {dynamic read: null}) : super(selector, read: read);
+  const ViewChildren(dynamic /*Type | string*/ selector) : super(selector);
 }
 
 /**
  * See: [ViewChildMetadata] for docs.
  */
 class ViewChild extends ViewChildMetadata {
-  const ViewChild(dynamic /*Type | string*/ selector, {dynamic read: null}) : super(selector, read: read);
+  const ViewChild(dynamic /*Type | string*/ selector) : super(selector);
 }
 
 /**

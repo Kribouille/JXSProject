@@ -1,10 +1,5 @@
 import { ApplicationRef } from 'angular2/src/core/application_ref';
-import { ComponentRef } from 'angular2/src/core/linker/component_factory';
-export declare class ChangeDetectionPerfRecord {
-    msPerTick: number;
-    numTicks: number;
-    constructor(msPerTick: number, numTicks: number);
-}
+import { ComponentRef } from 'angular2/src/core/linker/dynamic_component_loader';
 /**
  * Entry point for all Angular debug tools. This object corresponds to the `ng`
  * global variable accessible in the dev console.
@@ -36,5 +31,5 @@ export declare class AngularProfiler {
      * ng.profiler.timeChangeDetection({record: true})
      * ```
      */
-    timeChangeDetection(config: any): ChangeDetectionPerfRecord;
+    timeChangeDetection(config: any): void;
 }

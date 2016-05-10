@@ -122,12 +122,8 @@ class NgZoneImpl {
     );
   }
 
-  dynamic runInnerGuarded(fn()) {
-    return _innerZone.runGuarded(fn);
-  }
-
   dynamic runInner(fn()) {
-    return _innerZone.run(fn);
+    return _innerZone.runGuarded(fn);
   }
 
   /**

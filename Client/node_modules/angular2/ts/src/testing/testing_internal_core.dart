@@ -26,17 +26,30 @@ import 'package:angular2/src/core/reflection/reflection_capabilities.dart';
 import 'package:angular2/src/core/di/provider.dart' show bind;
 import 'package:angular2/src/facade/collection.dart' show StringMapWrapper;
 
-import 'async_test_completer.dart';
-export 'async_test_completer.dart' show AsyncTestCompleter;
-
 import 'test_injector.dart';
 export 'test_injector.dart' show inject;
 
 TestInjector _testInjector = getTestInjector();
+bool _isCurrentTestAsync;
+Future _currentTestFuture;
 bool _inIt = false;
 bool _initialized = false;
 List<dynamic> _platformProviders = [];
 List<dynamic> _applicationProviders = [];
+
+class AsyncTestCompleter {
+  final _completer = new Completer();
+
+  AsyncTestCompleter() {
+    _currentTestFuture = this.future;
+  }
+
+  void done() {
+    _completer.complete();
+  }
+
+  Future get future => _completer.future;
+}
 
 void setDartBaseTestProviders(List<dynamic> platform, List<dynamic> application) {
   _platformProviders = platform;
@@ -57,15 +70,18 @@ void testSetup() {
 
   gns.beforeEach(() {
     _testInjector.reset();
+    _currentTestFuture = null;
   });
 
   var completerProvider = bind(AsyncTestCompleter).toFactory(() {
     // Mark the test as async when an AsyncTestCompleter is injected in an it(),
     if (!_inIt) throw 'AsyncTestCompleter can only be injected in an "it()"';
+    _isCurrentTestAsync = true;
     return new AsyncTestCompleter();
   });
 
   gns.beforeEach(() {
+    _isCurrentTestAsync = false;
     _testInjector.addProviders([completerProvider]);
   });
 }
@@ -97,16 +113,22 @@ void beforeEachBindings(Function fn) {
 
 void beforeEach(fn) {
   testSetup();
-  gns.beforeEach(fn);
+  if (fn is! FunctionWithParamTokens) fn =
+      new FunctionWithParamTokens([], fn, false);
+  gns.beforeEach(() {
+    _testInjector.execute(fn);
+  });
 }
 
 void _it(gnsFn, name, fn) {
   testSetup();
+  if (fn is! FunctionWithParamTokens) fn =
+      new FunctionWithParamTokens([], fn, false);
   gnsFn(name, () {
     _inIt = true;
-    var retVal = fn();
+    _testInjector.execute(fn);
     _inIt = false;
-    return retVal;
+    if (_isCurrentTestAsync) return _currentTestFuture;
   });
 }
 

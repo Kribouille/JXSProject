@@ -90,8 +90,7 @@ export declare class ListWrapper {
     static toString<T>(l: T[]): string;
     static toJSON<T>(l: T[]): string;
     static maximum<T>(list: T[], predicate: (t: T) => number): T;
-    static flatten<T>(list: Array<T | T[]>): T[];
-    static addAll<T>(list: Array<T>, source: Array<T>): void;
+    static flatten<T>(array: T[][]): T[];
 }
 export declare function isListLikeIterable(obj: any): boolean;
 export declare function areIterablesEqual(a: any, b: any, comparator: Function): boolean;
