@@ -9,19 +9,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var core_2 = require('@angular/core');
 var NavClientBar_1 = require('./NavClientBar');
-var AppComponent = (function () {
-    function AppComponent() {
+var TabNavBar = (function () {
+    function TabNavBar(navBar) {
+        this.active = true;
+        navBar.addTabToNavBar(this);
     }
-    AppComponent = __decorate([
+    __decorate([
+        core_2.Input(), 
+        __metadata('design:type', Object)
+    ], TabNavBar.prototype, "tabTitle", void 0);
+    TabNavBar = __decorate([
         core_1.Component({
-            selector: 'my-app',
-            templateUrl: 'app/gui.html',
-            directives: [NavClientBar_1.NavClientBar]
+            selector: 'tabNavBar',
+            template: "\n    <div [hidden]=\"!active\">\n      <ng-content></ng-content>\n    </div>\n  "
         }), 
-        __metadata('design:paramtypes', [])
-    ], AppComponent);
-    return AppComponent;
+        __metadata('design:paramtypes', [NavClientBar_1.NavClientBar])
+    ], TabNavBar);
+    return TabNavBar;
 }());
-exports.AppComponent = AppComponent;
-//# sourceMappingURL=app.component.js.map
+exports.TabNavBar = TabNavBar;
+//# sourceMappingURL=TabNavBar.js.map

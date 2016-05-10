@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { NavClientBar } from './NavClientBar';
 
 @Component({
   selector: 'my-app',
-  template: '<h1>My First Angular 2 App</h1>'
+  templateUrl: 'app/gui.html',
+  directives: [NavClientBar]
 })
-export class AppComponent { }
-
+export class AppComponent {
+}

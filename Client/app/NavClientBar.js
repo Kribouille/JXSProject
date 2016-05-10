@@ -9,19 +9,30 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var NavClientBar_1 = require('./NavClientBar');
-var AppComponent = (function () {
-    function AppComponent() {
+var NavClientBar = (function () {
+    function NavClientBar() {
+        this.tabs = [];
     }
-    AppComponent = __decorate([
+    NavClientBar.prototype.addTabToNavBar = function (t) {
+        if (this.tabs.length === 0) {
+            t.active = true;
+        }
+        this.tabs.push(t);
+    };
+    NavClientBar.prototype.selectTab = function (t) {
+        this.tabs.forEach(function (t) {
+            t.active = false;
+        });
+        t.active = true;
+    };
+    NavClientBar = __decorate([
         core_1.Component({
-            selector: 'my-app',
-            templateUrl: 'app/gui.html',
-            directives: [NavClientBar_1.NavClientBar]
+            selector: 'navClientBar',
+            templateUrl: 'app/NavClientBar.html'
         }), 
         __metadata('design:paramtypes', [])
-    ], AppComponent);
-    return AppComponent;
+    ], NavClientBar);
+    return NavClientBar;
 }());
-exports.AppComponent = AppComponent;
-//# sourceMappingURL=app.component.js.map
+exports.NavClientBar = NavClientBar;
+//# sourceMappingURL=NavClientBar.js.map
