@@ -1,0 +1,3 @@
+# Compiled Sources #
+*.war
+Server/WSCloudUnifierService/target/maven-archiver/pom.properties
