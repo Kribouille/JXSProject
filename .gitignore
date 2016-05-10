@@ -1,4 +1,8 @@
 # Compiled Sources #
+# Server #
 *.war
+Server/WSCloudUnifierService/target/*
 Server/WSCloudUnifierService/target/maven-archiver/pom.properties
+
+# Client #
 Client/node_modules/*
