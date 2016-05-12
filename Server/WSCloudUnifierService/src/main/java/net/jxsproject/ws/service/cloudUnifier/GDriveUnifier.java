@@ -13,7 +13,7 @@ public class GDriveUnifier implements ICloudUnifier {
   @Override
   public Response test(@PathParam("i") String i) {
 
-    int output = Integer.parseInt(i) + 2;
+    int output = Integer.parseInt(i) + 4;
 
     return Response.status(200).entity(Integer.toString(output)).build();
   }
