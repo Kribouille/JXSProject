@@ -6,19 +6,21 @@ public interface ICloudUnifier {
 
   public Response test(String i);
 
-  /* public FileDetails getFileDetails(File f);
+  /*public Response authenticate();
 
-  public void rename(File f);
+  public Response getFileDetails(File f);
 
-  public void delete(File f);
+  public Response rename(File f);
 
-  public void add(File f);
+  public Response delete(File f);
 
-  public void move(File f, Dir d);
+  public Response add(File f);
 
-  public void share(File f, Rights r);
+  public Response move(File f, Dir d);
 
-  public CloudData getCloudData();
-*/
+  public Response share(File f, Rights r);
+
+  public Response getCloudData();
+  */
 
 }
