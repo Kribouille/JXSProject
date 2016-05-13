@@ -4,10 +4,10 @@ import javax.ws.rs.core.Response;
 
 public interface ICloudUnifier {
 
-  public Response test(String i);
+  public Response cloudAuthorize(String callbackUri);
 
-  /*public Response authenticate();
-
+  public Response authenticate(String code, String callbackUri);
+/**
   public Response getFileDetails(File f);
 
   public Response rename(File f);
@@ -21,6 +21,5 @@ public interface ICloudUnifier {
   public Response share(File f, Rights r);
 
   public Response getCloudData();
-  */
-
+**/
 }

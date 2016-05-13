@@ -4,18 +4,25 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.FormParam;
 
 @Path("/GDriveUnifier")
 public class GDriveUnifier implements ICloudUnifier {
 
-  @GET
-  @Path("/{i}")
-  @Override
-  public Response test(@PathParam("i") String i) {
 
-    int output = Integer.parseInt(i) + 4;
+    @GET
+    @Path("cloudAuthorize")
+    @Override
+    public Response cloudAuthorize(@QueryParam("callbackUri") String callbackUri) {
+      return null;
+    }
 
-    return Response.status(200).entity(Integer.toString(output)).build();
-  }
+    @GET
+    @Path("authenticate")
+    @Override
+    public Response authenticate(@QueryParam("code") String code, @QueryParam("callbackUri") String callbackUri) {
+      return null;
+    }
 
 }
