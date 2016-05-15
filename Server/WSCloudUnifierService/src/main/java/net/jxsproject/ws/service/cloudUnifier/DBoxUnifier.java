@@ -5,13 +5,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Response;
-import org.json.*;
+import org.json.JSONObject;
+import org.json.JSONException;
 import java.util.Map;
 import java.util.HashMap;
 import java.lang.Exception;
-
-//Path param
-//String redirect_uriS = "http://localhost:8080/WSCloudUnifierService/DBoxUnifier";
 
 @Path("/DBoxUnifier")
 public class DBoxUnifier extends CloudUnifier {
@@ -19,7 +17,7 @@ public class DBoxUnifier extends CloudUnifier {
   private String m_clientId = ""; //[PUT KEY HERE]
   private String m_clientSecret = ""; //[PUT SECRET HERE]
   private String m_token = ""; //[PUT TOKEN HERE]
-
+  //private String redirect_uriS = "http://localhost:8080/WSCloudUnifierService/DBoxUnifier";
   public DBoxUnifier() {
     //TODO : Récupérer ClientId et ClientSecret depuis un fichier local de config
   }
@@ -37,11 +35,10 @@ public class DBoxUnifier extends CloudUnifier {
       String query = String.format("client_id=%s&response_type=%s&redirect_uri=%s", this.m_clientId, "code",callbackUri);
       String url = String.format("https://www.dropbox.com/1/oauth2/authorize?%s", query);
 
-      output = this.get(url);
-
+      output =  this.get(url);
       JSONObject obj = new JSONObject(output);
       this.m_token = obj.getString("access_token");
-
+      System.out.println(this.m_token);
       res.put("token", this.m_token);
     }
     catch(Exception e){
@@ -50,7 +47,7 @@ public class DBoxUnifier extends CloudUnifier {
     }
 
     JSONObject result = new JSONObject(res);
-    return Response.status(200).entity(res.toString()).build();
+    return Response.status(200).entity(result.toString()).build();
   }
 
   @GET
