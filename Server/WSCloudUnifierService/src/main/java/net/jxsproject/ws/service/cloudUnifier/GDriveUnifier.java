@@ -48,4 +48,10 @@ public class GDriveUnifier implements ICloudUnifier {
     return null;
   }
 
+  @GET
+  @Path("getFileDetails")
+  @Override
+  public JSONObject getFileDetails(String f){
+    
+  }
 }
