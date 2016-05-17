@@ -55,13 +55,19 @@ public class DBoxUnifier extends CloudUnifier {
   @GET
   @Path("authenticate")
   @Override
-  public Response authenticate(@QueryParam("code") String code, @QueryParam("callbackUri") String callbackUri) {
-    /*JSONParser parser = new JSONParser();
-    Object tmp = parser.parse("{" + output + "}");
-    JSONObject obj = (JSONObject) tmp;
-    this.m_token = (String) obj.get("access_token");
-    System.out.println(this.m_token);
-    res.put("token", this.m_token);*/
-    return null;
+  public JSONObject authenticate(@QueryParam("code") String code, @QueryParam("callbackUri") String callbackUri) {
+    Map<String,String> map= new HashMap<String, String>();
+    map.put("code", code);
+    map.put("client_id", this.m_clientId);
+    map.put("client_secret", this.m_clientSecret);
+    map.put("grant_type", "authorization_code");
+    map.put("redirect_uri",callbackUri);
+
+    String res = this.post("https://api.dropboxapi.com/1/oauth2/token", map);
+    JSONObject json = new JSONObject();
+    this.m_token = (String) json.get("access_token");
+    json.put("token", this.m_token);
+
+    return  json;
   }
 }

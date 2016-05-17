@@ -26,7 +26,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.util.EntityUtils;
 import org.apache.http.entity.StringEntity;
 import java.text.ParseException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 import javax.ws.rs.core.Response;
 
 public abstract class CloudUnifier implements ICloudUnifier{
@@ -75,5 +75,5 @@ public abstract class CloudUnifier implements ICloudUnifier{
   }
 
   public abstract Response cloudAuthorize(String callbackUri);
-  public abstract Response authenticate(String code, String callbackUri);
+  public abstract JSONObject authenticate(String code, String callbackUri);
 }
