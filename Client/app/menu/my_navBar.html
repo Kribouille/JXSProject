@@ -13,11 +13,12 @@
       <!-- Collection of nav links and other content for toggling -->
       <div id="navbarCollapse" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-              <li *ngFor="let tab of _tabs"><a href="#">{{tab}}</a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-              <li><a href="#">Login</a></li>
+              <li *ngFor="let tab of _tabs" [class.selected]="tab === selectedTab"
+        (click)="onSelect(tab)"><a href="#">{{tab._name}}</a></li>
           </ul>
       </div>
   </nav>
+</div>
+<div *ngIf="selectedTab">
+  <h2>{{selectedTab._name}} details!</h2>
 </div>

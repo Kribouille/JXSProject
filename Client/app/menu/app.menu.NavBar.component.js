@@ -25,6 +25,8 @@ System.register(['@angular/core', './app.menu.tab.service'], function(exports_1,
                 function MyNavBar(tabs) {
                     this._tabs = tabs.getTabs();
                 }
+                // loginTab: MyTab = { "_name": "Login" };
+                MyNavBar.prototype.onSelect = function (tab) { this.selectedTab = tab; };
                 MyNavBar = __decorate([
                     core_1.Component({
                         selector: 'my_navBar',

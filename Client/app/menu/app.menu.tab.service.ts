@@ -1,5 +1,8 @@
+import {MyTab} from './app.menu.tab.component'
 export class MyTabs{
-  getTabs():string[]{
-    return ["Tous les fichiers","Partagés avec vous", "DashBoard"];
+  getTabs():MyTab[]{
+	  var TABS: MyTab[] = [{ "_name": "Tous les fichiers" }, { "_name": "Partagés avec vous" }, { "_name": "Dashboard" }, { "_name": "Login" }];
+	  return TABS;
+    // return [new MyTab('Tous les fichiers'), new MyTab('Partagés avec vous'), new MyTab('DashBoard')];
   }
 }

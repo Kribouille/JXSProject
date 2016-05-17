@@ -9,6 +9,7 @@ import {FileExplorer} from './explorer/app.explorer.fileExplorer.component';
     <my_navBar></my_navBar>
     <courses></courses>
     <file-explorer></file-explorer>
+    
     `,
     directives:[CoursesComponent, MyNavBar, FileExplorer]
 })

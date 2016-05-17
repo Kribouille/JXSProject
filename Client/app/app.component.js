@@ -33,7 +33,7 @@ System.register(['@angular/core', './courses.component', './menu/app.menu.NavBar
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "<h1>My Fcx 2 App</h1>\n    <my_navBar></my_navBar>\n    <courses></courses>\n    <file-explorer></file-explorer>\n    ",
+                        template: "<h1>My Fcx 2 App</h1>\n    <my_navBar></my_navBar>\n    <courses></courses>\n    <file-explorer></file-explorer>\n    \n    ",
                         directives: [courses_component_1.CoursesComponent, app_menu_NavBar_component_1.MyNavBar, app_explorer_fileExplorer_component_1.FileExplorer]
                     }), 
                     __metadata('design:paramtypes', [])
