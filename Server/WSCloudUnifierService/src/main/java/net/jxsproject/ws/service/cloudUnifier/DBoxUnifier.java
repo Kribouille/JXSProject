@@ -5,29 +5,48 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Response;
-import org.json.JSONObject;
-import org.json.JSONException;
 import java.util.Map;
 import java.util.HashMap;
 import java.lang.Exception;
+import java.io.FileReader;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 @Path("/DBoxUnifier")
 public class DBoxUnifier extends CloudUnifier {
 
-  private String m_clientId = ""; //[PUT KEY HERE]
-  private String m_clientSecret = ""; //[PUT SECRET HERE]
+  private String m_clientId = "";
+  private String m_clientSecret = "";
   private String m_token = ""; //[PUT TOKEN HERE]
   //private String redirect_uriS = "http://localhost:8080/WSCloudUnifierService/DBoxUnifier";
+
   public DBoxUnifier() {
-    //TODO : Récupérer ClientId et ClientSecret depuis un fichier local de config
+    try {
+      JSONParser parser = new JSONParser();
+      Object obj = parser.parse(new FileReader("./dBoxConfig.json"));
+
+      JSONObject config = (JSONObject) obj;
+
+      this.m_clientId = (String) config.get("client_id");
+      this.m_clientSecret = (String) config.get("client_secret");
+    } catch (Exception e) {
+      e.printStackTrace();
+      this.m_clientId = null;
+      this.m_clientSecret = null;
+    }
   }
 
   @GET
   @Path("cloudAuthorize")
   @Override
   public Response cloudAuthorize(@QueryParam("callbackUri") String callbackUri) {
-    Map<String, String> res = new HashMap<String, String>();
     String output = "";
+    Map<String, String> res = new HashMap<String, String>();
+
+    //Return Internal server error
+    if (this.m_clientId == null || this.m_clientSecret == null) {
+      return Response.status(500).entity(output).build();
+    }
 
     try{
       //Create connection
@@ -36,8 +55,11 @@ public class DBoxUnifier extends CloudUnifier {
       String url = String.format("https://www.dropbox.com/1/oauth2/authorize?%s", query);
 
       output =  this.get(url);
-      JSONObject obj = new JSONObject(output);
-      this.m_token = obj.getString("access_token");
+
+      JSONParser parser = new JSONParser();
+      Object tmp = parser.parse(output);
+      JSONObject obj = (JSONObject) tmp;
+      this.m_token = (String) obj.get("access_token");
       System.out.println(this.m_token);
       res.put("token", this.m_token);
     }
