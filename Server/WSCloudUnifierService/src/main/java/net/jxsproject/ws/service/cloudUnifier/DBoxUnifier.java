@@ -40,42 +40,28 @@ public class DBoxUnifier extends CloudUnifier {
   @Path("cloudAuthorize")
   @Override
   public Response cloudAuthorize(@QueryParam("callbackUri") String callbackUri) {
-    String output = "";
-    Map<String, String> res = new HashMap<String, String>();
 
-    //Return Internal server error
-    if (this.m_clientId == null || this.m_clientSecret == null) {
-      return Response.status(500).entity(output).build();
+    if (this.m_clientId == null || this.m_clientSecret == null){
+      return Response.status(500).entity("Error config").build();
     }
-
-    try{
-      //Create connection
-      //Authorize API connection
+    else {
       String query = String.format("client_id=%s&response_type=%s&redirect_uri=%s", this.m_clientId, "code",callbackUri);
       String url = String.format("https://www.dropbox.com/1/oauth2/authorize?%s", query);
-
-      output =  this.get(url);
-
-      JSONParser parser = new JSONParser();
-      Object tmp = parser.parse(output);
-      JSONObject obj = (JSONObject) tmp;
-      this.m_token = (String) obj.get("access_token");
-      System.out.println(this.m_token);
-      res.put("token", this.m_token);
-    }
-    catch(Exception e){
-      e.printStackTrace();
-      return Response.status(500).entity(output).build();
+      return Response.status(200).entity(url).build();
     }
 
-    JSONObject result = new JSONObject(res);
-    return Response.status(200).entity(result.toString()).build();
   }
 
   @GET
   @Path("authenticate")
   @Override
   public Response authenticate(@QueryParam("code") String code, @QueryParam("callbackUri") String callbackUri) {
+    /*JSONParser parser = new JSONParser();
+    Object tmp = parser.parse("{" + output + "}");
+    JSONObject obj = (JSONObject) tmp;
+    this.m_token = (String) obj.get("access_token");
+    System.out.println(this.m_token);
+    res.put("token", this.m_token);*/
     return null;
   }
 }
