@@ -16,7 +16,7 @@ public class GDriveUnifier implements ICloudUnifier {
   private String m_clientId = "";
   private String m_clientSecret = "";
   private String m_token = ""; //[PUT TOKEN HERE]
-  
+
   public GDriveUnifier() {
     try {
       JSONParser parser = new JSONParser();
@@ -44,8 +44,14 @@ public class GDriveUnifier implements ICloudUnifier {
   @GET
   @Path("authenticate")
   @Override
-  public Response authenticate(@QueryParam("code") String code, @QueryParam("callbackUri") String callbackUri) {
+  public JSONObject authenticate(@QueryParam("code") String code, @QueryParam("callbackUri") String callbackUri) {
     return null;
   }
 
+  @GET
+  @Path("getFileDetails")
+  @Override
+  public JSONObject getFileDetails(String f){
+    
+  }
 }
