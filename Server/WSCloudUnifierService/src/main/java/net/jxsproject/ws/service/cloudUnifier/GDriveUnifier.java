@@ -1,14 +1,8 @@
 package net.jxsproject.ws.service.cloudUnifier;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.FormParam;
-import java.io.FileReader;
-import org.json.JSONArray;
 import org.json.JSONObject;
+
+import javax.ws.rs.core.Response;
 
 public class GDriveUnifier extends CloudUnifier {
 
@@ -58,4 +52,7 @@ public class GDriveUnifier extends CloudUnifier {
 
   @Override
   public Response deleteFile(String file) { return null;}
+
+  @Override
+  public Response moveFile(final String pathFrom, final String pathTo) {return null;}
 }

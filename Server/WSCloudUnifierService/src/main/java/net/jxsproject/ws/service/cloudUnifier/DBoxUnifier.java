@@ -2,7 +2,6 @@ package net.jxsproject.ws.service.cloudUnifier;
 
 import org.json.JSONObject;
 
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
@@ -111,6 +110,19 @@ public class DBoxUnifier extends CloudUnifier {
         }
         else {
             String url = String.format("https://api.dropboxapi.com/1/fileops/delete?access_token=%s&root=%s&path=%s", this.m_token, "auto", path);
+            String res = this.get(url, new HashMap<String, String>());
+            JSONObject json = new JSONObject(res);
+            return Response.status(200).entity(json.toString()).build();
+        }
+    }
+
+    @Override
+    public Response moveFile(final String pathFrom, final String pathTo) {
+        if (this.m_clientId == null || this.m_clientSecret == null){
+            return Response.status(500).entity("Error config").build();
+        }
+        else {
+            String url = String.format("https://api.dropboxapi.com/1/fileops/move?access_token=%s&root=%s&from_path=%s&to_path=%s", this.m_token, "auto", pathFrom, pathTo);
             String res = this.get(url, new HashMap<String, String>());
             JSONObject json = new JSONObject(res);
             return Response.status(200).entity(json.toString()).build();
