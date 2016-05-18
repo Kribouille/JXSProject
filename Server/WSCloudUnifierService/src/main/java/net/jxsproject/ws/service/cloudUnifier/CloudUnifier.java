@@ -1,33 +1,23 @@
 package net.jxsproject.ws.service.cloudUnifier;
 
-import org.apache.http.client.ClientProtocolException;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.FileReader;
-import java.io.PrintWriter;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.Header;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+import javax.ws.rs.core.Response;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.util.EntityUtils;
-import org.apache.http.entity.StringEntity;
-import java.text.ParseException;
-import org.json.JSONObject;
-import javax.ws.rs.core.Response;
+import java.util.Map;
 
 public abstract class CloudUnifier implements ICloudUnifier{
 
@@ -39,7 +29,7 @@ public abstract class CloudUnifier implements ICloudUnifier{
       String line = br.readLine();
       while (line != null) {
         sb.append(line);
-        sb.append(System.lineSeparator());
+        sb.append(System.getProperty("line.separator"));
         line = br.readLine();
       }
       String result = sb.toString();
