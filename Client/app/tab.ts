@@ -1,5 +1,5 @@
-import { Component } from 'angular2/angular2';
-import {Tabs} from './tabs';
+import { Component } from '@angular/core';
+//import {Tabs} from './tabs';
 
 @Component({
   selector: 'tab',
@@ -22,9 +22,5 @@ export class Tab {
   title: string;
   active = this.active || false;
 
-  constructor(tabs: Tabs) {
 
-    tabs.addTab(this);
-
-  }
 }

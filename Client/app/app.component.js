@@ -1,4 +1,4 @@
-System.register(['@angular/core', './courses.component', './menu/app.menu.NavBar.component', './explorer/app.explorer.fileExplorer.component', '@angular/router', './app.component.login', './crisis-list.component', './hero-list.component'], function(exports_1, context_1) {
+System.register(['@angular/core', './menu/app.menu.NavBar.component', './explorer/app.explorer.fileExplorer.component', '@angular/router', './app.component.login', './crisis-list.component', './menu/app.menu.allFiles.component', './menu/app.menu.sharedFiles', './menu/app.menu.dashboard.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,15 +10,12 @@ System.register(['@angular/core', './courses.component', './menu/app.menu.NavBar
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, courses_component_1, app_menu_NavBar_component_1, app_explorer_fileExplorer_component_1, router_1, app_component_login_1, crisis_list_component_1, hero_list_component_1;
+    var core_1, app_menu_NavBar_component_1, app_explorer_fileExplorer_component_1, router_1, app_component_login_1, crisis_list_component_1, app_menu_allFiles_component_1, app_menu_sharedFiles_1, app_menu_dashboard_component_1;
     var AppComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
-            },
-            function (courses_component_1_1) {
-                courses_component_1 = courses_component_1_1;
             },
             function (app_menu_NavBar_component_1_1) {
                 app_menu_NavBar_component_1 = app_menu_NavBar_component_1_1;
@@ -35,26 +32,38 @@ System.register(['@angular/core', './courses.component', './menu/app.menu.NavBar
             function (crisis_list_component_1_1) {
                 crisis_list_component_1 = crisis_list_component_1_1;
             },
-            function (hero_list_component_1_1) {
-                hero_list_component_1 = hero_list_component_1_1;
+            function (app_menu_allFiles_component_1_1) {
+                app_menu_allFiles_component_1 = app_menu_allFiles_component_1_1;
+            },
+            function (app_menu_sharedFiles_1_1) {
+                app_menu_sharedFiles_1 = app_menu_sharedFiles_1_1;
+            },
+            function (app_menu_dashboard_component_1_1) {
+                app_menu_dashboard_component_1 = app_menu_dashboard_component_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent() {
+                function AppComponent(router) {
+                    this.router = router;
                 }
+                AppComponent.prototype.ngOnInit = function () {
+                    this.router.navigate(['/allFiles']);
+                };
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "<h1>My Fcx 2 App</h1>\n\t<my_navBar></my_navBar>\n\t<courses></courses>\n\t<file-explorer></file-explorer>\n\n\t",
-                        directives: [courses_component_1.CoursesComponent, app_menu_NavBar_component_1.MyNavBar, app_explorer_fileExplorer_component_1.FileExplorer, router_1.ROUTER_DIRECTIVES]
+                        template: "<h1>My Fcx 2 App</h1>\n\t<my_navBar></my_navBar>\n\t<file-explorer></file-explorer>\n\t\n\n\t",
+                        directives: [app_menu_NavBar_component_1.MyNavBar, app_explorer_fileExplorer_component_1.FileExplorer, router_1.ROUTER_DIRECTIVES]
                     }),
                     router_1.Routes([
-                        { path: '/crisis-center', component: crisis_list_component_1.CrisisListComponent },
-                        { path: '/heroes', component: hero_list_component_1.HeroListComponent },
+                        //{ path: '/crisis-center', component: CrisisListComponent },
+                        //{ path: '/heroes', component: HeroListComponent },
+                        { path: '/allFiles', component: app_menu_allFiles_component_1.AllFilesComponent },
+                        { path: '/dashboard', component: app_menu_dashboard_component_1.DashBoardComponent },
+                        { path: '/sharedWithUser', component: app_menu_sharedFiles_1.SharedWithUserFilesComponent },
                         { path: '/login', component: app_component_login_1.Login },
-                        { path: '*', component: crisis_list_component_1.CrisisListComponent }
-                    ]), 
-                    __metadata('design:paramtypes', [])
+                        { path: '*', component: crisis_list_component_1.CrisisListComponent }]), 
+                    __metadata('design:paramtypes', [router_1.Router])
                 ], AppComponent);
                 return AppComponent;
             }());
