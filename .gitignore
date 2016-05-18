@@ -5,8 +5,8 @@ Server/WSCloudUnifierService/target/*
 Server/WSCloudUnifierService/target/maven-archiver/pom.properties
 
 # Server Config Files #
-Server/WSCloudUnifierService/src/main/java/net/jxsproject/ws/service/cloudUnifier/dBoxConfig.json
-Server/WSCloudUnifierService/src/main/java/net/jxsproject/ws/service/cloudUnifier/gDriveConfig.json
+Server/WSCloudUnifierService/dBoxConfig.json
+Server/WSCloudUnifierService/gDriveConfig.json
 
 # Client #
 Client/node_modules/*
