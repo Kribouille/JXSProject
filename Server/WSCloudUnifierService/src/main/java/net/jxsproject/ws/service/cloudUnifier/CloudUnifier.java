@@ -26,10 +26,28 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.util.EntityUtils;
 import org.apache.http.entity.StringEntity;
 import java.text.ParseException;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import javax.ws.rs.core.Response;
 
 public abstract class CloudUnifier implements ICloudUnifier{
+
+  protected String readF(String path) {
+    try {
+      BufferedReader br = new BufferedReader(new FileReader(path));
+      StringBuilder sb = new StringBuilder();
+
+      String line = br.readLine();
+      while (line != null) {
+        sb.append(line);
+        sb.append(System.lineSeparator());
+        line = br.readLine();
+      }
+      String result = sb.toString();
+      return result;
+    } catch (Exception e) {
+      return "";
+    }
+  }
 
   protected String get(String url) {
     try{
@@ -58,9 +76,6 @@ public abstract class CloudUnifier implements ICloudUnifier{
       for (Map.Entry<String, String> e : m.entrySet()) {
         params.add(new BasicNameValuePair(e.getKey(), e.getValue()));
       }
-      /*List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-      params.add(new BasicNameValuePair("param-1", "12345"));
-      params.add(new BasicNameValuePair("param-2", "Hello!"));*/
       httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
       HttpResponse rep = httpclient.execute(httppost);
       HttpEntity en = rep.getEntity();
@@ -75,6 +90,6 @@ public abstract class CloudUnifier implements ICloudUnifier{
   }
 
   public abstract Response cloudAuthorize(String callbackUri);
-  public abstract JSONObject authenticate(String code, String callbackUri);
+  public abstract Response authenticate(String code, String callbackUri);
   public abstract JSONObject getFileDetails(String f);
 }

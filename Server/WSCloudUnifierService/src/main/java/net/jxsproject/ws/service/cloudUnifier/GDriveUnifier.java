@@ -7,11 +7,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.FormParam;
 import java.io.FileReader;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 @Path("/GDriveUnifier")
-public class GDriveUnifier implements ICloudUnifier {
+public class GDriveUnifier extends CloudUnifier {
 
   private String m_clientId = "";
   private String m_clientSecret = "";
@@ -19,10 +19,7 @@ public class GDriveUnifier implements ICloudUnifier {
 
   public GDriveUnifier() {
     try {
-      JSONParser parser = new JSONParser();
-      Object obj = parser.parse(new FileReader("./gDriveConfig.json"));
-
-      JSONObject config = (JSONObject) obj;
+      JSONObject config = new JSONObject(this.readF("./gDriveConfig.json"));
 
       this.m_clientId = (String) config.get("client_id");
       this.m_clientSecret = (String) config.get("client_secret");
@@ -44,7 +41,7 @@ public class GDriveUnifier implements ICloudUnifier {
   @GET
   @Path("authenticate")
   @Override
-  public JSONObject authenticate(@QueryParam("code") String code, @QueryParam("callbackUri") String callbackUri) {
+  public Response authenticate(@QueryParam("code") String code, @QueryParam("callbackUri") String callbackUri) {
     return null;
   }
 
@@ -52,6 +49,6 @@ public class GDriveUnifier implements ICloudUnifier {
   @Path("getFileDetails")
   @Override
   public JSONObject getFileDetails(String f){
-    
+    return null;
   }
 }

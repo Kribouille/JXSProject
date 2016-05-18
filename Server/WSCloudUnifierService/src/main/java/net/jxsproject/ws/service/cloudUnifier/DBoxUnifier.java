@@ -2,21 +2,17 @@ package net.jxsproject.ws.service.cloudUnifier;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 import java.util.HashMap;
 import java.lang.Exception;
 import java.io.FileReader;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.impl.client.HttpClients;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 @Path("/DBoxUnifier")
 public class DBoxUnifier extends CloudUnifier {
@@ -28,10 +24,7 @@ public class DBoxUnifier extends CloudUnifier {
 
   public DBoxUnifier() {
     try {
-      JSONParser parser = new JSONParser();
-      Object obj = parser.parse(new FileReader("./dBoxConfig.json"));
-
-      JSONObject config = (JSONObject) obj;
+      JSONObject config = new JSONObject(this.readF("./dBoxConfig.json"));
 
       this.m_clientId = (String) config.get("client_id");
       this.m_clientSecret = (String) config.get("client_secret");
@@ -60,70 +53,27 @@ public class DBoxUnifier extends CloudUnifier {
 
   @GET
   @Path("authenticate")
+  @Produces(MediaType.APPLICATION_JSON)
   @Override
-  public JSONObject authenticate(@QueryParam("code") String code, @QueryParam("callbackUri") String callbackUri) {
-    try{
-      Map<String,String> map= new HashMap<String, String>();
-      map.put("code", code);
-      map.put("client_id", this.m_clientId);
-      map.put("client_secret", this.m_clientSecret);
-      map.put("grant_type", "authorization_code");
-      map.put("redirect_uri",callbackUri);
+  public Response authenticate(@QueryParam("code") String code, @QueryParam("callbackUri") String callbackUri) {
+    Map<String,String> map= new HashMap<String, String>();
+    map.put("code", code);
+    map.put("client_id", this.m_clientId);
+    map.put("client_secret", this.m_clientSecret);
+    map.put("grant_type", "authorization_code");
+    map.put("redirect_uri",callbackUri);
 
-      String res = this.post("https://api.dropboxapi.com/1/oauth2/token", map);
-      JSONParser parser = new JSONParser();
-      JSONObject json = (JSONObject) parser.parse(res);
-      this.m_token = (String) json.get("access_token");
-      json.clear();
-      json.put("token", this.m_token);
-      return json;
-    }
-    catch(Exception e){
-      e.printStackTrace();
-      return null;
-    }
+    String res = this.post("https://api.dropboxapi.com/1/oauth2/token", map);
+    JSONObject json = new JSONObject(res);
+    System.out.println(json);
+    this.m_token = json.getString("access_token");
+    json.put("token", this.m_token);
+    
+    return Response.status(200).entity(json.toString()).build();
   }
 
-  @GET
-  @Path("getFileDetails")
-  @Override
-  public JSONObject getFileDetails(String f){
-    JSONObject result = null;
-    try {
-      String query = String.format("?access_token=%s", this.m_token);
-      String url = String.format("https://content.dropboxapi.com/1/files/auto/%s%s", f, query);
-      HttpGet request = new HttpGet(url);
-      HttpClient httpClient = HttpClients.createDefault();
-      HttpResponse response = httpClient.execute(request);
 
-      HttpEntity entity = response.getEntity();
-      String downloadUrl = this.shareFile(f).getString("url");
-
-      result = new JSONObject(response.getFirstHeader("x-dropbox-metadata")
-      .getValue());
-      result.put("download_url", downloadUrl);
-    } catch (Exception e) {
-      Map<String, String> jsonContent = new HashMap();
-      jsonContent.put("err", "Unable to parse json");
-      return new JSONObject(jsonContent);
-    }
-    return result;
-  }
-
-  public JSONObject shareFile(final String file) {
-    String res = null;
-    JSONParser parser = new JSONParser();
-    try {
-      res = this.get(
-      new StringBuilder("https://api.dropboxapi.com/1/shares/auto/")
-      .append(file)
-      .append("?access_token=").append(_token)
-      .toString());
-    } catch (Exception e) {
-      JSONObject json = (JSONObject) parser.parse(res);
-      return json;
-    }
-    JSONObject json = (JSONObject) parser.parse(res);
-    return new JSONObject(json);
+  public JSONObject getFileDetails(String f) {
+    return null;
   }
 }

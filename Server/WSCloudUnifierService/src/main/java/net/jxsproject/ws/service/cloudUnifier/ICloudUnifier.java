@@ -1,13 +1,13 @@
 package net.jxsproject.ws.service.cloudUnifier;
 
 import javax.ws.rs.core.Response;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 public interface ICloudUnifier {
 
   public Response cloudAuthorize(String callbackUri);
 
-  public JSONObject authenticate(String code, String callbackUri);
+  public Response authenticate(String code, String callbackUri);
 
   public JSONObject getFileDetails(String f);
 /**
