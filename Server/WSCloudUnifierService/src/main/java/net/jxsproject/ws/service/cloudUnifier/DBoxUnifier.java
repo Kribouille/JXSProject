@@ -62,12 +62,11 @@ public class DBoxUnifier extends CloudUnifier {
     map.put("client_secret", this.m_clientSecret);
     map.put("grant_type", "authorization_code");
     map.put("redirect_uri",callbackUri);
-
+    System.out.println(this.m_clientId);
     String res = this.post("https://api.dropboxapi.com/1/oauth2/token", map);
     JSONObject json = new JSONObject(res);
     System.out.println(json);
-    this.m_token = (String) json.get("access_token");
-
+    this.m_token = json.getString("access_token");
     return Response.status(200).entity(json.toString()).build();
   }
 
@@ -76,11 +75,12 @@ public class DBoxUnifier extends CloudUnifier {
   @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response getFileDetails(@QueryParam("path") String path) {
-    Map<String, String> m = new HashMap();
-    m.put("token_type", "bearer");
-    m.put("access_token", this.m_token);
-    String url = String.format("https://api.dropboxapi.com/1/metadata/auto/%s?access_token=%s", path, this.m_token);
-    String res = this.get(url, m);
+    Map<String, String> map = new HashMap();
+    String aut = "Bearer " + this.m_token;
+    map.put("Authorization", aut);
+    //map.put("Authorization", "Bearer " + this.m_token);
+    String url = String.format("https://api.dropboxapi.com/1/metadata/auto/%s", path);
+    String res = this.get(url, map);
     JSONObject json = new JSONObject(res);
     System.out.println(json);
     return Response.status(200).entity(json.toString()).build();
