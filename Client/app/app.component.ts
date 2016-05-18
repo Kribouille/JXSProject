@@ -3,8 +3,6 @@ import {MyNavBar} from './menu/app.menu.NavBar.component';
 import {FileExplorer} from './explorer/app.explorer.fileExplorer.component';
 import { ROUTER_DIRECTIVES, Routes, Router } from '@angular/router';
 import {Login} from './app.component.login';
-import { CrisisListComponent } from './crisis-list.component';
-import { HeroListComponent }   from './hero-list.component';
 import {AllFilesComponent} from './menu/app.menu.allFiles.component';
 import {SharedWithUserFilesComponent} from './menu/app.menu.sharedFiles';
 import {DashBoardComponent} from './menu/app.menu.dashboard.component';
@@ -14,7 +12,7 @@ import {DashBoardComponent} from './menu/app.menu.dashboard.component';
 	template: `<h1>My Fcx 2 App</h1>
 	<my_navBar></my_navBar>
 	<file-explorer></file-explorer>
-	
+
 
 	`,
 	directives:[MyNavBar, FileExplorer, ROUTER_DIRECTIVES]
@@ -26,7 +24,7 @@ import {DashBoardComponent} from './menu/app.menu.dashboard.component';
 		{ path: '/dashboard', component: DashBoardComponent },
 		{ path: '/sharedWithUser', component: SharedWithUserFilesComponent },
 		{ path: '/login', component: Login },
-		{ path: '*', component: CrisisListComponent }])
+		{ path: '*', component: AllFilesComponent }])
 export class AppComponent {
 	constructor(private router: Router){}
 

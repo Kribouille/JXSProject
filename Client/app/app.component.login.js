@@ -18,17 +18,12 @@ System.register(['@angular/core'], function(exports_1, context_1) {
                 core_1 = core_1_1;
             }],
         execute: function() {
-            // import {CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/common';
-            // import { bootstrap } from 'angular2/platform/browser';
             Login = (function () {
                 function Login() {
                 }
                 Login = __decorate([
                     core_1.Component({
                         selector: 'my_login',
-                        // })
-                        // @View({
-                        // directives: [CORE_DIRECTIVES, FORM_DIRECTIVES],
                         template: "\n  <header>\n    <h1 class=\"title\">Login part</h1>\n  </header>\n  "
                     }), 
                     __metadata('design:paramtypes', [])
@@ -39,5 +34,4 @@ System.register(['@angular/core'], function(exports_1, context_1) {
         }
     }
 });
-// bootstrap(Login) 
 //# sourceMappingURL=app.component.login.js.map

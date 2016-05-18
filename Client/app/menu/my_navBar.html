@@ -12,8 +12,6 @@
     <!-- Collection of nav links and other content for toggling -->
     <div id="navbarCollapse" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <!--<li *ngFor="let tab of _tabs" [class.selected]="tab === selectedTab"
-        (click)="onSelect(tab)"><a href="#">{{tab._name}}</a></li>-->
         <li><a class="navbar-brand" [routerLink]="['/allFiles']">Tous les fichiers</a></li>
         <li><a [routerLink]="['/sharedWithUser']">Partagés avec vous</a></li>
         <li><a [routerLink]="['/dashboard']">Dashboard</a></li>
