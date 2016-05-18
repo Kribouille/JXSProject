@@ -66,8 +66,7 @@ public class DBoxUnifier extends CloudUnifier {
     String res = this.post("https://api.dropboxapi.com/1/oauth2/token", map);
     JSONObject json = new JSONObject(res);
     System.out.println(json);
-    this.m_token = json.getString("access_token");
-    json.put("token", this.m_token);
+    this.m_token = (String) json.get("access_token");
 
     return Response.status(200).entity(json.toString()).build();
   }
@@ -77,6 +76,13 @@ public class DBoxUnifier extends CloudUnifier {
   @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response getFileDetails(@QueryParam("path") String path) {
-    return null;
+    Map<String, String> m = new HashMap();
+    m.put("token_type", "bearer");
+    m.put("access_token", this.m_token);
+    String url = String.format("https://api.dropboxapi.com/1/metadata/auto/%s?access_token=%s", path, this.m_token);
+    String res = this.get(url, m);
+    JSONObject json = new JSONObject(res);
+    System.out.println(json);
+    return Response.status(200).entity(json.toString()).build();
   }
 }

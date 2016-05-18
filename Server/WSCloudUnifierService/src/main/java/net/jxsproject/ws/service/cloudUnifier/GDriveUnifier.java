@@ -48,7 +48,7 @@ public class GDriveUnifier extends CloudUnifier {
   @GET
   @Path("getFileDetails")
   @Override
-  public Reponse getFileDetails(String f){
+  public Response getFileDetails(String path){
     return null;
   }
 }

@@ -49,11 +49,15 @@ public abstract class CloudUnifier implements ICloudUnifier{
     }
   }
 
-  protected String get(String url) {
+  protected String get(String url, Map<String, String> m) {
     try{
       HttpClient httpclient = HttpClients.createDefault();
       HttpGet httpget = new HttpGet(url);
-
+      for (String key : m.keySet()) {
+        if (!httpget.containsHeader(key)) {
+          httpget.addHeader(key, m.get(key));
+        }
+      }
       HttpResponse rep = httpclient.execute(httpget);
       HttpEntity en = rep.getEntity();
       String body = EntityUtils.toString(en);
@@ -91,5 +95,5 @@ public abstract class CloudUnifier implements ICloudUnifier{
 
   public abstract Response cloudAuthorize(String callbackUri);
   public abstract Response authenticate(String code, String callbackUri);
-  public abstract JSONObject getFileDetails(String f);
+  public abstract Response getFileDetails(String path);
 }
