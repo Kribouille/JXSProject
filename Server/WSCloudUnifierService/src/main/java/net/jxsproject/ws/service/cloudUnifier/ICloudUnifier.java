@@ -1,7 +1,6 @@
 package net.jxsproject.ws.service.cloudUnifier;
 
 import javax.ws.rs.core.Response;
-import org.json.JSONObject;
 
 public interface ICloudUnifier {
 
@@ -9,7 +8,7 @@ public interface ICloudUnifier {
 
   public Response authenticate(String code, String callbackUri);
 
-  public JSONObject getFileDetails(String f);
+  public Response getFileDetails(String f);
 /**
   public Response rename(File f);
 

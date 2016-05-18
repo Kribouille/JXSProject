@@ -68,12 +68,15 @@ public class DBoxUnifier extends CloudUnifier {
     System.out.println(json);
     this.m_token = json.getString("access_token");
     json.put("token", this.m_token);
-    
+
     return Response.status(200).entity(json.toString()).build();
   }
 
-
-  public JSONObject getFileDetails(String f) {
+  @GET
+  @Path("getFileDetails")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Override
+  public Response getFileDetails(@QueryParam("path") String path) {
     return null;
   }
 }
