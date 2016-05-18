@@ -57,16 +57,28 @@ public class WSCloudUnifierService {
 			return null;
 	}
 
-    @GET
-    @Path("getUDetails")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserDetails(@QueryParam("cloud") String cloud) {
-        if(cloud.equals("db"))
-		return this.dropbox.getUserDetails();
-        else if (cloud.equals("drive"))
-            return this.drive.getUserDetails();
-        else
-            return null;
-    }
+	@GET
+	@Path("getUDetails")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUserDetails(@QueryParam("cloud") String cloud) {
+		if(cloud.equals("db"))
+			return this.dropbox.getUserDetails();
+		else if (cloud.equals("drive"))
+			return this.drive.getUserDetails();
+		else
+			return null;
+	}
+
+	@GET
+	@Path("deleteFile")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteFile(@QueryParam("cloud") String cloud, @QueryParam("path") String path) {
+		if(cloud.equals("db"))
+			return this.dropbox.deleteFile(path);
+		else if (cloud.equals("drive"))
+			return this.drive.deleteFile(path);
+		else
+			return null;
+	}
 
 }

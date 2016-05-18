@@ -55,4 +55,7 @@ public class GDriveUnifier extends CloudUnifier {
 
   @Override
   public Response getUserDetails() {return null; }
+
+  @Override
+  public Response deleteFile(String file) { return null;}
 }

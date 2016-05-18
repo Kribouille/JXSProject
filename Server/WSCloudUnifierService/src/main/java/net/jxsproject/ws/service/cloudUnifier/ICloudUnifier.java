@@ -12,11 +12,9 @@ public interface ICloudUnifier {
 
   public Response getUserDetails();
 
+  public Response deleteFile(String file);
+
   /*
-  public Response rename(String file);
-
-  public Response delete(File f);
-
   public Response add(File f);
 
   public Response move(File f, Dir d);

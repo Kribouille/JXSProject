@@ -104,4 +104,16 @@ public class DBoxUnifier extends CloudUnifier {
       return Response.status(200).entity(json.toString()).build();
     }
   }
+    @Override
+    public Response deleteFile(String path) {
+        if (this.m_clientId == null || this.m_clientSecret == null){
+            return Response.status(500).entity("Error config").build();
+        }
+        else {
+            String url = String.format("https://api.dropboxapi.com/1/fileops/delete?access_token=%s&root=%s&path=%s", this.m_token, "auto", path);
+            String res = this.get(url, new HashMap<String, String>());
+            JSONObject json = new JSONObject(res);
+            return Response.status(200).entity(json.toString()).build();
+        }
+    }
 }
