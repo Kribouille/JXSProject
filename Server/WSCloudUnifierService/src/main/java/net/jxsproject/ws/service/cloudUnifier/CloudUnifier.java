@@ -43,15 +43,13 @@ public abstract class CloudUnifier implements ICloudUnifier{
     try{
       HttpClient httpclient = HttpClients.createDefault();
       HttpGet httpget = new HttpGet(url);
-      if(m!=null){
+      if(m!=null)
+        for (Map.Entry<String, String> e : m.entrySet())
+            if (httpget.getAllHeaders().length >= 1) //Header déjà présent, on en ajoute
+                httpget.addHeader(e.getKey(), e.getValue());
+            else //Pas de header donc on le set
+                httpget.setHeader(e.getKey(), e.getValue());
 
-        for (String key : m.keySet()) {
-            httpget.setHeader(key, m.get(key));
-        }
-      }
-      /*for (Map.Entry<String, String> e : m.entrySet()) {
-        params.add(new BasicNameValuePair(e.getKey(), e.getValue()));
-      }*/
       HttpResponse rep = httpclient.execute(httpget);
       HttpEntity en = rep.getEntity();
       String body = EntityUtils.toString(en);
@@ -90,4 +88,5 @@ public abstract class CloudUnifier implements ICloudUnifier{
   public abstract Response cloudAuthorize(String callbackUri);
   public abstract Response authenticate(String code, String callbackUri);
   public abstract Response getFileDetails(String path);
+  public abstract Response getUserDetails();
 }

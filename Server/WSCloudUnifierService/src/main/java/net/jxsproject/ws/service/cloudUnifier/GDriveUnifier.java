@@ -10,14 +10,22 @@ import java.io.FileReader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-@Path("/GDriveUnifier")
 public class GDriveUnifier extends CloudUnifier {
 
   private String m_clientId = "";
   private String m_clientSecret = "";
   private String m_token = ""; //[PUT TOKEN HERE]
 
-  public GDriveUnifier() {
+  private static GDriveUnifier instance;
+
+  public static ICloudUnifier getInstance() {
+    if (instance == null)
+      instance = new GDriveUnifier();
+
+    return instance;
+  }
+
+  private GDriveUnifier() {
     try {
       JSONObject config = new JSONObject(this.readF("./gDriveConfig.json"));
 
@@ -30,25 +38,21 @@ public class GDriveUnifier extends CloudUnifier {
     }
   }
 
-
-  @GET
-  @Path("cloudAuthorize")
   @Override
-  public Response cloudAuthorize(@QueryParam("callbackUri") String callbackUri) {
+  public Response cloudAuthorize(String callbackUri) {
     return null;
   }
 
-  @GET
-  @Path("authenticate")
   @Override
-  public Response authenticate(@QueryParam("code") String code, @QueryParam("callbackUri") String callbackUri) {
+  public Response authenticate(String code, String callbackUri) {
     return null;
   }
 
-  @GET
-  @Path("getFileDetails")
   @Override
   public Response getFileDetails(String path){
     return null;
   }
+
+  @Override
+  public Response getUserDetails() {return null; }
 }

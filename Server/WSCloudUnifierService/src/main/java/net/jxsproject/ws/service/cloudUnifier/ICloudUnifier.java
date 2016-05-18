@@ -9,8 +9,11 @@ public interface ICloudUnifier {
   public Response authenticate(String code, String callbackUri);
 
   public Response getFileDetails(String f);
-/**
-  public Response rename(File f);
+
+  public Response getUserDetails();
+
+  /*
+  public Response rename(String file);
 
   public Response delete(File f);
 
