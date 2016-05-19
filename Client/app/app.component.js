@@ -52,7 +52,7 @@ System.register(['@angular/core', './menu/app.menu.NavBar.component', './explore
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n\t<div class=\"page-header\">\n  <h1>Chili Kribouille Carne<small> Le Cloud du turfu</small></h1>\n</div>\n\t<my_navBar></my_navBar>\n\t<file-explorer></file-explorer>\n\n\n\t",
+                        template: "\n\t<div class=\"page-header\">\n  <h1>Chili Conbouille Carne<small> Le Cloud du turfu</small></h1>\n</div>\n\t<my_navBar></my_navBar>\n\t",
                         directives: [app_menu_NavBar_component_1.MyNavBar, app_explorer_fileExplorer_component_1.FileExplorer, router_1.ROUTER_DIRECTIVES],
                         providers: [app_connected_service_1.Connected]
                     }),

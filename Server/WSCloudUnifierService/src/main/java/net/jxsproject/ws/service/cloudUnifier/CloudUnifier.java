@@ -22,6 +22,7 @@ public abstract class CloudUnifier implements ICloudUnifier{
 
   protected String m_clientId = "";
   protected String m_clientSecret = "";
+  protected String callbackUri;
   protected String m_token = ""; //[PUT TOKEN HERE]
 
   protected String readF(String path) {

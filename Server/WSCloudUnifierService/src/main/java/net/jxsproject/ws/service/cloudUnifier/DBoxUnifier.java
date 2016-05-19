@@ -17,8 +17,6 @@ import java.util.Map;
 
 public class DBoxUnifier extends CloudUnifier {
 
-  private String callbackUri;
-
   private static DBoxUnifier instance;
 
   public static ICloudUnifier getInstance() {
@@ -34,7 +32,7 @@ public class DBoxUnifier extends CloudUnifier {
 
       this.m_clientId = (String) config.get("client_id");
       this.m_clientSecret = (String) config.get("client_secret");
-      this.callbackUri = (String) config.get("callbackUri"); //TODO
+      this.callbackUri = (String) config.get("callbackUri");
     } catch (Exception e) {
       e.printStackTrace();
       this.m_clientId = null;
@@ -67,7 +65,7 @@ public class DBoxUnifier extends CloudUnifier {
       map.put("client_id", this.m_clientId);
       map.put("client_secret", this.m_clientSecret);
       map.put("grant_type", "authorization_code");
-      map.put("redirect_uri", "http://localhost:8080/WSCloudUnifierService/cloudUnifier/authenticate?cloud=db");  //TODO : change to this.callbackUri
+      map.put("redirect_uri", this.callbackUri);
       System.out.println(this.m_clientId);
       String res = this.post("https://api.dropboxapi.com/1/oauth2/token", map);
       JSONObject json = new JSONObject(res);
