@@ -48,18 +48,18 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                     var _this = this;
                     this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/getTree?cloud=db&path=/')
                         .map(function (res) { return res.json(); })
-                        .subscribe(function (data) { return _this.files = data; }, function (err) { return _this.logError(err); }, function () { return _this.consultDataDropbox(); });
+                        .subscribe(function (data) { return _this.files = data; }, function (err) { return _this.logError(err); }, function () { return _this.getFilesFromDropbox(); });
                 };
-                AllFilesComponent.prototype.consultDataDropbox = function () {
+                AllFilesComponent.prototype.getFilesFromDropbox = function () {
                     // console.log(this.files);
-                    var filesDetails = JSON.parse(this.files);
-                    for (var i = 0; i < filesDetails.contents.length; i++) {
-                        var name = filesDetails.contents[i].path;
-                        var size = filesDetails.contents[i].size;
-                        var date = filesDetails.contents[i].modified;
+                    var details = this.files.files;
+                    for (var i = 0; i < details.length; i++) {
+                        var name = details[i].path;
+                        var size = details[i].size;
+                        var date = details[i].modified;
                         var prov = "dropbox";
                         var own = "Proprietaire";
-                        var lien = filesDetails.contents[i].path;
+                        var lien = details[i].path;
                         this.folders.push(new Folder(name, size, date, prov, own, lien));
                     }
                     console.log(this.folders[0]);
@@ -72,7 +72,7 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                         selector: "all-files",
                         directives: [common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES, router_1.ROUTER_DIRECTIVES, app_explorer_fileExplorer_component_1.FileExplorer],
                         providers: [app_menu_allFiles_service_1.AllFilesService],
-                        template: "<div>\n  <h3>All files on your drive</h3>\n  <p>Firest file, etc</p>\n  </div>\n  <file-explorer></file-explorer>\n  "
+                        template: "\n  <div class=\"panel panel-default\">\n        <div class=\"panel-heading\">\n          <h2 class=\"panel-title\">Documents </h2>\n        </div>\n        <div class=\"panel-body\">\n          <span class=\"counter pull-right\"></span>\n          <table class=\"table table-bordered table-responsive table-hover results\" id=\"dataTables-example\">\n              <tr>\n                <th>Nom</th> <th>taille</th> <th>Date de Modification</th> <th>Provenance</th> <th>Propri\u00E9taire</th><th>Lien</th>\n              </tr>\n            <tbody>\n\n                  <tr *ngFor=\"let folder of folders\" >\n\n                    <td> <h1><span class=\"glyphicon glyphicon-file\"></span></h1>{{ folder.name }} </td>\n                    <td> {{ folder.size }} </td>\n                    <td> {{ folder.date }}</td>\n                    <td> {{ folder.provide }}</td>\n                    <td> {{ folder.owner }}</td>\n                    <td> <a href=\"{{ folder.link }}\" class=\"glyphicon glyphicon-download-alt\" style=\"margin:auto;\"> </a></td>\n                  </tr>\n\n            </tbody>\n          </table>\n        </div>\n      </div>\n  "
                     }), 
                     __metadata('design:paramtypes', [http_1.Http])
                 ], AllFilesComponent);

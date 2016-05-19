@@ -12,17 +12,39 @@ import {FileExplorer} from '../explorer/app.explorer.fileExplorer.component';
   selector:"all-files",
   directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, FileExplorer ],
   providers:[AllFilesService],
-  template:`<div>
-  <h3>All files on your drive</h3>
-  <p>Firest file, etc</p>
-  </div>
-  <file-explorer></file-explorer>
+  template:`
+  <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Documents </h2>
+        </div>
+        <div class="panel-body">
+          <span class="counter pull-right"></span>
+          <table class="table table-bordered table-responsive table-hover results" id="dataTables-example">
+              <tr>
+                <th>Nom</th> <th>taille</th> <th>Date de Modification</th> <th>Provenance</th> <th>Propriétaire</th><th>Lien</th>
+              </tr>
+            <tbody>
+
+                  <tr *ngFor="let folder of folders" >
+
+                    <td> <h1><span class="glyphicon glyphicon-file"></span></h1>{{ folder.name }} </td>
+                    <td> {{ folder.size }} </td>
+                    <td> {{ folder.date }}</td>
+                    <td> {{ folder.provide }}</td>
+                    <td> {{ folder.owner }}</td>
+                    <td> <a href="{{ folder.link }}" class="glyphicon glyphicon-download-alt" style="margin:auto;"> </a></td>
+                  </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
   `
 })
 export class AllFilesComponent{
 
   public folders : Array<Folder>;
-  public files : string;
+  public files;
 
   constructor(public http: Http){
     this.folders = new Array<Folder>();
@@ -41,20 +63,20 @@ export class AllFilesComponent{
         .subscribe(
           data => this.files = data,
           err => this.logError(err),
-          () => this.consultDataDropbox()
+          () => this.getFilesFromDropbox()
         );
     }
 
-    consultDataDropbox(){
+    getFilesFromDropbox(){
        // console.log(this.files);
-        var filesDetails = JSON.parse(this.files);
-        for(var i = 0; i<filesDetails.contents.length; i++){
-            var name = filesDetails.contents[i].path;
-            var size = filesDetails.contents[i].size;
-            var date = filesDetails.contents[i].modified;
+        var details = this.files.files;
+        for(var i = 0; i < details.length; i++){
+            var name = details[i].path;
+            var size = details[i].size;
+            var date = details[i].modified;
             var prov = "dropbox"
             var own = "Proprietaire";
-            var lien = filesDetails.contents[i].path;
+            var lien = details[i].path;
             this.folders.push(new Folder(name,size,date,prov,own,lien));
         }
         console.log(this.folders[0]);
