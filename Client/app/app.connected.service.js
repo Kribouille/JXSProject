@@ -22,12 +22,12 @@ System.register(['@angular/core'], function(exports_1, context_1) {
                 function Connected() {
                     this.connected = false;
                 }
-                Connected.prototype.isConnected = function () {
+                Connected.prototype.getConnected = function () {
                     return this.connected;
                 };
-                Connected.prototype.connect = function () {
+                Connected.prototype.setConnect = function (bool) {
                     console.log("Connection activée ...");
-                    this.connected = true;
+                    this.connected = bool;
                 };
                 Connected = __decorate([
                     core_1.Injectable(), 
