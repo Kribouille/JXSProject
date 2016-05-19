@@ -26,16 +26,14 @@ export class Login{
  * Se connecter à la fenêtre d'authentification de Dropbox
  */
   connectDropbox() {
-    this.url = 'https://www.dropbox.com/1/oauth2/authorize?client_id=wl5n5wq11bvcnst&response_type=code&redirect_uri=http://localhost:3000/allFiles';
+    this.url = 'https://www.dropbox.com/1/oauth2/authorize?client_id=wl5n5wq11bvcnst&response_type=code&redirect_uri=http://localhost:8080/WSCloudUnifierService/cloudUnifier/authenticate?cloud=db';
     this.http.get(this.url)
     .map(res => res.text())
     .subscribe(  
-      data => console.log('dfgdfgf'),
+      data => console.log('Connection ...'),
       err => this.logError(err),
       () => window.location.href = this.url
       );
-    console.log('Connection ...')
-    this.isconnected()
   }
 
 /**

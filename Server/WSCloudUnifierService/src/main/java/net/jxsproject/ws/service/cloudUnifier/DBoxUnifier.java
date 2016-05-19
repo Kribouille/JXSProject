@@ -54,7 +54,7 @@ public class DBoxUnifier extends CloudUnifier {
   }
 
   @Override
-  public Response authenticate(String code, String callbackUri) {
+  public Response authenticate(String code) {
     if (this.m_clientId == null || this.m_clientSecret == null){
       return Response.status(500).entity("Error config").build();
     }
@@ -64,14 +64,12 @@ public class DBoxUnifier extends CloudUnifier {
       map.put("client_id", this.m_clientId);
       map.put("client_secret", this.m_clientSecret);
       map.put("grant_type", "authorization_code");
-      map.put("redirect_uri", callbackUri);
+      map.put("redirect_uri", "http://localhost:3000/login");
       System.out.println(this.m_clientId);
       String res = this.post("https://api.dropboxapi.com/1/oauth2/token", map);
       JSONObject json = new JSONObject(res);
       System.out.println(json);
       this.m_token = (String) json.get("access_token");
-      System.out.println(this.m_token);
-      System.out.println(this);
       return Response.status(200).entity(json.toString()).build();
     }
   }
