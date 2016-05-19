@@ -7,7 +7,7 @@ import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
+import java.net.URI;
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.File;
@@ -71,7 +71,14 @@ public class DBoxUnifier extends CloudUnifier {
       JSONObject json = new JSONObject(res);
       System.out.println(json);
       this.m_token = (String) json.get("access_token");
-      return Response.status(200).entity(json.toString()).build();
+      try{
+        URI uri = new URI("http://localhost:3000/allFiles");
+        return Response.seeOther(uri).build();
+      }
+      catch(Exception e){
+        e.printStackTrace();
+        return Response.status(500).entity("Error redirection").build();
+      }
     }
   }
 
@@ -196,9 +203,9 @@ public class DBoxUnifier extends CloudUnifier {
           fileToAdd.put("path", nxtPath.substring(1));
           if (file.getBoolean("is_dir")) {
             recursiveRoute(nxtPath,
-                    "https://api.dropboxapi.com/1/metadata/auto" +
-                            nxtPath +
-                            "?access_token=" + this.m_token
+            "https://api.dropboxapi.com/1/metadata/auto" +
+            nxtPath +
+            "?access_token=" + this.m_token
             , currentArray);
           }
           currentArray.put(fileToAdd);
