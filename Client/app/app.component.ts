@@ -29,6 +29,6 @@ export class AppComponent {
 	constructor(private router: Router){}
 
 	ngOnInit() {
-    this.router.navigate(['/allFiles']);
+    this.router.navigate(['/login']);
   }
 }
