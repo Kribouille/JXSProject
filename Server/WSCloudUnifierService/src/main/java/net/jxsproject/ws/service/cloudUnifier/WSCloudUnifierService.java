@@ -128,4 +128,16 @@ public class WSCloudUnifierService {
 		else
 			return null;
 	}
+
+	@GET
+	@Path("share")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response isConnected(@QueryParam("cloud") String cloud, @QueryParam("path") String path) {
+		if(cloud.equals("db"))
+			return this.dropbox.share(path);
+		else if (cloud.equals("drive"))
+			return this.drive.share(path);
+		else
+			return null;
+	}
 }
