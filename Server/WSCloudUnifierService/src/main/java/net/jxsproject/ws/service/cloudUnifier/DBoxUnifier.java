@@ -73,7 +73,7 @@ public class DBoxUnifier extends CloudUnifier {
       map.put("client_id", this.m_clientId);
       map.put("client_secret", this.m_clientSecret);
       map.put("grant_type", "authorization_code");
-      map.put("redirect_uri", "http://localhost:8080/WSCloudUnifierService/cloudUnifier/authenticate?cloud=db");
+      map.put("redirect_uri", "http://localhost:3000/login");
       System.out.println(this.m_clientId);
       String res = this.post("https://api.dropboxapi.com/1/oauth2/token", map);
       JSONObject json = new JSONObject(res);
