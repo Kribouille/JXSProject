@@ -22,9 +22,6 @@ public class WSCloudUnifierService {
 	@Path("cloudAuthorize")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response cloudAuthorize(@QueryParam("cloud") String cloud, String code, @QueryParam("callbackUri") String callbackUri) {
-		System.out.println("CloudAuthorize");
-		System.out.println(cloud);
-		System.out.println(callbackUri);
 		if(cloud.equals("db"))
 			return dropbox.cloudAuthorize(callbackUri);
 		else if (cloud.equals("drive"))
