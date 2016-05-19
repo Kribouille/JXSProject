@@ -25,15 +25,25 @@ System.register(['@angular/http', '@angular/core'], function(exports_1, context_
                 function Login(http) {
                     this.http = http;
                 }
-                Login.prototype.connectDropbox = function () {
-                    window.location.href = this.url;
-                };
+                // connectDropbox() {
+                //   window.location.href = this.url;
+                //   console.log('Authentification !')
+                // }
                 Login.prototype.getURL = function () {
                     var _this = this;
-                    this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/cloudAuthorize?cloud=db&callbackUri=http://localhost:8080/WSCloudUnifierService/cloudUnifier')
+                    this.http.get('https://www.dropbox.com/1/oauth2/authorize?client_id=wl5n5wq11bvcnst&response_type=code&redirect_uri=http://localhost:3000/allFiles')
                         .map(function (res) { return res.text(); })
-                        .subscribe(function (data) { return _this.url = data; }, function (err) { return _this.logError(err); }, function () { return _this.connectDropbox(); });
+                        .subscribe(function (data) { return _this.url = data; }, function (err) { return _this.logError(err); }, function () { return console.log('Authentification !'); });
                 };
+                // getReponse(){
+                //   this.http.get(this.url)
+                //     .map(res => res.json())
+                //     .subscribe(
+                //     data => console.log(data),
+                //     err => this.logError(err),
+                //     () => console.log('truc')
+                //     );
+                // }
                 Login.prototype.logError = function (err) {
                     console.error('ERROR !');
                 };

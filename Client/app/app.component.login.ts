@@ -22,19 +22,30 @@ export class Login{
 
 	}
 
-  connectDropbox() {
-    window.location.href = this.url;
-  }
+  // connectDropbox() {
+  //   window.location.href = this.url;
+  //   console.log('Authentification !')
+  // }
 
   getURL() {
-    this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/cloudAuthorize?cloud=db&callbackUri=http://localhost:8080/WSCloudUnifierService/cloudUnifier')
+    this.http.get('https://www.dropbox.com/1/oauth2/authorize?client_id=wl5n5wq11bvcnst&response_type=code&redirect_uri=http://localhost:3000/allFiles')
       .map(res => res.text())
       .subscribe(
       data => this.url = data,
       err => this.logError(err),
-      () => this.connectDropbox()
+      () => console.log('Authentification !')
       );
   }
+
+  // getReponse(){
+  //   this.http.get(this.url)
+  //     .map(res => res.json())
+  //     .subscribe(
+  //     data => console.log(data),
+  //     err => this.logError(err),
+  //     () => console.log('truc')
+  //     );
+  // }
 
   logError(err){
     console.error('ERROR !');

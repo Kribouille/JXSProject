@@ -44,7 +44,7 @@ System.register(['@angular/core', './menu/app.menu.NavBar.component', './explore
                     this.router = router;
                 }
                 AppComponent.prototype.ngOnInit = function () {
-                    this.router.navigate(['/allFiles']);
+                    this.router.navigate(['/login']);
                 };
                 AppComponent = __decorate([
                     core_1.Component({
