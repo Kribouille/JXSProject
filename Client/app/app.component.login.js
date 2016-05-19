@@ -21,10 +21,13 @@ System.register(['@angular/core'], function(exports_1, context_1) {
             Login = (function () {
                 function Login() {
                 }
+                Login.prototype.connectDropbox = function () {
+                    window.location.href = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/cloudAuthorize?cloud=db&callbackUri=http://localhost:8080/WSCloudUnifierService/cloudUnifier';
+                };
                 Login = __decorate([
                     core_1.Component({
                         selector: 'my_login',
-                        template: "\n  <header>\n    <h1 class=\"title\">Login part</h1>\n  </header>\n  "
+                        template: "\n  <header>\n    <h1 class=\"title\">Connection</h1>\n  </header>\n  <button class=\"btn btn-primary\" (click)=\"connectDropbox()\">Dropbox authentification</button>\n  "
                     }), 
                     __metadata('design:paramtypes', [])
                 ], Login);

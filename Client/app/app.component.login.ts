@@ -5,8 +5,9 @@ import {Component} from '@angular/core';
 	selector: 'my_login',
 	template: `
   <header>
-    <h1 class="title">Login part</h1>
+    <h1 class="title">Connection</h1>
   </header>
+  <button class="btn btn-primary" (click)="connectDropbox()">Dropbox authentification</button>
   `
 })
 
@@ -15,5 +16,9 @@ export class Login{
 	constructor() {
 
 	}
+
+  connectDropbox() {
+    window.location.href = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/cloudAuthorize?cloud=db&callbackUri=http://localhost:8080/WSCloudUnifierService/cloudUnifier';
+  }
 
 }
