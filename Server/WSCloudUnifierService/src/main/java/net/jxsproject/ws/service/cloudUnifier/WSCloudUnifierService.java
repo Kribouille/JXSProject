@@ -93,4 +93,16 @@ public class WSCloudUnifierService {
 			return null;
 	}
 
+	@GET
+	@Path("addFile")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addFile(@QueryParam("cloud") String cloud, @QueryParam("pathFrom") String pathFrom, @QueryParam("pathTo") String pathTo) {
+		if(cloud.equals("db"))
+			return this.dropbox.addFile(pathFrom, pathTo);
+		else if (cloud.equals("drive"))
+			return this.drive.addFile(pathFrom, pathTo);
+		else
+			return null;
+	}
+
 }

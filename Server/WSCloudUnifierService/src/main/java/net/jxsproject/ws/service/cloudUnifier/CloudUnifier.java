@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.apache.http.entity.mime.content.FileBody;
 import org.json.JSONObject;
 
 import javax.ws.rs.core.Response;
@@ -91,4 +92,5 @@ public abstract class CloudUnifier implements ICloudUnifier{
   public abstract Response getUserDetails();
   public abstract Response deleteFile(String path);
   public abstract Response moveFile(String pathFrom, String pathTo);
+  public abstract Response addFile(String pathFrom, String pathTo);
 }

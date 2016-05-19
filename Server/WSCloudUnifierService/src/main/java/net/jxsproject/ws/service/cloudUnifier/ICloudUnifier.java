@@ -16,9 +16,8 @@ public interface ICloudUnifier {
 
   public Response moveFile(String pathFrom, String pathTo);
 
-  /*
-  public Response add(File f);
-
+  public Response addFile(String pathFrom, String pathTo);
+/*
   public Response move(File f, Dir d);
 
   public Response share(File f, Rights r);
