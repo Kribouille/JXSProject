@@ -1,4 +1,4 @@
-System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/router', './app.menu.allFiles.service'], function(exports_1, context_1) {
+System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/router', './app.menu.allFiles.service', '../explorer/app.explorer.fileExplorer.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, http_1, router_1, app_menu_allFiles_service_1;
+    var core_1, common_1, http_1, router_1, app_menu_allFiles_service_1, app_explorer_fileExplorer_component_1;
     var AllFilesComponent, Folder;
     return {
         setters:[
@@ -28,6 +28,9 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
             },
             function (app_menu_allFiles_service_1_1) {
                 app_menu_allFiles_service_1 = app_menu_allFiles_service_1_1;
+            },
+            function (app_explorer_fileExplorer_component_1_1) {
+                app_explorer_fileExplorer_component_1 = app_explorer_fileExplorer_component_1_1;
             }],
         execute: function() {
             AllFilesComponent = (function () {
@@ -67,9 +70,9 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                 AllFilesComponent = __decorate([
                     core_1.Component({
                         selector: "all-files",
-                        directives: [common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES, router_1.ROUTER_DIRECTIVES],
+                        directives: [common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES, router_1.ROUTER_DIRECTIVES, app_explorer_fileExplorer_component_1.FileExplorer],
                         providers: [app_menu_allFiles_service_1.AllFilesService],
-                        template: "\n  <div>\n  <h3>All files on your drive</h3>\n  <p>Firest file, etc</p>\n  </div>\n  "
+                        template: "<div>\n  <h3>All files on your drive</h3>\n  <p>Firest file, etc</p>\n  </div>\n  <file-explorer></file-explorer>\n  "
                     }), 
                     __metadata('design:paramtypes', [http_1.Http])
                 ], AllFilesComponent);

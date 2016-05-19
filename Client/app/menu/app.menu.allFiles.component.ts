@@ -5,17 +5,18 @@ import {Http, Headers} from '@angular/http';
 import {NgForm} from '@angular/common';
 import {Router} from '@angular/router';
 import { ROUTER_DIRECTIVES, Routes } from '@angular/router';
-import {AllFilesService} from './app.menu.allFiles.service'
+import {AllFilesService} from './app.menu.allFiles.service';
+import {FileExplorer} from '../explorer/app.explorer.fileExplorer.component';
 
 @Component({
   selector:"all-files",
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES ],
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, FileExplorer ],
   providers:[AllFilesService],
-  template:`
-  <div>
+  template:`<div>
   <h3>All files on your drive</h3>
   <p>Firest file, etc</p>
   </div>
+  <file-explorer></file-explorer>
   `
 })
 export class AllFilesComponent{
@@ -29,18 +30,10 @@ export class AllFilesComponent{
     this.getFiles();
 
 }
-
-
-
-
-
     getFiles(){
       //dropbox for now
       return this.getFilesDropbox();
     }
-
-
-
 
     getFilesDropbox() {
         this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/getTree?cloud=db&path=/')
@@ -72,7 +65,6 @@ export class AllFilesComponent{
         console.error('ERROR get all files ' + err);
     }
 }
-
 
 class Folder{
     _name: String;
