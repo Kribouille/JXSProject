@@ -1,4 +1,4 @@
-System.register(['@angular/core', './menu/app.menu.NavBar.component', './explorer/app.explorer.fileExplorer.component', '@angular/router', './app.component.login', './menu/app.menu.allFiles.component', './menu/app.menu.sharedFiles', './menu/app.menu.dashboard.component'], function(exports_1, context_1) {
+System.register(['@angular/core', './menu/app.menu.NavBar.component', './explorer/app.explorer.fileExplorer.component', '@angular/router', './app.component.login', './menu/app.menu.allFiles.component', './menu/app.menu.sharedFiles', './menu/app.menu.dashboard.component', './app.connected.service'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['@angular/core', './menu/app.menu.NavBar.component', './explore
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, app_menu_NavBar_component_1, app_explorer_fileExplorer_component_1, router_1, app_component_login_1, app_menu_allFiles_component_1, app_menu_sharedFiles_1, app_menu_dashboard_component_1;
+    var core_1, app_menu_NavBar_component_1, app_explorer_fileExplorer_component_1, router_1, app_component_login_1, app_menu_allFiles_component_1, app_menu_sharedFiles_1, app_menu_dashboard_component_1, app_connected_service_1;
     var AppComponent;
     return {
         setters:[
@@ -37,6 +37,9 @@ System.register(['@angular/core', './menu/app.menu.NavBar.component', './explore
             },
             function (app_menu_dashboard_component_1_1) {
                 app_menu_dashboard_component_1 = app_menu_dashboard_component_1_1;
+            },
+            function (app_connected_service_1_1) {
+                app_connected_service_1 = app_connected_service_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
@@ -51,6 +54,7 @@ System.register(['@angular/core', './menu/app.menu.NavBar.component', './explore
                         selector: 'my-app',
                         template: "<h1>My Fcx 2 App</h1>\n\t<my_navBar></my_navBar>\n\t<file-explorer></file-explorer>\n\n\n\t",
                         directives: [app_menu_NavBar_component_1.MyNavBar, app_explorer_fileExplorer_component_1.FileExplorer, router_1.ROUTER_DIRECTIVES],
+                        providers: [app_connected_service_1.Connected]
                     }),
                     router_1.Routes([
                         //{ path: '/crisis-center', component: CrisisListComponent },

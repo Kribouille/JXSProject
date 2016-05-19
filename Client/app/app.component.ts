@@ -6,7 +6,7 @@ import {Login} from './app.component.login';
 import {AllFilesComponent} from './menu/app.menu.allFiles.component';
 import {SharedWithUserFilesComponent} from './menu/app.menu.sharedFiles';
 import {DashBoardComponent} from './menu/app.menu.dashboard.component';
-
+import {Connected} from './app.connected.service'
 @Component({
 	selector: 'my-app',
 	template: `<h1>My Fcx 2 App</h1>
@@ -16,6 +16,7 @@ import {DashBoardComponent} from './menu/app.menu.dashboard.component';
 
 	`,
 	directives:[MyNavBar, FileExplorer, ROUTER_DIRECTIVES],
+	providers:[Connected]
 })
 @Routes([
 		//{ path: '/crisis-center', component: CrisisListComponent },

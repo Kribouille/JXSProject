@@ -4,7 +4,7 @@ import {Login} from '../app.component.login';
 import {AllFilesComponent} from './app.menu.allFiles.component';
 import {SharedWithUserFilesComponent} from './app.menu.sharedFiles';
 import {DashBoardComponent} from './app.menu.dashboard.component';
-
+import {Connected} from '../app.connected.service'
 @Component({
 	selector: 'my_navBar',
 	templateUrl: 'app/menu/my_navBar.html',
@@ -17,7 +17,7 @@ import {DashBoardComponent} from './app.menu.dashboard.component';
 		{ path: '/login', component: Login },
 		{ path: '*', component: AllFilesComponent }])
 export class MyNavBar{
-	constructor(private connected:boolean=false){
+	constructor(private connect:Connected){
 
 	}
 }
