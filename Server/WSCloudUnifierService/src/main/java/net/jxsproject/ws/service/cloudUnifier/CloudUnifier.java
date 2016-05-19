@@ -24,6 +24,10 @@ public abstract class CloudUnifier implements ICloudUnifier{
   protected String m_clientSecret = "";
   protected String callbackUri;
   protected String m_token = ""; //[PUT TOKEN HERE]
+  //To transform an ID to a File with some infos
+ //protected  Map<String, GoogleFile> _IdToFile = null;
+ //To transform a path to an ID
+ //protected Map<String, String> _pathToId = null;
 
   protected String readF(String path) {
     try {
