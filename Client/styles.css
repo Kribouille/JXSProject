@@ -13,19 +13,14 @@ body {
   margin: 2em;
 }
 body, input[text], button {
-  color: #888;
+  color: #88
   font-family: Cambria, Georgia;
 }
-
-courses {
-  float: left;
-  margin:10px;
+.navbar > ul > li > a
+{
+  color: white;
 }
 
-infos{
-  float: right;
-  margin:10px;
-}
 /*
  * See https://github.com/angular/angular.io/blob/master/public/docs/_examples/styles.css
  * for the full set of master styles used by the documentation samples

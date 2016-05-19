@@ -34,12 +34,10 @@ System.register(['@angular/http', '@angular/core', './app.connected.service'], f
                  */
                 Login.prototype.connectDropbox = function () {
                     var _this = this;
-                    this.url = 'https://www.dropbox.com/1/oauth2/authorize?client_id=wl5n5wq11bvcnst&response_type=code&redirect_uri=http://localhost:3000/allFiles';
+                    this.url = 'https://www.dropbox.com/1/oauth2/authorize?client_id=wl5n5wq11bvcnst&response_type=code&redirect_uri=http://localhost:8080/WSCloudUnifierService/cloudUnifier/authenticate?cloud=db';
                     this.http.get(this.url)
                         .map(function (res) { return res.text(); })
-                        .subscribe(function (data) { return console.log('dfgdfgf'); }, function (err) { return _this.logError(err); }, function () { return window.location.href = _this.url; });
-                    console.log('Connection ...');
-                    this.isconnected();
+                        .subscribe(function (data) { return console.log('Connection ...'); }, function (err) { return _this.logError(err); }, function () { return window.location.href = _this.url; });
                 };
                 /**
                  * Vérifie que le client est connecté
