@@ -11,7 +11,7 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, common_1, http_1, router_1, app_menu_allFiles_service_1, app_explorer_fileExplorer_component_1;
-    var AllFilesComponent, Folder;
+    var AllFilesComponent, FileFolder;
     return {
         setters:[
             function (core_1_1) {
@@ -36,6 +36,7 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
             AllFilesComponent = (function () {
                 function AllFilesComponent(http) {
                     this.http = http;
+                    this.nbFolders = 0;
                     this.folders = new Array();
                     this.http = http;
                     this.getFiles();
@@ -55,12 +56,8 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                     var details = this.files.files;
                     for (var i = 0; i < details.length; i++) {
                         var name = details[i].path;
-                        var size = details[i].size;
-                        var date = details[i].modified;
-                        var prov = "dropbox";
-                        var own = "Proprietaire";
-                        var lien = details[i].path;
-                        this.folders.push(new Folder(name, size, date, prov, own, lien));
+                        this.folders.push(new FileFolder(name));
+                        this.nbFolders++;
                     }
                     console.log(this.folders[0]);
                 };
@@ -72,29 +69,40 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                         selector: "all-files",
                         directives: [common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES, router_1.ROUTER_DIRECTIVES, app_explorer_fileExplorer_component_1.FileExplorer],
                         providers: [app_menu_allFiles_service_1.AllFilesService],
-                        template: "\n  <div class=\"panel panel-default\">\n        <div class=\"panel-heading\">\n          <h2 class=\"panel-title\">Documents </h2>\n        </div>\n        <div class=\"panel-body\">\n          <span class=\"counter pull-right\"></span>\n          <table class=\"table table-bordered table-responsive table-hover results\" id=\"dataTables-example\">\n              <tr>\n                <th>Nom</th> <th>taille</th> <th>Date de Modification</th> <th>Provenance</th> <th>Propri\u00E9taire</th><th>Lien</th>\n              </tr>\n            <tbody>\n\n                  <tr *ngFor=\"let folder of folders\" >\n\n                    <td> <h1><span class=\"glyphicon glyphicon-file\"></span></h1>{{ folder.name }} </td>\n                    <td> {{ folder.size }} </td>\n                    <td> {{ folder.date }}</td>\n                    <td> {{ folder.provide }}</td>\n                    <td> {{ folder.owner }}</td>\n                    <td> <a href=\"{{ folder.link }}\" class=\"glyphicon glyphicon-download-alt\" style=\"margin:auto;\"> </a></td>\n                  </tr>\n\n            </tbody>\n          </table>\n        </div>\n      </div>\n  "
+                        templateUrl: './app/menu/displayFiles.html'
                     }), 
                     __metadata('design:paramtypes', [http_1.Http])
                 ], AllFilesComponent);
                 return AllFilesComponent;
             }());
             exports_1("AllFilesComponent", AllFilesComponent);
-            Folder = (function () {
-                function Folder(name, size, date, provide, own, link) {
+            FileFolder = (function () {
+                function FileFolder(name) {
                     this.name = name;
-                    this.size = size;
-                    this.date = date;
-                    this.provide = provide;
-                    this.own = own;
-                    this.link = link;
+                    this._toDisplay = true;
                     this._name = name;
-                    this._size = size;
-                    this._date = date;
-                    this._provide = provide;
-                    this._own = own;
-                    this._link = link;
+                    if (this._name.indexOf('/') > -1) {
+                        this._toDisplay = false;
+                        if (this._name.indexOf('.') > -1) {
+                            this._isFolder = false; //le fichier est dans un sous-dossier
+                        }
+                        else {
+                            this._isFolder = true; // sous-dossier
+                        }
+                    }
+                    else {
+                        if (this._name.indexOf('.') > -1) {
+                            this._isFolder = false; // cas ou le fichier est a la racine
+                        }
+                        else {
+                            this._isFolder = true; //dossier dans la racine
+                        }
+                    }
+                    this._toDisplayAndIsFolder = this._toDisplay && this._isFolder;
+                    this._toDisplayAndIsFile = this._toDisplay && !this._isFolder;
+                    console.log("name : " + this._name + ", display : " + this._toDisplay + ", folder : " + this._isFolder);
                 }
-                return Folder;
+                return FileFolder;
             }());
         }
     }
