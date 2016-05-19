@@ -23,6 +23,8 @@ public interface ICloudUnifier {
   public Response isConnected();
 
   public Response share(String path);
+
+  public Response download(String path);
 /*
   public Response move(File f, Dir d);
 

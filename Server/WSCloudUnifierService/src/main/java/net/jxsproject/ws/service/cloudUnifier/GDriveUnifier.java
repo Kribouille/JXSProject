@@ -1,37 +1,17 @@
 package net.jxsproject.ws.service.cloudUnifier;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.FileEntity;
-import org.apache.http.impl.client.HttpClients;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import com.google.common.collect.ImmutableMap;
-import javax.ws.rs.core.Response;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.net.URI;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import javax.ws.rs.core.Response;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GDriveUnifier extends CloudUnifier {
@@ -63,12 +43,8 @@ public class GDriveUnifier extends CloudUnifier {
   public Response cloudAuthorize(String callbackUri) {
     Map<String, String> jsonContent = new HashMap();
 
-    if (this.m_clientId == null) {
-      jsonContent.put("err", "incorrect config (app_key)");
-    } else if (this.m_clientSecret == null) {
-      jsonContent.put("err", "incorrect config (app_secret)");
-    } else if (this.callbackUri == null) {
-      jsonContent.put("err", "incorrect config (callback_url)");
+    if (isBadConfig()){
+      return Response.status(500).entity("Error config").build();
     } else {
       this.callbackUri=callbackUri;
       String url = new StringBuilder(
@@ -102,9 +78,8 @@ public class GDriveUnifier extends CloudUnifier {
       .put("grant_type", "authorization_code").build());
 
       JSONObject obj = new JSONObject(body);
-      accessToken = obj.getString("access_token");
 
-      this.m_token = accessToken;
+      this.m_token = obj.getString("access_token");
       jsonContent.put("token", accessToken);
     } catch (Exception e) {
       jsonContent.put("err", "Unable to parse json " + body);
@@ -163,6 +138,9 @@ public class GDriveUnifier extends CloudUnifier {
 
   @Override
   public Response share(final String path) {return null;}
+
+  @Override
+  public Response download(String path) {return null;}
 
   /*public void synchronize(){
     try {

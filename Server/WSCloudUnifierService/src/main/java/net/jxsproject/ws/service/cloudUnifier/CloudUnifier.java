@@ -22,8 +22,9 @@ public abstract class CloudUnifier implements ICloudUnifier{
 
   protected String m_clientId = "";
   protected String m_clientSecret = "";
-  protected String callbackUri;
+  protected String callbackUri = "";
   protected String m_token = ""; //[PUT TOKEN HERE]
+
   //To transform an ID to a File with some infos
  //protected  Map<String, GoogleFile> _IdToFile = null;
  //To transform a path to an ID
@@ -93,6 +94,12 @@ public abstract class CloudUnifier implements ICloudUnifier{
     return null;
   }
 
+  protected boolean isBadConfig() {
+    if (this.m_clientId == null || this.m_clientSecret == null || this.callbackUri == null)
+      return true;
+    return false;
+  }
+
   public abstract Response cloudAuthorize(String callbackUri);
   public abstract Response authenticate(String code);
   public abstract Response getFileDetails(String path);
@@ -103,5 +110,6 @@ public abstract class CloudUnifier implements ICloudUnifier{
   public abstract Response getTree(String path);
   public abstract Response share(String path);
   public abstract Response isConnected();
+  public abstract Response download(String path);
 
 }

@@ -32,7 +32,7 @@ public class DBoxUnifier extends CloudUnifier {
 
       this.m_clientId = (String) config.get("client_id");
       this.m_clientSecret = (String) config.get("client_secret");
-      this.callbackUri = (String) config.get("callbackUri");
+      this.callbackUri = (String) config.get("callback_uri");
     } catch (Exception e) {
       e.printStackTrace();
       this.m_clientId = null;
@@ -42,8 +42,7 @@ public class DBoxUnifier extends CloudUnifier {
 
   @Override
   public Response cloudAuthorize(String callbackUri) {
-
-    if (this.m_clientId == null || this.m_clientSecret == null){
+    if (isBadConfig()){
       return Response.status(500).entity("Error config").build();
     }
     else {
@@ -56,7 +55,7 @@ public class DBoxUnifier extends CloudUnifier {
 
   @Override
   public Response authenticate(String code) {
-    if (this.m_clientId == null || this.m_clientSecret == null){
+    if (isBadConfig()){
       return Response.status(500).entity("Error config").build();
     }
     else {
@@ -84,11 +83,10 @@ public class DBoxUnifier extends CloudUnifier {
 
   @Override
   public Response getFileDetails(String path) {
-    if (this.m_clientId == null || this.m_clientSecret == null){
+    if (isBadConfig()){
       return Response.status(500).entity("Error config").build();
     }
     else {
-      //map.put("Authorization", "Bearer " + this.m_token);
       System.out.println(this);
       System.out.println(this.m_token);
       String url = String.format("https://api.dropboxapi.com/1/metadata/auto/%s?access_token=%s", path, this.m_token);
@@ -102,7 +100,7 @@ public class DBoxUnifier extends CloudUnifier {
 
   @Override
   public Response getUserDetails() {
-    if (this.m_clientId == null || this.m_clientSecret == null){
+    if (isBadConfig()){
       return Response.status(500).entity("Error config").build();
     }
     else {
@@ -116,7 +114,7 @@ public class DBoxUnifier extends CloudUnifier {
   }
   @Override
   public Response deleteFile(String path) {
-    if (this.m_clientId == null || this.m_clientSecret == null){
+    if (isBadConfig()){
       return Response.status(500).entity("Error config").build();
     }
     else {
@@ -129,7 +127,7 @@ public class DBoxUnifier extends CloudUnifier {
 
   @Override
   public Response moveFile(final String pathFrom, final String pathTo) {
-    if (this.m_clientId == null || this.m_clientSecret == null){
+    if (isBadConfig()){
       return Response.status(500).entity("Error config").build();
     }
     else {
@@ -143,7 +141,7 @@ public class DBoxUnifier extends CloudUnifier {
   @Override
   public Response addFile(final String pathFrom, final String pathTo) {
     String output = "";
-    if (this.m_clientId == null || this.m_clientSecret == null){
+    if (isBadConfig()){
       return Response.status(500).entity("Error config").build();
     }
     else {
@@ -171,22 +169,27 @@ public class DBoxUnifier extends CloudUnifier {
 
   @Override
   public Response getTree(final String path) {
-    JSONObject result = new JSONObject();
-    try {
-      JSONArray array = new JSONArray();
-      recursiveRoute("",
-      new StringBuilder("https://api.dropboxapi.com/1/metadata/auto/")
-      .append(path).append("?access_token=").append(this.m_token)
-      .toString(),
-      array
-      );
-      result.put("files", array);
-    } catch (Exception e) {
-      JSONObject err = new JSONObject();
-      err.put("err", "Unable to parse json ");
-      return Response.status(500).entity(err.toString()).build();
+    if (isBadConfig()){
+      return Response.status(500).entity("Error config").build();
     }
-    return Response.status(200).entity(result.toString()).build();
+    else {
+      JSONObject result = new JSONObject();
+      try {
+        JSONArray array = new JSONArray();
+        recursiveRoute("",
+                new StringBuilder("https://api.dropboxapi.com/1/metadata/auto/")
+                        .append(path).append("?access_token=").append(this.m_token)
+                        .toString(),
+                array
+        );
+        result.put("files", array);
+      } catch (Exception e) {
+        JSONObject err = new JSONObject();
+        err.put("err", "Unable to parse json ");
+        return Response.status(500).entity(err.toString()).build();
+      }
+      return Response.status(200).entity(result.toString()).build();
+    }
   }
 
   public void recursiveRoute(final String currentPath, final String url,final JSONArray currentArray) {
@@ -226,7 +229,6 @@ public class DBoxUnifier extends CloudUnifier {
     return Response.status(200).entity(res.toString()).build();
   }
 
-
   @Override
   public Response share(final String path){
     if (this.m_clientId == null || this.m_clientSecret == null){
@@ -239,4 +241,24 @@ public class DBoxUnifier extends CloudUnifier {
       return Response.status(200).entity(json.toString()).build();
     }
   }
+
+  @Override
+  public Response download(String path) {
+    if (this.m_clientId == null || this.m_clientSecret == null){
+      return Response.status(500).entity("Error config").build();
+    } else {
+      try {
+        String url = String.format("https://content.dropboxapi.com/1/files/auto/%s?access_token=%s", path, this.m_token);
+
+        String res = this.get(url, new HashMap<String, String>());
+        JSONObject json = new JSONObject();
+        json.put("raw_data", res);
+
+        return Response.status(200).entity(json.toString()).build();
+      } catch (Exception e) {
+        return Response.status(500).entity("Error Download : " + e.toString()).build();
+      }
+    }
+  }
+
 }

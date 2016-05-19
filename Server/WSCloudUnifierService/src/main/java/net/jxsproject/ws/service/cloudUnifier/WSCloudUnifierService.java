@@ -140,4 +140,16 @@ public class WSCloudUnifierService {
 		else
 			return null;
 	}
+
+	@GET
+	@Path("download")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response download(@QueryParam("cloud") String cloud, @QueryParam("path") String path) {
+		if(cloud.equals("db"))
+			return this.dropbox.download(path);
+		else if (cloud.equals("drive"))
+			return this.drive.download(path);
+		else
+			return null;
+	}
 }
