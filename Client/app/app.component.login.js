@@ -37,7 +37,7 @@ System.register(['@angular/http', '@angular/core', './app.connected.service'], f
                  */
                 Login.prototype.connectDropbox = function () {
                     var _this = this;
-                    this.url = 'https://www.dropbox.com/1/oauth2/authorize?client_id=wl5n5wq11bvcnst&response_type=code&redirect_uri=http://localhost:8080/WSCloudUnifierService/cloudUnifier/authenticate?cloud=db';
+                    this.url = 'https://www.dropbox.com/1/oauth2/authorize?client_id=wl5n5wq11bvcnst&response_type=code&redirect_uri=http://localhost:3000/allFiles';
                     this.http.get(this.url, this.headers)
                         .map(function (res) { return res.text(); })
                         .subscribe(function (data) { return console.log('Connection ...'); }, function (err) { return _this.logError(err); }, function () { return window.location.href = _this.url; });
@@ -62,7 +62,7 @@ System.register(['@angular/http', '@angular/core', './app.connected.service'], f
                 Login = __decorate([
                     core_1.Component({
                         selector: 'my_login',
-                        template: "\n  <header>\n  <h1 class=\"title\">Connection</h1>\n  </header>\n  <button class=\"btn btn-primary\" (click)=\"connectDropbox()\">DROPBOX</button>\n  <br><br><br>\n  "
+                        template: "\n  <header>\n  <h1 class=\"title\">Connection</h1>\n  </header>\n  <span id=\"buttons\">\n  <button style=\"height:50px;width:100px\"class=\"btn btn-primary\" (click)=\"connectDropbox()\">DROPBOX</button>\n  <button style=\"height:50px;width:100px\" class=\"btn btn-primary\" (click)=\"connectDropbox()\">GOOGLE DRIVE</button>\n  </span>\n  <br><br><br>\n  "
                     }), 
                     __metadata('design:paramtypes', [http_1.Http, app_connected_service_1.Connected])
                 ], Login);

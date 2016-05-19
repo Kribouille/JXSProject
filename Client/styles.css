@@ -20,6 +20,11 @@ body, input[text], button {
 {
   color: white;
 }
+#buttons
+{
+  text-align: center; 
+  display: block;
+}
 
 /*
  * See https://github.com/angular/angular.io/blob/master/public/docs/_examples/styles.css

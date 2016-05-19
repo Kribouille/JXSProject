@@ -11,12 +11,9 @@ import {Connected} from './app.connected.service'
 	selector: 'my-app',
 	template: `
 	<div class="page-header">
-  <h1>Chili Kribouille Carne<small> Le Cloud du turfu</small></h1>
+  <h1>Chili Conbouille Carne<small> Le Cloud du turfu</small></h1>
 </div>
 	<my_navBar></my_navBar>
-	<file-explorer></file-explorer>
-
-
 	`,
 	directives:[MyNavBar, FileExplorer, ROUTER_DIRECTIVES],
 	providers:[Connected]
