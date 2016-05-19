@@ -65,4 +65,7 @@ public class GDriveUnifier extends CloudUnifier {
   @Override
   public Response isConnected() {return null;}
 
+  @Override
+  public Response share(final String path) {return null;}
+
 }

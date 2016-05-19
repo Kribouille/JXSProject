@@ -229,4 +229,18 @@ public class DBoxUnifier extends CloudUnifier {
     }
     return Response.status(200).entity(res.toString()).build();
   }
+
+
+  @Override
+  public Response share(final String path){
+    if (this.m_clientId == null || this.m_clientSecret == null){
+      return Response.status(500).entity("Error config").build();
+    }
+    else {
+      String url = String.format("https://api.dropboxapi.com/1/shares/auto/%s?access_token=%s", path, this.m_token);
+      String res = this.post(url, new HashMap<String, String>());
+      JSONObject json = new JSONObject(res);
+      return Response.status(200).entity(json.toString()).build();
+    }
+  }
 }

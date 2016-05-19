@@ -4,15 +4,15 @@ import javax.ws.rs.core.Response;
 
 public interface ICloudUnifier {
 
-  Response cloudAuthorize(String callbackUri);
+  public Response cloudAuthorize(String callbackUri);
 
-  Response authenticate(String code, String callbackUri);
+  public Response authenticate(String code, String callbackUri);
 
-  Response getFileDetails(String f);
+  public Response getFileDetails(String f);
 
-  Response getUserDetails();
+  public Response getUserDetails();
 
-  Response deleteFile(String file);
+  public Response deleteFile(String file);
 
   public Response moveFile(String pathFrom, String pathTo);
 
@@ -21,10 +21,12 @@ public interface ICloudUnifier {
   public Response getTree(String path);
 
   public Response isConnected();
+
+  public Response share(String path);
 /*
   public Response move(File f, Dir d);
 
-  public Response share(File f, Rights r);
+
 
   public Response getCloudData();
 **/
