@@ -9,7 +9,10 @@ import {DashBoardComponent} from './menu/app.menu.dashboard.component';
 import {Connected} from './app.connected.service'
 @Component({
 	selector: 'my-app',
-	template: `<h1>My Fcx 2 App</h1>
+	template: `
+	<div class="page-header">
+  <h1>Chili Kribouille Carne<small> Le Cloud du turfu</small></h1>
+</div>
 	<my_navBar></my_navBar>
 	<file-explorer></file-explorer>
 
