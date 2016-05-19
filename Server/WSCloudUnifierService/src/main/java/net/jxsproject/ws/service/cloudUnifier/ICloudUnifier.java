@@ -14,9 +14,13 @@ public interface ICloudUnifier {
 
   Response deleteFile(String file);
 
-  Response moveFile(String pathFrom, String pathTo);
+  public Response moveFile(String pathFrom, String pathTo);
 
-  Response addFile(String pathFrom, String pathTo);
+  public Response addFile(String pathFrom, String pathTo);
+
+  public Response getTree(String path);
+
+  public Response isConnected();
 /*
   public Response move(File f, Dir d);
 

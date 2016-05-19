@@ -105,4 +105,27 @@ public class WSCloudUnifierService {
 			return null;
 	}
 
+	@GET
+	@Path("getTree")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTree(@QueryParam("cloud") String cloud, @QueryParam("path") String path) {
+		if(cloud.equals("db"))
+			return this.dropbox.getTree(path);
+		else if (cloud.equals("drive"))
+			return this.drive.getTree(path);
+		else
+			return null;
+	}
+
+	@GET
+	@Path("isConnected")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response isConnected(@QueryParam("cloud") String cloud) {
+		if(cloud.equals("db"))
+			return this.dropbox.isConnected();
+		else if (cloud.equals("drive"))
+			return this.drive.isConnected();
+		else
+			return null;
+	}
 }

@@ -18,6 +18,7 @@ import java.io.OutputStream;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 
 public class DBoxUnifier extends CloudUnifier {
 
@@ -29,7 +30,7 @@ public class DBoxUnifier extends CloudUnifier {
 
   public static ICloudUnifier getInstance() {
     if (instance == null)
-      instance = new DBoxUnifier();
+    instance = new DBoxUnifier();
 
     return instance;
   }
@@ -149,8 +150,7 @@ public class DBoxUnifier extends CloudUnifier {
       return Response.status(500).entity("Error config").build();
     }
     else {
-      String url = "https://content.dropboxapi.com/1/files_put/auto/"
-              + pathTo + "?access_token=" + this.m_token;
+      String url = "https://content.dropboxapi.com/1/files_put/auto/" + pathTo + "?access_token=" + this.m_token;
       HttpClient httpclient = HttpClients.createDefault();
       StringBuilder result = new StringBuilder();
       File file = new File(pathFrom);
@@ -160,7 +160,7 @@ public class DBoxUnifier extends CloudUnifier {
         putRequest.setEntity(input);
         HttpResponse response = httpclient.execute(putRequest);
         BufferedReader br = new BufferedReader(new InputStreamReader(
-                (response.getEntity().getContent())));
+        (response.getEntity().getContent())));
         while ((output = br.readLine()) != null) {
           result.append(output);
         }
@@ -170,5 +170,63 @@ public class DBoxUnifier extends CloudUnifier {
         return Response.status(500).entity("Error upload").build();
       }
     }
+  }
+
+  @Override
+  public Response getTree(final String path) {
+    JSONObject result = new JSONObject();
+    try {
+      JSONArray array = new JSONArray();
+      recursiveRoute("",
+      new StringBuilder("https://api.dropboxapi.com/1/metadata/auto/")
+      .append(path).append("?access_token=").append(this.m_token)
+      .toString(),
+      array
+      );
+      result.put("files", array);
+    } catch (Exception e) {
+      JSONObject err = new JSONObject();
+      err.put("err", "Unable to parse json ");
+      return Response.status(500).entity(err.toString()).build();
+    }
+    return Response.status(200).entity(result.toString()).build();
+  }
+
+  public void recursiveRoute(final String currentPath,final String url,final JSONArray currentArray) {
+    try {
+      String res = this.get(url, new HashMap<String,String>());
+      JSONObject responseObj = new JSONObject(res);
+
+      if (responseObj.getBoolean("is_dir")) {
+        JSONArray sub = responseObj.getJSONArray("contents");
+        for (int i = 0; i < sub.length(); ++i) {
+          JSONObject file = sub.getJSONObject(i);
+          JSONObject fileToAdd = new JSONObject();
+          String nxtPath = file.getString("path");
+          fileToAdd.put("path", nxtPath.substring(1));
+          if (file.getBoolean("is_dir")) {
+            recursiveRoute(nxtPath,
+            new StringBuilder("https://api.dropboxapi.com/1/metadata/auto")
+            .append(nxtPath)
+            .append("?access_token=").append(this.m_token)
+            .toString()
+            , currentArray);
+          }
+          currentArray.put(fileToAdd);
+        }
+      }
+    } catch (Exception e) { e.getMessage(); }
+  }
+
+  @Override
+  public Response isConnected(){
+    JSONObject res = new JSONObject();
+    if(this.m_token!=""){
+      res.put("isConnected", "true");
+    }
+    else{
+      res.put("isConnected", "false");
+    }
+    return Response.status(200).entity(res.toString()).build();
   }
 }

@@ -93,4 +93,6 @@ public abstract class CloudUnifier implements ICloudUnifier{
   public abstract Response deleteFile(String path);
   public abstract Response moveFile(String pathFrom, String pathTo);
   public abstract Response addFile(String pathFrom, String pathTo);
+  public abstract Response getTree(String path);
+
 }
