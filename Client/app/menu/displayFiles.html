@@ -12,8 +12,8 @@
               <tbody>
 
                   <tr *ngFor="let filefolder of folders" >
-                    <td *ngIf="filefolder._toDisplayAndIsFolder" class="folder"> <h1><span class="glyphicon glyphicon-folder-close"></span></h1>{{ filefolder.name }} </td>
-                    <td *ngIf="filefolder._toDisplayAndIsFile" class="file"> <h1><span class="glyphicon glyphicon-file"></span></h1>{{ filefolder.name }} </td>
+                    <td *ngIf="filefolder._toDisplayAndIsFolder" class="folder" (click)="onSelect(filefolder)"> <h1><span class="glyphicon glyphicon-folder-close"></span></h1>{{ filefolder.name }} </td>
+                    <td *ngIf="filefolder._toDisplayAndIsFile" class="file" (click)="onSelect(filefolder)"> <h1><span class="glyphicon glyphicon-file"></span></h1>{{ filefolder.name }} </td>
                   </tr>
 
               </tbody>
@@ -28,8 +28,8 @@
               </tr>
               <tbody>
                 <tr>
-                    <td>
-                      Voici les infos : blablabla
+                    <td >
+                      <div *ngIf="folders._selected">{{folders._selected.getInfos()}}</div>
                     </td>
                 </tr>
 

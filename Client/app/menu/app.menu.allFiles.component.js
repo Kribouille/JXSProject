@@ -56,13 +56,14 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                     var details = this.files.files;
                     for (var i = 0; i < details.length; i++) {
                         var name = details[i].path;
-                        this.folders.push(new FileFolder(name));
+                        this.folders.push(new FileFolder(name, this.http));
                         this.nbFolders++;
                     }
                     console.log(this.folders[0]);
                 };
+                AllFilesComponent.prototype.onSelect = function (f) { this._selected = f; f.getInfos(); };
                 AllFilesComponent.prototype.logError = function (err) {
-                    console.error('ERROR get all files ' + err);
+                    console.error('ERROR get all files/folders ' + err);
                 };
                 AllFilesComponent = __decorate([
                     core_1.Component({
@@ -77,31 +78,48 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
             }());
             exports_1("AllFilesComponent", AllFilesComponent);
             FileFolder = (function () {
-                function FileFolder(name) {
+                function FileFolder(name, http) {
                     this.name = name;
+                    this.http = http;
                     this._toDisplay = true;
+                    //inititalisation du type
                     this._name = name;
                     if (this._name.indexOf('/') > -1) {
                         this._toDisplay = false;
                         if (this._name.indexOf('.') > -1) {
-                            this._isFolder = false; //le fichier est dans un sous-dossier
-                        }
+                            this._isFolder = false;
+                        } //le fichier est dans un sous-dossier
                         else {
-                            this._isFolder = true; // sous-dossier
-                        }
+                            this._isFolder = true;
+                        } // sous-dossier
                     }
                     else {
                         if (this._name.indexOf('.') > -1) {
-                            this._isFolder = false; // cas ou le fichier est a la racine
-                        }
+                            this._isFolder = false;
+                        } // cas ou le fichier est a la racine
                         else {
-                            this._isFolder = true; //dossier dans la racine
-                        }
+                            this._isFolder = true;
+                        } //dossier dans la racine
                     }
                     this._toDisplayAndIsFolder = this._toDisplay && this._isFolder;
                     this._toDisplayAndIsFile = this._toDisplay && !this._isFolder;
-                    console.log("name : " + this._name + ", display : " + this._toDisplay + ", folder : " + this._isFolder);
+                    //console.log("name : " + this._name +"is Dir :" + informations[0]);
                 }
+                FileFolder.prototype.setInfos = function (infos) {
+                    this._informations = infos;
+                };
+                FileFolder.prototype.getInfos = function () {
+                    var _this = this;
+                    var url = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/getFDetails?cloud=db&path=' + this._name;
+                    this.http.get(url)
+                        .map(function (res) { return res.json(); })
+                        .subscribe(function (data) { return _this.setInfos(data); }, function (err) { return _this.logError(err); });
+                    console.log("infos : " + this._informations);
+                    return this._informations;
+                };
+                FileFolder.prototype.logError = function (err) {
+                    console.error('ERROR get infos of file or folder ' + err);
+                };
                 return FileFolder;
             }());
         }
