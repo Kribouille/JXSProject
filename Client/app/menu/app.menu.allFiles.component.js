@@ -1,4 +1,4 @@
-System.register(['@angular/core'], function(exports_1, context_1) {
+System.register(['@angular/core', '../explorer/app.explorer.fileExplorer.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,12 +10,15 @@ System.register(['@angular/core'], function(exports_1, context_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1;
+    var core_1, app_explorer_fileExplorer_component_1;
     var AllFilesComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (app_explorer_fileExplorer_component_1_1) {
+                app_explorer_fileExplorer_component_1 = app_explorer_fileExplorer_component_1_1;
             }],
         execute: function() {
             AllFilesComponent = (function () {
@@ -24,7 +27,8 @@ System.register(['@angular/core'], function(exports_1, context_1) {
                 AllFilesComponent = __decorate([
                     core_1.Component({
                         selector: "all-files",
-                        template: "\n  <div>\n  <h3>All files on your drive</h3>\n  <p>Firest file, etc</p>\n  </div>\n  "
+                        template: "\n  <div>\n  <h3>All files on your drive</h3>\n  <p>Firest file, etc</p>\n  </div>\n  <file-explorer></file-explorer>\n  ",
+                        directives: [app_explorer_fileExplorer_component_1.FileExplorer]
                     }), 
                     __metadata('design:paramtypes', [])
                 ], AllFilesComponent);
