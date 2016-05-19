@@ -36,11 +36,11 @@ public class WSCloudUnifierService {
 	@GET
 	@Path("authenticate")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response authenticate(@QueryParam("cloud") String cloud, @QueryParam("code") String code, @QueryParam("callbackUri") String callbackUri) {
+	public Response authenticate(@QueryParam("cloud") String cloud, @QueryParam("code") String code) {
 		if(cloud.equals("db"))
-			return this.dropbox.authenticate(code, callbackUri);
+			return this.dropbox.authenticate(code);
 		else if (cloud.equals("drive"))
-			return this.drive.authenticate(code, callbackUri);
+			return this.drive.authenticate(code);
 		else
 			return null;
 	}

@@ -87,7 +87,7 @@ public abstract class CloudUnifier implements ICloudUnifier{
   }
 
   public abstract Response cloudAuthorize(String callbackUri);
-  public abstract Response authenticate(String code, String callbackUri);
+  public abstract Response authenticate(String code);
   public abstract Response getFileDetails(String path);
   public abstract Response getUserDetails();
   public abstract Response deleteFile(String path);

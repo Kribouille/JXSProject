@@ -38,7 +38,7 @@ public class GDriveUnifier extends CloudUnifier {
   }
 
   @Override
-  public Response authenticate(String code, String callbackUri) {
+  public Response authenticate(String code) {
     return null;
   }
 
