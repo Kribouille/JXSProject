@@ -37,9 +37,9 @@ public class WSCloudUnifierService {
 	@Path("authenticate")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response authenticate(@QueryParam("cloud") String cloud, @QueryParam("code") String code, @QueryParam("callbackUri") String callbackUri) {
-        if(cloud.equals("db"))
+		if(cloud.equals("db"))
 			return this.dropbox.authenticate(code, callbackUri);
-        else if (cloud.equals("drive"))
+		else if (cloud.equals("drive"))
 			return this.drive.authenticate(code, callbackUri);
 		else
 			return null;
@@ -49,9 +49,9 @@ public class WSCloudUnifierService {
 	@Path("getFDetails")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFileDetails(@QueryParam("cloud") String cloud, @QueryParam("path") String path) {
-        if(cloud.equals("db"))
+		if(cloud.equals("db"))
 			return this.dropbox.getFileDetails(path);
-        else if (cloud.equals("drive"))
+		else if (cloud.equals("drive"))
 			return this.drive.getFileDetails(path);
 		else
 			return null;
@@ -104,5 +104,6 @@ public class WSCloudUnifierService {
 		else
 			return null;
 	}
+
 
 }

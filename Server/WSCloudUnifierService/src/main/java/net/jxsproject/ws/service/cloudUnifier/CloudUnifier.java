@@ -46,10 +46,10 @@ public abstract class CloudUnifier implements ICloudUnifier{
       HttpGet httpget = new HttpGet(url);
       if(m!=null)
         for (Map.Entry<String, String> e : m.entrySet())
-            if (httpget.getAllHeaders().length >= 1) //Header déjà présent, on en ajoute
-                httpget.addHeader(e.getKey(), e.getValue());
-            else //Pas de header donc on le set
-                httpget.setHeader(e.getKey(), e.getValue());
+          if (httpget.getAllHeaders().length >= 1) //Header déjà présent, on en ajoute
+            httpget.addHeader(e.getKey(), e.getValue());
+          else //Pas de header donc on le set
+            httpget.setHeader(e.getKey(), e.getValue());
 
       HttpResponse rep = httpclient.execute(httpget);
       HttpEntity en = rep.getEntity();
@@ -93,4 +93,5 @@ public abstract class CloudUnifier implements ICloudUnifier{
   public abstract Response deleteFile(String path);
   public abstract Response moveFile(String pathFrom, String pathTo);
   public abstract Response addFile(String pathFrom, String pathTo);
+
 }

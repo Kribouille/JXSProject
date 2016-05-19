@@ -150,6 +150,7 @@ public class DBoxUnifier extends CloudUnifier {
     }
     else {
       String url = "https://content.dropboxapi.com/1/files_put/auto/"
+<<<<<<< HEAD
     + pathTo + "?access_token=" + this.m_token;
       HttpClient httpclient = HttpClients.createDefault();
       StringBuilder result = new StringBuilder();
@@ -160,6 +161,7 @@ public class DBoxUnifier extends CloudUnifier {
         putRequest.setEntity(input);
         HttpResponse response = httpclient.execute(putRequest);
         BufferedReader br = new BufferedReader(new InputStreamReader(
+<<<<<<< HEAD
         (response.getEntity().getContent())));
         while ((output = br.readLine()) != null) {
           result.append(output);
@@ -171,4 +173,5 @@ public class DBoxUnifier extends CloudUnifier {
       }
     }
   }
+
 }
