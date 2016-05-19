@@ -4,13 +4,15 @@
     'app':                        'app', // 'dist',
     'rxjs':                       'node_modules/rxjs',
     'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
-    '@angular':                   'node_modules/@angular'
+    '@angular':                   'node_modules/@angular',
+    'symbol-observable': 'node_modules/symbol-observable'
   };
   // packages tells the System loader how to load when no filename and/or no extension
   var packages = {
     'app':                        { main: 'boot.js',  defaultExtension: 'js' },
     'rxjs':                       { defaultExtension: 'js' },
     'angular2-in-memory-web-api': { defaultExtension: 'js' },
+    'symbol-observable': { defaultExtension: 'js', main: 'index.js'},
   };
   var packageNames = [
     '@angular/common',

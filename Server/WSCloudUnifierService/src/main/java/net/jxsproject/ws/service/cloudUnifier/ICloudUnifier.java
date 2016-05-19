@@ -6,7 +6,7 @@ public interface ICloudUnifier {
 
   public Response cloudAuthorize(String callbackUri);
 
-  public Response authenticate(String code, String callbackUri);
+  public Response authenticate(String code);
 
   public Response getFileDetails(String f);
 
