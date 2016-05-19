@@ -1,30 +1,21 @@
 package net.jxsproject.ws.service.cloudUnifier;
 
-import org.json.JSONObject;
 import org.apache.http.HttpResponse;
-import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.Map;
-import java.io.File;
-import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.HttpClients;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import org.apache.http.entity.FileEntity;
-import org.apache.http.HttpEntity;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DBoxUnifier extends CloudUnifier {
-
-  private String m_clientId = "";
-  private String m_clientSecret = "";
-  private String m_token = ""; //[PUT TOKEN HERE]
 
   private static DBoxUnifier instance;
 
@@ -192,7 +183,7 @@ public class DBoxUnifier extends CloudUnifier {
     return Response.status(200).entity(result.toString()).build();
   }
 
-  public void recursiveRoute(final String currentPath,final String url,final JSONArray currentArray) {
+  public void recursiveRoute(final String currentPath, final String url,final JSONArray currentArray) {
     try {
       String res = this.get(url, new HashMap<String,String>());
       JSONObject responseObj = new JSONObject(res);
@@ -206,10 +197,9 @@ public class DBoxUnifier extends CloudUnifier {
           fileToAdd.put("path", nxtPath.substring(1));
           if (file.getBoolean("is_dir")) {
             recursiveRoute(nxtPath,
-            new StringBuilder("https://api.dropboxapi.com/1/metadata/auto")
-            .append(nxtPath)
-            .append("?access_token=").append(this.m_token)
-            .toString()
+                    "https://api.dropboxapi.com/1/metadata/auto" +
+                            nxtPath +
+                            "?access_token=" + this.m_token
             , currentArray);
           }
           currentArray.put(fileToAdd);
@@ -221,7 +211,7 @@ public class DBoxUnifier extends CloudUnifier {
   @Override
   public Response isConnected(){
     JSONObject res = new JSONObject();
-    if(this.m_token!=""){
+    if(!m_token.equals("")){
       res.put("isConnected", "true");
     }
     else{
