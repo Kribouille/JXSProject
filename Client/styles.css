@@ -22,9 +22,10 @@ body, input[text], button {
 }
 #buttons
 {
-  text-align: center; 
+  text-align: center;
   display: block;
 }
+
 
 /*
  * See https://github.com/angular/angular.io/blob/master/public/docs/_examples/styles.css
