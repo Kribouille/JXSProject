@@ -28,6 +28,9 @@ System.register(['@angular/http', '@angular/core', './app.connected.service'], f
                 function Login(http, connect) {
                     this.http = http;
                     this.connect = connect;
+                    this.headers = new http_1.Headers();
+                    this.headers.append('Content-Type', 'application/json');
+                    this.headers.append('Access-Control-Allow-Origin', '*');
                 }
                 /**
                  * Se connecter à la fenêtre d'authentification de Dropbox
@@ -35,20 +38,24 @@ System.register(['@angular/http', '@angular/core', './app.connected.service'], f
                 Login.prototype.connectDropbox = function () {
                     var _this = this;
                     this.url = 'https://www.dropbox.com/1/oauth2/authorize?client_id=wl5n5wq11bvcnst&response_type=code&redirect_uri=http://localhost:8080/WSCloudUnifierService/cloudUnifier/authenticate?cloud=db';
-                    this.http.get(this.url)
+                    this.http.get(this.url, this.headers)
                         .map(function (res) { return res.text(); })
                         .subscribe(function (data) { return console.log('Connection ...'); }, function (err) { return _this.logError(err); }, function () { return window.location.href = _this.url; });
                 };
                 /**
                  * Vérifie que le client est connecté
                  */
-                Login.prototype.isconnected = function () {
-                    var _this = this;
-                    this.urlConnect = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/isConnected?cloud=db';
-                    this.http.get(this.urlConnect)
-                        .map(function (res) { return res.json(); })
-                        .subscribe(function (data) { return _this.connect.setConnect(data.isConnected); }, function (err) { return _this.logError(err); }, function () { return console.log("Connected"); });
-                };
+                // isconnected(){
+                //   this.urlConnect = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/isConnected?cloud=db';
+                //   this.http.get(this.urlConnect)
+                //   .map(res => res.json())
+                //   .subscribe
+                //   (
+                //     data => this.connect.setConnect(data.isConnected),
+                //     err => this.logError(err),
+                //     () => console.log("Connected")
+                //     );
+                // }
                 Login.prototype.logError = function (err) {
                     console.error('ERROR !');
                 };
