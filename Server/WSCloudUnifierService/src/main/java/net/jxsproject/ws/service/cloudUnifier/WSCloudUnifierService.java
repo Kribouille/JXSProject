@@ -22,9 +22,6 @@ public class WSCloudUnifierService {
 	@Path("cloudAuthorize")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response cloudAuthorize(@QueryParam("cloud") String cloud, String code, @QueryParam("callbackUri") String callbackUri) {
-		System.out.println("CloudAuthorize");
-		System.out.println(cloud);
-		System.out.println(callbackUri);
 		if(cloud.equals("db"))
 			return dropbox.cloudAuthorize(callbackUri);
 		else if (cloud.equals("drive"))
@@ -137,6 +134,18 @@ public class WSCloudUnifierService {
 			return this.dropbox.share(path);
 		else if (cloud.equals("drive"))
 			return this.drive.share(path);
+		else
+			return null;
+	}
+
+	@GET
+	@Path("download")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response download(@QueryParam("cloud") String cloud, @QueryParam("path") String path) {
+		if(cloud.equals("db"))
+			return this.dropbox.download(path);
+		else if (cloud.equals("drive"))
+			return this.drive.download(path);
 		else
 			return null;
 	}
