@@ -6,10 +6,6 @@ import javax.ws.rs.core.Response;
 
 public class GDriveUnifier extends CloudUnifier {
 
-  private String m_clientId = "";
-  private String m_clientSecret = "";
-  private String m_token = ""; //[PUT TOKEN HERE]
-
   private static GDriveUnifier instance;
 
   public static ICloudUnifier getInstance() {

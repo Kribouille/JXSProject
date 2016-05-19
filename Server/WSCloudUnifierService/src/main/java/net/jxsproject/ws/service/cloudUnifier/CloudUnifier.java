@@ -10,8 +10,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.apache.http.entity.mime.content.FileBody;
-import org.json.JSONObject;
 
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
@@ -21,6 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class CloudUnifier implements ICloudUnifier{
+
+  protected String m_clientId = "";
+  protected String m_clientSecret = "";
+  protected String m_token = ""; //[PUT TOKEN HERE]
 
   protected String readF(String path) {
     try {
@@ -95,5 +97,6 @@ public abstract class CloudUnifier implements ICloudUnifier{
   public abstract Response addFile(String pathFrom, String pathTo);
   public abstract Response getTree(String path);
   public abstract Response share(String path);
+  public abstract Response isConnected();
 
 }
