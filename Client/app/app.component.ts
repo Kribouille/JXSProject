@@ -15,7 +15,7 @@ import {DashBoardComponent} from './menu/app.menu.dashboard.component';
 
 
 	`,
-	directives:[MyNavBar, FileExplorer, ROUTER_DIRECTIVES]
+	directives:[MyNavBar, FileExplorer, ROUTER_DIRECTIVES],
 })
 @Routes([
 		//{ path: '/crisis-center', component: CrisisListComponent },

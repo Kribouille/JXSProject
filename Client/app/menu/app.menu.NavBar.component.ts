@@ -8,7 +8,7 @@ import {DashBoardComponent} from './app.menu.dashboard.component';
 @Component({
 	selector: 'my_navBar',
 	templateUrl: 'app/menu/my_navBar.html',
-	directives:[ROUTER_DIRECTIVES]
+	directives:[ROUTER_DIRECTIVES],
 })
 @Routes([
 		{ path: '/allFiles', component: AllFilesComponent },
@@ -17,4 +17,7 @@ import {DashBoardComponent} from './app.menu.dashboard.component';
 		{ path: '/login', component: Login },
 		{ path: '*', component: AllFilesComponent }])
 export class MyNavBar{
+	constructor(private connected:boolean=false){
+
+	}
 }

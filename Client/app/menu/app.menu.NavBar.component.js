@@ -34,13 +34,15 @@ System.register(['@angular/core', '@angular/router', '../app.component.login', '
             }],
         execute: function() {
             MyNavBar = (function () {
-                function MyNavBar() {
+                function MyNavBar(connected) {
+                    if (connected === void 0) { connected = false; }
+                    this.connected = connected;
                 }
                 MyNavBar = __decorate([
                     core_1.Component({
                         selector: 'my_navBar',
                         templateUrl: 'app/menu/my_navBar.html',
-                        directives: [router_1.ROUTER_DIRECTIVES]
+                        directives: [router_1.ROUTER_DIRECTIVES],
                     }),
                     router_1.Routes([
                         { path: '/allFiles', component: app_menu_allFiles_component_1.AllFilesComponent },
@@ -48,7 +50,7 @@ System.register(['@angular/core', '@angular/router', '../app.component.login', '
                         { path: '/sharedWithUser', component: app_menu_sharedFiles_1.SharedWithUserFilesComponent },
                         { path: '/login', component: app_component_login_1.Login },
                         { path: '*', component: app_menu_allFiles_component_1.AllFilesComponent }]), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [Boolean])
                 ], MyNavBar);
                 return MyNavBar;
             }());

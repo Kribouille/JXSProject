@@ -50,7 +50,7 @@ System.register(['@angular/core', './menu/app.menu.NavBar.component', './explore
                     core_1.Component({
                         selector: 'my-app',
                         template: "<h1>My Fcx 2 App</h1>\n\t<my_navBar></my_navBar>\n\t<file-explorer></file-explorer>\n\n\n\t",
-                        directives: [app_menu_NavBar_component_1.MyNavBar, app_explorer_fileExplorer_component_1.FileExplorer, router_1.ROUTER_DIRECTIVES]
+                        directives: [app_menu_NavBar_component_1.MyNavBar, app_explorer_fileExplorer_component_1.FileExplorer, router_1.ROUTER_DIRECTIVES],
                     }),
                     router_1.Routes([
                         //{ path: '/crisis-center', component: CrisisListComponent },

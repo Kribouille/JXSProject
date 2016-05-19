@@ -25,16 +25,35 @@ System.register(['@angular/http', '@angular/core'], function(exports_1, context_
                 function Login(http) {
                     this.http = http;
                 }
-                // connectDropbox() {
-                //   window.location.href = this.url;
-                //   console.log('Authentification !')
-                // }
-                Login.prototype.getURL = function () {
+                Login.prototype.connectDropbox = function () {
                     var _this = this;
-                    this.http.get('https://www.dropbox.com/1/oauth2/authorize?client_id=wl5n5wq11bvcnst&response_type=code&redirect_uri=http://localhost:3000/allFiles')
+                    this.url = 'https://www.dropbox.com/1/oauth2/authorize?client_id=wl5n5wq11bvcnst&response_type=code&redirect_uri=http://localhost:3000/allFiles';
+                    this.http.get(this.url)
                         .map(function (res) { return res.text(); })
-                        .subscribe(function (data) { return _this.url = data; }, function (err) { return _this.logError(err); }, function () { return console.log('Authentification !'); });
+                        .subscribe(function (data) { return console.log('duuh'); }, function (err) { return _this.logError(err); }, function () { return window.location.href = _this.url; });
+                    console.log('Connection ...');
                 };
+                Login.prototype.isconnected = function () {
+                    var _this = this;
+                    this.urlConnect = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/isConnected?cloud=db';
+                    this.http.get(this.urlConnect)
+                        .map(function (res) { return res.json(); })
+                        .subscribe(function (data) { return _this.connectVarInUrl = data; }, function (err) { return _this.logError(err); }, function () { return console.log("Connected"); });
+                };
+                Login.prototype.extractData = function (res) {
+                    var body = res.json();
+                    return body.data;
+                };
+                // getURL() {
+                //   this.url = 'https://www.dropbox.com/1/oauth2/authorize?client_id=wl5n5wq11bvcnst&response_type=code&redirect_uri=http://localhost:3000/allFiles';
+                //   this.http.get(this.url)
+                //     .map(res => res.text())
+                //     .subscribe(  
+                //     data => console.log(data),
+                //     err => this.logError(err),
+                //     () => window.location.href = this.url
+                //     );
+                // }
                 // getReponse(){
                 //   this.http.get(this.url)
                 //     .map(res => res.json())
@@ -50,7 +69,7 @@ System.register(['@angular/http', '@angular/core'], function(exports_1, context_
                 Login = __decorate([
                     core_1.Component({
                         selector: 'my_login',
-                        template: "\n  <header>\n    <h1 class=\"title\">Connection</h1>\n  </header>\n  <button class=\"btn btn-primary\" (click)=\"getURL()\">DROPBOX</button>\n  <br><br><br>\n  "
+                        template: "\n  <header>\n  <h1 class=\"title\">Connection</h1>\n  </header>\n  <button class=\"btn btn-primary\" (click)=\"connectDropbox()\">DROPBOX</button>\n  <br><br><br>\n  "
                     }), 
                     __metadata('design:paramtypes', [http_1.Http])
                 ], Login);
