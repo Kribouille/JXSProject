@@ -23,18 +23,4 @@ export class FileExplorerService{
     return Observable.throw(err.json().error || 'Server error');
   }
 
-
-
-  /*
-    addFile (name: string, date:Date ,content:string): Observable<MyFile> {
-      let body = JSON.stringify({ name,date,content });
-      let headers = new Headers({ 'Content-Type': 'application/json' });
-      let options = new RequestOptions({ headers: headers });
-
-      return this.http.post(this._filesUrls, body, options)
-                      .map(this.extractData)
-                      .catch(this.handleError);
-    }
-  */
-
 }
