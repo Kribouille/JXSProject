@@ -1,10 +1,23 @@
 package net.jxsproject.ws.service.cloudUnifier;
 
 import org.json.JSONObject;
-
+import org.apache.http.HttpResponse;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.File;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClients;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.HttpEntity;
+import org.apache.http.util.EntityUtils;
 
 public class DBoxUnifier extends CloudUnifier {
 
@@ -103,29 +116,59 @@ public class DBoxUnifier extends CloudUnifier {
       return Response.status(200).entity(json.toString()).build();
     }
   }
-    @Override
-    public Response deleteFile(String path) {
-        if (this.m_clientId == null || this.m_clientSecret == null){
-            return Response.status(500).entity("Error config").build();
-        }
-        else {
-            String url = String.format("https://api.dropboxapi.com/1/fileops/delete?access_token=%s&root=%s&path=%s", this.m_token, "auto", path);
-            String res = this.get(url, new HashMap<String, String>());
-            JSONObject json = new JSONObject(res);
-            return Response.status(200).entity(json.toString()).build();
-        }
+  @Override
+  public Response deleteFile(String path) {
+    if (this.m_clientId == null || this.m_clientSecret == null){
+      return Response.status(500).entity("Error config").build();
     }
+    else {
+      String url = String.format("https://api.dropboxapi.com/1/fileops/delete?access_token=%s&root=%s&path=%s", this.m_token, "auto", path);
+      String res = this.get(url, new HashMap<String, String>());
+      JSONObject json = new JSONObject(res);
+      return Response.status(200).entity(json.toString()).build();
+    }
+  }
 
-    @Override
-    public Response moveFile(final String pathFrom, final String pathTo) {
-        if (this.m_clientId == null || this.m_clientSecret == null){
-            return Response.status(500).entity("Error config").build();
-        }
-        else {
-            String url = String.format("https://api.dropboxapi.com/1/fileops/move?access_token=%s&root=%s&from_path=%s&to_path=%s", this.m_token, "auto", pathFrom, pathTo);
-            String res = this.get(url, new HashMap<String, String>());
-            JSONObject json = new JSONObject(res);
-            return Response.status(200).entity(json.toString()).build();
-        }
+  @Override
+  public Response moveFile(final String pathFrom, final String pathTo) {
+    if (this.m_clientId == null || this.m_clientSecret == null){
+      return Response.status(500).entity("Error config").build();
     }
+    else {
+      String url = String.format("https://api.dropboxapi.com/1/fileops/move?access_token=%s&root=%s&from_path=%s&to_path=%s", this.m_token, "auto", pathFrom, pathTo);
+      String res = this.get(url, new HashMap<String, String>());
+      JSONObject json = new JSONObject(res);
+      return Response.status(200).entity(json.toString()).build();
+    }
+  }
+
+  @Override
+  public Response addFile(final String pathFrom, final String pathTo) {
+    String output = "";
+    if (this.m_clientId == null || this.m_clientSecret == null){
+      return Response.status(500).entity("Error config").build();
+    }
+    else {
+      String url = "https://content.dropboxapi.com/1/files_put/auto/"
+              + pathTo + "?access_token=" + this.m_token;
+      HttpClient httpclient = HttpClients.createDefault();
+      StringBuilder result = new StringBuilder();
+      File file = new File(pathFrom);
+      try {
+        HttpPut putRequest = new HttpPut(url);
+        FileEntity input = new FileEntity(file);
+        putRequest.setEntity(input);
+        HttpResponse response = httpclient.execute(putRequest);
+        BufferedReader br = new BufferedReader(new InputStreamReader(
+                (response.getEntity().getContent())));
+        while ((output = br.readLine()) != null) {
+          result.append(output);
+        }
+        return Response.status(200).entity("Votre fichier " + pathFrom + " a été upload avec succès :).").build();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return Response.status(500).entity("Error upload").build();
+      }
+    }
+  }
 }

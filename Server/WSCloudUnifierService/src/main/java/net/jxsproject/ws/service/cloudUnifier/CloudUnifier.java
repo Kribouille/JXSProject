@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.apache.http.entity.mime.content.FileBody;
 import org.json.JSONObject;
 
 import javax.ws.rs.core.Response;
@@ -45,10 +46,10 @@ public abstract class CloudUnifier implements ICloudUnifier{
       HttpGet httpget = new HttpGet(url);
       if(m!=null)
         for (Map.Entry<String, String> e : m.entrySet())
-            if (httpget.getAllHeaders().length >= 1) //Header déjà présent, on en ajoute
-                httpget.addHeader(e.getKey(), e.getValue());
-            else //Pas de header donc on le set
-                httpget.setHeader(e.getKey(), e.getValue());
+          if (httpget.getAllHeaders().length >= 1) //Header déjà présent, on en ajoute
+            httpget.addHeader(e.getKey(), e.getValue());
+          else //Pas de header donc on le set
+            httpget.setHeader(e.getKey(), e.getValue());
 
       HttpResponse rep = httpclient.execute(httpget);
       HttpEntity en = rep.getEntity();
@@ -91,4 +92,5 @@ public abstract class CloudUnifier implements ICloudUnifier{
   public abstract Response getUserDetails();
   public abstract Response deleteFile(String path);
   public abstract Response moveFile(String pathFrom, String pathTo);
+  public abstract Response addFile(String pathFrom, String pathTo);
 }

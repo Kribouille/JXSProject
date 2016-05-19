@@ -55,4 +55,7 @@ public class GDriveUnifier extends CloudUnifier {
 
   @Override
   public Response moveFile(final String pathFrom, final String pathTo) {return null;}
+
+  @Override
+  public Response addFile(final String pathFrom, final String pathTo) {return null;}
 }
