@@ -33,7 +33,7 @@ public class GDriveUnifier extends CloudUnifier {
 
             this.m_clientId = (String) config.get("client_id");
             this.m_clientSecret = (String) config.get("client_secret");
-            this.callbackUri = (String) config.get("callbackUri");
+            this.callbackUri = (String) config.get("callback_uri");
         } catch (Exception e) {
             e.printStackTrace();
             this.m_clientId = null;
