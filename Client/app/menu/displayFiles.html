@@ -1,40 +1,48 @@
 <div class="panel panel-default">
-      <div class="panel-heading">
-        <h2 class="panel-title">Documents </h2>
-      </div>
-      <div class="panel-body">
-        <span class="counter pull-right"></span>
-        <div id="folders-and-files" class="col-sm-6">
-          <table class="table table-bordered table-responsive table-hover results" >
-              <tr>
-                <th>Nom</th>
-              </tr>
-              <tbody>
+  <div class="panel-heading">
+    <h2 class="panel-title">Documents </h2>
+  </div>
+  <div class="panel-body">
+    <span class="counter pull-right"></span>
+    <div id="folders-and-files" class="col-sm-6">
+      <table class="table table-bordered table-responsive table-hover results" >
+        <tr>
+          <th>Nom</th>
+        </tr>
+        <tbody>
 
-                  <tr *ngFor="let filefolder of folders" >
-                    <td *ngIf="filefolder._toDisplayAndIsFolder" class="folder" (click)="onSelect(filefolder)"> <h1><span class="glyphicon glyphicon-folder-close"></span></h1>{{ filefolder.name }} </td>
-                    <td *ngIf="filefolder._toDisplayAndIsFile" class="file" (click)="onSelect(filefolder)"> <h1><span class="glyphicon glyphicon-file"></span></h1>{{ filefolder.name }} </td>
-                  </tr>
+          <tr *ngFor="let filefolder of folders" >
+          <td *ngIf="filefolder._toDisplayAndIsFolder" class="folder" (click)="onSelect(filefolder)"> <span class="glyphicon glyphicon-folder-close" style="font-size: 3em;"> </span> {{ filefolder.name }}<br><br>
+              <span class="glyphicon glyphicon-trash" title="Supprimer" style="font-size: 1.5em;"></span>
+              <span class="glyphicon glyphicon-link" title="Partager" style="font-size: 1.5em; margin-left: 30px;"></span>
+            </td>
+            <td *ngIf="filefolder._toDisplayAndIsFile" class="file" (click)="onSelect(filefolder)"> 
+              <span class="glyphicon glyphicon-file" style="font-size: 3em;"> </span> {{ filefolder.name }}<br><br>
+              <span class="glyphicon glyphicon-trash" title="Supprimer" style="font-size: 1.5em;"></span>
+              <span class="glyphicon glyphicon-link" title="Partager" style="font-size: 1.5em; margin-left: 30px;"></span>
+            </td>
 
-              </tbody>
-          </table>
-        </div>
-        <div id="informations-files-folders" class="col-sm-6">
-          <table class="table table-bordered table-responsive table-hover results" >
-              <tr>
-                <th>
-                  Informations
-                </th>
-              </tr>
-              <tbody>
-                <tr>
-                    <td >
-                      <div *ngIf="folders._selected">{{folders._selected.getInfos()}}</div>
-                    </td>
-                </tr>
+          </tr>
 
-              </tbody>
-          </table>
-        </div>
-      </div>
+        </tbody>
+      </table>
     </div>
+    <div id="informations-files-folders" class="col-sm-6">
+      <table class="table table-bordered table-responsive table-hover results" >
+        <tr>
+          <th>
+            Informations
+          </th>
+        </tr>
+        <tbody>
+          <tr>
+            <td >
+              <div *ngIf="folders._selected">{{folders._selected.getInfos()}}</div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
