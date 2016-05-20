@@ -27,17 +27,7 @@ public class DBoxUnifier extends CloudUnifier {
   }
 
   private DBoxUnifier() {
-    try {
-      JSONObject config = new JSONObject(this.readF("./dBoxConfig.json"));
-
-      this.m_clientId = (String) config.get("client_id");
-      this.m_clientSecret = (String) config.get("client_secret");
-      this.callbackUri = (String) config.get("callback_uri");
-    } catch (Exception e) {
-      e.printStackTrace();
-      this.m_clientId = null;
-      this.m_clientSecret = null;
-    }
+    super("./dBoxConfig.json");
   }
 
   @Override
@@ -114,6 +104,8 @@ public class DBoxUnifier extends CloudUnifier {
       return Response.status(500).entity("Error config").build();
     }
     else {
+      path = this.formatPath(path);
+
       String url = String.format("https://api.dropboxapi.com/1/fileops/delete?access_token=%s&root=%s&path=%s", this.m_token, "auto", path);
       String res = this.get(url, new HashMap<String, String>());
       JSONObject json = new JSONObject(res);
@@ -122,11 +114,14 @@ public class DBoxUnifier extends CloudUnifier {
   }
 
   @Override
-  public Response moveFile(final String pathFrom, final String pathTo) {
+  public Response moveFile(String pathFrom, String pathTo) {
     if (isBadConfig()){
       return Response.status(500).entity("Error config").build();
     }
     else {
+      pathFrom = this.formatPath(pathFrom);
+      pathTo = this.formatPath(pathTo);
+
       String url = String.format("https://api.dropboxapi.com/1/fileops/move?access_token=%s&root=%s&from_path=%s&to_path=%s", this.m_token, "auto", pathFrom, pathTo);
       String res = this.get(url, new HashMap<String, String>());
       JSONObject json = new JSONObject(res);
@@ -135,12 +130,15 @@ public class DBoxUnifier extends CloudUnifier {
   }
 
   @Override
-  public Response addFile(final String pathFrom, final String pathTo) {
+  public Response addFile(final String pathFrom, String pathTo) {
     String output = "";
     if (isBadConfig()){
       return Response.status(500).entity("Error config").build();
     }
     else {
+
+      pathTo = this.formatPath(pathTo);
+
       String url = "https://content.dropboxapi.com/1/files_put/auto/" + pathTo + "?access_token=" + this.m_token;
       HttpClient httpclient = HttpClients.createDefault();
       StringBuilder result = new StringBuilder();
@@ -226,11 +224,13 @@ public class DBoxUnifier extends CloudUnifier {
   }
 
   @Override
-  public Response share(final String path){
+  public Response share(String path){
     if (this.m_clientId == null || this.m_clientSecret == null){
       return Response.status(500).entity("Error config").build();
     }
     else {
+      path = this.formatPath(path);
+
       String url = String.format("https://api.dropboxapi.com/1/shares/auto/%s?access_token=%s", path, this.m_token);
       String res = this.post(url, new HashMap<String, String>());
       JSONObject json = new JSONObject(res);
@@ -244,6 +244,8 @@ public class DBoxUnifier extends CloudUnifier {
       return Response.status(500).entity("Error config").build();
     } else {
       try {
+        path = this.formatPath(path);
+
         String url = String.format("https://content.dropboxapi.com/1/files/auto/%s?access_token=%s", path, this.m_token);
 
         String res = this.get(url, new HashMap<String, String>());

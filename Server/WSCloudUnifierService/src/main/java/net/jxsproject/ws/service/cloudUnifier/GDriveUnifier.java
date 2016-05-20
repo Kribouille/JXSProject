@@ -28,18 +28,7 @@ public class GDriveUnifier extends CloudUnifier {
     }
 
     private GDriveUnifier() {
-        try {
-            JSONObject config = new JSONObject(this.readF("./gDriveConfig.json"));
-
-            this.m_clientId = (String) config.get("client_id");
-            this.m_clientSecret = (String) config.get("client_secret");
-            this.callbackUri = (String) config.get("callback_uri");
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.m_clientId = null;
-            this.m_clientSecret = null;
-            this.callbackUri = null;
-        }
+            super("./gDriveConfig.json");
     }
 
     @Override
