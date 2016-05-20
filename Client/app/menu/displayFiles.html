@@ -2,6 +2,10 @@
       <div class="panel-heading">
         <h2 class="panel-title">{{_currentPath}} </h2>
       </div>
+      <div id= "upload">
+        <input #filePath placeholder="filePath"/>
+        <button (click)="uploadFile(filePath.value)">Uploader</button>
+      </div>
       <div class="panel-body">
         <span class="counter pull-right"></span>
         <div id="folders-and-files" class="col-sm-6">
@@ -39,12 +43,12 @@
         <tbody>
           <tr>
             <td *ngIf="_selected">
-              <div >Chemin : {{_selected._path}}</div>
-              <div >Taille : {{_selected._size}}</div>
-              <div >Type : {{_selected._type}}</div>
-              <div >Origine  : {{_selected._cloudFrom}}</div>
+              <div *ngIf="_selected._path">Chemin : {{_selected._path}}</div>
+              <div *ngIf="_selected._size">Taille : {{_selected._size}}</div>
+              <div *ngIf="_selected._type">Type : {{_selected._type}}</div>
+              <div *ngIf="_selected._cloudFrom">Origine  : {{_selected._cloudFrom}}</div>
               <div *ngIf="_selected._link">Lien de partage : {{_selected._link}}</div>
-              <div >Date de dernière modification : {{_selected._modified}}</div>
+              <div *ngIf="_selected._modified">Date de dernière modification : {{_selected._modified}}</div>
             </td>
           </tr>
 

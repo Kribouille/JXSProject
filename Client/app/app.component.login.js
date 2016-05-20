@@ -44,6 +44,15 @@ System.register(['@angular/http', '@angular/core', './app.connected.service'], f
                         window.location.href = _this.url;
                     });
                 };
+                Login.prototype.connectDrive = function () {
+                    var _this = this;
+                    this.url = 'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&scope=https://www.googleapis.com/auth/drive&client_id=921146812227-r0olsfvaghs07ss0g0jhbgd6veq68eib.apps.googleusercontent.com&redirect_uri=http://localhost:8080/WSCloudUnifierService/cloudUnifier/authenticate?cloud=drive';
+                    this.http.get(this.url)
+                        .map(function (res) { return res.text(); })
+                        .subscribe(function (data) { console.log('Connection qui passe à true'); }, function (err) { return _this.logError(err); }, function () {
+                        window.location.href = _this.url;
+                    });
+                };
                 /**
                  * Vérifie que le client est connecté
                  */
@@ -63,7 +72,7 @@ System.register(['@angular/http', '@angular/core', './app.connected.service'], f
                 Login = __decorate([
                     core_1.Component({
                         selector: 'my_login',
-                        template: "\n  <header>\n  <h1 class=\"title\">Connection</h1>\n  </header>\n  <span id=\"buttons\">\n  <button style=\"height:50px;width:200px\"class=\"btn btn-primary\" (click)=\"connectDropbox()\">DROPBOX</button>\n  <button style=\"height:50px;width:200px\" class=\"btn btn-primary\" (click)=\"connectDropbox()\">GOOGLE DRIVE</button>\n  <button style=\"height:50px;width:200px\" class=\"btn btn-primary\" (click)=\"getConnected()\">KRIBOUILLE IS MAGIC</button>\n  </span>\n  <br><br><br>\n  "
+                        template: "\n  <header>\n  <h1 class=\"title\">Connection</h1>\n  </header>\n  <span id=\"buttons\">\n  <button style=\"height:50px;width:200px\"class=\"btn btn-primary\" (click)=\"connectDropbox()\">DROPBOX</button>\n  <button style=\"height:50px;width:200px\" class=\"btn btn-primary\" (click)=\"connectDrive()\">GOOGLE DRIVE</button>\n  </span>\n  <br><br><br>\n  "
                     }), 
                     __metadata('design:paramtypes', [http_1.Http, app_connected_service_1.Connected])
                 ], Login);

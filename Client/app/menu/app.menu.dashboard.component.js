@@ -1,4 +1,4 @@
-System.register(['@angular/core'], function(exports_1, context_1) {
+System.register(['@angular/core', '@angular/http'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,23 +10,59 @@ System.register(['@angular/core'], function(exports_1, context_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1;
+    var core_1, http_1;
     var DashBoardComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (http_1_1) {
+                http_1 = http_1_1;
             }],
         execute: function() {
             DashBoardComponent = (function () {
-                function DashBoardComponent() {
+                function DashBoardComponent(http) {
+                    this.http = http;
+                    this.getUserInfoDropbox();
+                    this.getUserInfoDrive();
                 }
+                DashBoardComponent.prototype.getUserInfoDropbox = function () {
+                    var _this = this;
+                    this.url = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/getUDetails?cloud=db';
+                    this.http.get(this.url)
+                        .map(function (res) { return res.json(); })
+                        .subscribe(function (data) {
+                        _this.nameDB = data.name_details.familiar_name;
+                        _this.surnameDB = data.name_details.surname;
+                        _this.mailDB = data.email;
+                        _this.spaceUsedDB = data.quota_info.normal;
+                        _this.spaceAvailableDB = data.quota_info.quota;
+                        _this.countryDB = data.country;
+                    }, function (err) { return _this.logError(err); }, function () { });
+                };
+                DashBoardComponent.prototype.getUserInfoDrive = function () {
+                    var _this = this;
+                    this.url = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/getUDetails?cloud=drive';
+                    this.http.get(this.url)
+                        .map(function (res) { return res.json(); })
+                        .subscribe(function (data) {
+                        _this.nameDR = data.name;
+                        _this.mailDR = data.user.emailAddress;
+                        _this.spaceUsedDR = data.quotaBytesUsed;
+                        _this.spaceTotalDR = data.quotaBytesTotal;
+                        _this.countryDR = data.languageCode;
+                    }, function (err) { return _this.logError(err); }, function () { });
+                };
+                DashBoardComponent.prototype.logError = function (err) {
+                    console.error('ERROR !');
+                };
                 DashBoardComponent = __decorate([
                     core_1.Component({
                         selector: "dashboard",
-                        template: "\n  <div>\n    Dashboard\n    Stats : 3/5\n  </div>\n  "
+                        template: "\n\t<table class=\"table table-bordered table-responsive table-hover results\" >\n\t<thead><tr>\n\t<th>#</th>\n\t<th>Informations Dropbox</th>\n\t<th>Informations Google Drive</th>\n\t</tr>\n\t</thead>\n\t<tbody>\n\t<tr>\n\t<th scope=\"row\">Nom</th>\n\t<td>{{nameDB}}</td>\n\t<td>{{nameDR}}</td>\n\t</tr>\n\t<tr>\n\t<th scope=\"row\">Pr\u00E9nom</th>\n\t<td>{{surnameDB}}</td>\n\t<td>ok</td>\n\t</tr>\n\t<tr>\n\t<th scope=\"row\">Email</th>\n\t<td>{{mailDB}}</td>\n\t<td>{{mailDR}}</td>\n\t</tr>\n\t<tr>\n\t<th scope=\"row\">Pays</th>\n\t<td>{{countryDB}}</td>\n\t<td>{{countryDR}}</td>\n\t</tr>\n\t<tr>\n\t<th scope=\"row\">Espace utilis\u00E9 (en octets)</th>\n\t<td>{{spaceUsedDB}}</td>\n\t<td>{{spaceUsedDR}}</td>\n\t</tr>\n\t<tr>\n\t<th scope=\"row\">Espace total</th>\n\t<td>{{spaceUsedDR}}</td>\n\t<td>{{spaceTotalDR}}</td>\n\t</tr>\n\t</tbody>\n\t</table>\n\t"
                     }), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [http_1.Http])
                 ], DashBoardComponent);
                 return DashBoardComponent;
             }());

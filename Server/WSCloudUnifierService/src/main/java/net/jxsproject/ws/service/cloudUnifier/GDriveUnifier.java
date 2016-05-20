@@ -147,16 +147,20 @@ public class GDriveUnifier extends CloudUnifier {
     List<GFile> tmpL = new ArrayList<GFile>();
 
     for (Map.Entry<String, String> e : this.paths.entrySet()) {
-      System.out.println(e.getKey());
-      if (e.getKey().contains(path))
-        tmpL.add(this.files.get(e.getValue()));
+      if (e.getKey().contains(path)) {
+        String tmp = e.getKey().substring(e.getKey().indexOf(path));
+        int index = tmp.indexOf("/");
+        if (index != -1)
+          tmp = tmp.substring(0, tmp.indexOf("/"));
+        System.out.println(tmp);
+        if (!tmp.equals("path"))
+          tmpL.add(this.files.get(tmp));
+      }
     }
 
-    System.out.println(tmpL);
     JSONArray tab = new JSONArray();
     tab.put(tmpL);
 
-        System.out.println(tab);
     JSONObject json = new JSONObject();
     json.put("res", tab);
     return Response.status(200).entity(json.toString()).build();
