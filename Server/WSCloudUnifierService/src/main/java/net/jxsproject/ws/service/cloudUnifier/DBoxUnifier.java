@@ -21,7 +21,7 @@ public class DBoxUnifier extends CloudUnifier {
 
   public static ICloudUnifier getInstance() {
     if (instance == null)
-    instance = new DBoxUnifier();
+      instance = new DBoxUnifier();
 
     return instance;
   }
@@ -86,10 +86,8 @@ public class DBoxUnifier extends CloudUnifier {
       return Response.status(500).entity("Error config").build();
     }
     else {
-      System.out.println(path);
       path = this.formatPath(path);
 
-      System.out.println(path);
       String url = String.format("https://api.dropboxapi.com/1/metadata/auto/%s?access_token=%s", path, this.m_token);
       String res = this.get(url, new HashMap<String, String>());
       JSONObject json = new JSONObject(res);
@@ -153,7 +151,7 @@ public class DBoxUnifier extends CloudUnifier {
         putRequest.setEntity(input);
         HttpResponse response = httpclient.execute(putRequest);
         BufferedReader br = new BufferedReader(new InputStreamReader(
-        (response.getEntity().getContent())));
+                (response.getEntity().getContent())));
         while ((output = br.readLine()) != null) {
           result.append(output);
         }
@@ -204,10 +202,10 @@ public class DBoxUnifier extends CloudUnifier {
           fileToAdd.put("path", nxtPath.substring(1));
           if (file.getBoolean("is_dir")) {
             recursiveRoute(nxtPath,
-            "https://api.dropboxapi.com/1/metadata/auto" +
-            nxtPath +
-            "?access_token=" + this.m_token
-            , currentArray);
+                    "https://api.dropboxapi.com/1/metadata/auto" +
+                            nxtPath +
+                            "?access_token=" + this.m_token
+                    , currentArray);
           }
           currentArray.put(fileToAdd);
         }
