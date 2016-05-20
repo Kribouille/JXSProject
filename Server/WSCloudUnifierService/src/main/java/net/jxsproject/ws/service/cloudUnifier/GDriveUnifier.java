@@ -148,7 +148,7 @@ public class GDriveUnifier extends CloudUnifier {
 
     for (Map.Entry<String, String> e : this.paths.entrySet()) {
       if (e.getKey().contains(path)) {
-        String tmp = e.getValue().substring(e.getKey().indexOf(path));
+        String tmp = e.getKey().substring(e.getKey().indexOf(path));
         int index = tmp.indexOf("/");
         if (index != -1)
           tmp = tmp.substring(0, tmp.indexOf("/"));
