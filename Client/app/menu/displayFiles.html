@@ -40,8 +40,12 @@
         </tr>
         <tbody>
           <tr>
-            <td >
-              <div *ngIf="folders._selected">{{folders._selected.getInfos()}}</div>
+            <td *ngIf="_selected">
+              <div >Chemin : {{_selected._path}}</div>
+              <div >Taille : {{_selected._size}}</div>
+              <div >Type : {{_selected._type}}</div>
+              <div >Origine  : {{_selected._cloudFrom}}</div>
+              <div >Date de dernière modification : {{_selected._modified}}</div>
             </td>
           </tr>
 
