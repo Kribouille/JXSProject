@@ -121,7 +121,17 @@ public class GDriveUnifier extends CloudUnifier {
 
     @Override
     public Response getUserDetails() {
-        return null;
+        try {
+            String url = String.format("https://www.googleapis.com/drive/v2/about?access_token=%s", this.m_token);
+            String res = this.get(url, new HashMap<String, String>());
+
+            JSONObject json = new JSONObject(res);
+            return Response.status(200).entity(json.toString()).build();
+        } catch (Exception e) {
+            JSONObject err = new JSONObject();
+            err.put("err", e.toString());
+            return Response.status(500).entity(err).build();
+        }
     }
 
     @Override
