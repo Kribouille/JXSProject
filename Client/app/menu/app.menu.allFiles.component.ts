@@ -29,9 +29,14 @@ export class AllFilesComponent{
     this.getFiles('/');
 
 }
+
     getFiles(path:string){
       //dropbox for now
       return this.getFilesDropbox(path);
+    }
+
+    onShare(f: FileFolder){
+      f.getSharedLink();
     }
 
     getFilesDropbox(path: string) {
@@ -58,13 +63,38 @@ export class AllFilesComponent{
     }
 
     onSelectFolder (f: FileFolder){ this._selected = f; this.getFiles(f._name);}
-    onSelectInfo(f : FileFolder) { this._selected = f; f.requestInfos();}
+    onSelectInfo(f : FileFolder) { console.log("info");this._selected = f; f.requestInfos();}
 
     logError(err) {
         console.error('ERROR get all files/folders ' + err);
     }
 
+
+    removeFile(f:FileFolder){
+      var path = f.replaceAll(f._name, " ", "%20");
+      console.log("Suppression");
+      this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/deleteFile?cloud=db&path='+f._name).map(res => res.json())
+      .subscribe(
+        data => this.getFiles(this._currentPath),
+        err => this.logError(err)
+      );
+
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -75,6 +105,10 @@ class FileFolder{
 
     _toDisplayAndIsFolder : boolean; // = toDisplay And
     _toDisplayAndIsFile : boolean;
+
+    private _url;
+    private _link;
+
     private _informations ;
 
     public _size; //affichage de la taille
@@ -143,7 +177,7 @@ class FileFolder{
 
 
 
-    private replaceAll(strFrom : string, c :string, sub:string){
+    replaceAll(strFrom : string, c :string, sub:string){
       var res = "";
       for (let i = 0; i< strFrom.length; i++){
           if(strFrom.charAt(i) != c){
@@ -156,6 +190,17 @@ class FileFolder{
       return res;
     }
 
+    getSharedLink() {
+  		this._url = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/share?cloud=db&path=';
+  		this._url = this._url + this.replaceAll(this._name, " ", "%20");
+  		this.http.get(this._url)
+  			.map(res => res.json())
+  			.subscribe(
+  			data => {this._link=data.url},
+  			err => this.logError(err),
+  			() => {}
+  			);
+  	}
 
 
     logError(err) {

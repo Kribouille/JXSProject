@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
@@ -29,6 +30,22 @@ public abstract class CloudUnifier implements ICloudUnifier{
  protected  Map<String, GFile> files = null;
  //To transform a path to an ID
 protected Map<String, String> paths = null;
+
+  protected CloudUnifier(String configPath) {
+    try {
+      JSONObject config = new JSONObject(this.readF(configPath));
+
+      this.m_clientId = (String) config.get("client_id");
+      this.m_clientSecret = (String) config.get("client_secret");
+      this.callbackUri = (String) config.get("callback_uri");
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      this.m_clientId = null;
+      this.m_clientSecret = null;
+      this.callbackUri = null;
+    }
+  }
 
   protected String readF(String path) {
     try {

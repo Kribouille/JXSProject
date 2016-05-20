@@ -10,8 +10,7 @@ import {Connected} from './app.connected.service'
   </header>
   <span id="buttons">
   <button style="height:50px;width:200px"class="btn btn-primary" (click)="connectDropbox()">DROPBOX</button>
-  <button style="height:50px;width:200px" class="btn btn-primary" (click)="connectDropbox()">GOOGLE DRIVE</button>
-  <button style="height:50px;width:200px" class="btn btn-primary" (click)="getConnected()">KRIBOUILLE IS MAGIC</button>
+  <button style="height:50px;width:200px" class="btn btn-primary" (click)="connectDrive()">GOOGLE DRIVE</button>
   </span>
   <br><br><br>
   `
@@ -44,6 +43,19 @@ export class Login{
     }      
          );
      }
+
+  connectDrive() {
+    this.url = 'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&scope=https://www.googleapis.com/auth/drive&client_id=921146812227-r0olsfvaghs07ss0g0jhbgd6veq68eib.apps.googleusercontent.com&redirect_uri=http://localhost:8080/WSCloudUnifierService/cloudUnifier/authenticate?cloud=drive';
+    this.http.get(this.url)
+      .map(res => res.text())
+      .subscribe(
+      data => {console.log('Connection qui passe à true')},
+      err => this.logError(err),
+      () => {
+        window.location.href = this.url;
+      }
+      );
+  }
 
 /**
  * Vérifie que le client est connecté
