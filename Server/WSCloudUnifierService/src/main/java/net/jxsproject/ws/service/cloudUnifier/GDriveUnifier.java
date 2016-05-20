@@ -8,11 +8,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
-
+import org.json.JSONArray;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 public class GDriveUnifier extends CloudUnifier {
 
@@ -47,7 +49,6 @@ public class GDriveUnifier extends CloudUnifier {
         if (isBadConfig()) {
             return Response.status(500).entity("Error config").build();
         } else {
-            this.callbackUri = callbackUri;
             String url = new StringBuilder(
                     "https://accounts.google.com/o/oauth2/v2/auth"
                             + "?response_type=code&scope=https://www.googleapis.com/auth/drive&")
@@ -98,11 +99,13 @@ public class GDriveUnifier extends CloudUnifier {
 
     @Override
     public Response getFileDetails(String path) {
-        //this.synchronize();
+        this.synchronize();
         Map<String, String> jsonContent = new HashMap();
         String json = null;
         try {
-            String url = new StringBuilder("https://www.googleapis.com/drive/v2/files/" + path + "?access_token=").append(this.m_token).toString();
+            String id = this.paths.get(path);
+            String url = new StringBuilder("https://www.googleapis.com/drive/v2/files/" + id + "?access_token=").append(this.m_token).toString();
+            System.out.println(id);
             HttpGet request = new HttpGet(url);
             HttpClient httpclient = HttpClients.createDefault();
             HttpResponse response = httpclient.execute(request);
@@ -156,52 +159,52 @@ public class GDriveUnifier extends CloudUnifier {
         return null;
     }
 
-  /*public void synchronize(){
+  public void synchronize(){
     try {
       JSONObject content = new JSONObject(this.get(
       new StringBuilder("https://www.googleapis.com/drive/v2/files")
       .append("?access_token=").append(this.m_token)
       .append("&spaces=drive")
-      .toString()));
+      .toString(), new HashMap<String,String>()));
 
       JSONArray items = content.getJSONArray("items");
-      this._IdToFile = new HashMap<String, GoogleFile>();
-      this._pathToId = new HashMap<String, String>();
+      this.files = new HashMap<String, GFile>();
+      this.paths = new HashMap<String, String>();
       //Build IdToFile
       for (int i = 0; i < items.length(); ++i) {
         JSONObject item = items.getJSONObject(i);
         String id = item.getString("id");
         String title = item.getString("title");
-        String link = item.getString("alternateLink");
-        List<GoogleFolder> parents = new ArrayList<GoogleFolder>();
+        //String link = item.getString("alternateLink");
+        List<GFolder> parents = new ArrayList<GFolder>();
         JSONArray parentsArray = item.getJSONArray("parents");
         for (int j = 0; j < parentsArray.length(); ++j) {
           JSONObject parent = parentsArray.getJSONObject(j);
-          parents.add(new GoogleFolder(parent.getString("id"),
+          parents.add(new GFolder(parent.getString("id"),
           parent.getBoolean("isRoot")));
           if (parent.getBoolean("isRoot")) {
-            this._pathToId.put("/", parent.getString("id"));
+            this.paths.put("/", parent.getString("id"));
           }
         }
-        this._IdToFile.put(id, new GoogleFile(id, title, link, parents));
+        this.files.put(id, new GFile(id, title, parents));
       }
 
       //Build pathToId
-      for (String key : this._IdToFile.keySet()) {
-        GoogleFile gf = this._IdToFile.get(key);
+      for (String key : this.files.keySet()) {
+        GFile gf = this.files.get(key);
         String finalPath = gf.getTitle();
         String id = gf.getId();
-        GoogleFolder parent = gf.getParents().get(0);
-        while (!parent.isRoot()) {
-          GoogleFile parentFile = this._IdToFile.get(parent.getId());
+        GFolder parent = gf.getParents().get(0);
+        while (!parent.getIsRoot()) {
+          GFile parentFile = this.files.get(parent.getId());
           finalPath = parentFile.getTitle() + "/" + finalPath;
           parent = parentFile.getParents().get(0);
         }
-        this._pathToId.put(finalPath, id);
+        this.paths.put(finalPath, id);
       }
     } catch (Exception e) {
       e.getMessage();
     }
-  }*/
+  }
 
 }
