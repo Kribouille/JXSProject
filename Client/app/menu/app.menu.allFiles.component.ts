@@ -114,8 +114,7 @@ class FileFolder{
 
     requestInfos(){
       var fileName = this._name;
-      //fileName = this.replaceAll(fileName, " ", "%20");
-
+      fileName = this.replaceAll(fileName, " ", "%20");
       var url = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/getFDetails?cloud=db&path=' + fileName;
       console.log(url);
       this.http.get(url)
