@@ -100,6 +100,14 @@ public abstract class CloudUnifier implements ICloudUnifier{
     return false;
   }
 
+  protected String formatPath(String oldPath) {
+    String newPath = new String(oldPath);
+
+    newPath = newPath.replace(" ", "%20");
+
+    return newPath;
+  }
+
   public abstract Response cloudAuthorize(String callbackUri);
   public abstract Response authenticate(String code);
   public abstract Response getFileDetails(String path);
