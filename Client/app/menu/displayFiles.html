@@ -1,6 +1,6 @@
 <div class="panel panel-default">
       <div class="panel-heading">
-        <h2 class="panel-title">Documents </h2>
+        <h2 class="panel-title">{{_currentPath}} </h2>
       </div>
       <div class="panel-body">
         <span class="counter pull-right"></span>
@@ -12,8 +12,12 @@
               <tbody>
 
                   <tr *ngFor="let filefolder of folders" >
-                    <td *ngIf="filefolder._toDisplayAndIsFolder" class="folder" (click)="onSelect(filefolder)"> <h1><span class="glyphicon glyphicon-folder-close"></span></h1>{{ filefolder.name }} </td>
-                    <td *ngIf="filefolder._toDisplayAndIsFile" class="file" (click)="onSelect(filefolder)"> <h1><span class="glyphicon glyphicon-file"></span></h1>{{ filefolder.name }} </td>
+                    <!--icone fichier / dossier-->
+                    <td *ngIf="filefolder._toDisplayAndIsFolder" class="folder" (click)="onSelectFolder(filefolder)"> <h1><span class="glyphicon glyphicon-folder-close"></span></h1>{{ filefolder.name }} </td>
+                    <td *ngIf="filefolder._toDisplayAndIsFile" class="file"> <h1><span class="glyphicon glyphicon-file"></span></h1>{{ filefolder.name }} </td>
+
+                    <!--icone pour avoir les infos-->
+                    <td *ngIf="filefolder._toDisplayAndIsFile" class="infosFileFolder" (click)="onSelectInfo(filefolder)"><span class="glyphicon glyphicon-info-sign"></span></td>
                   </tr>
 
               </tbody>
