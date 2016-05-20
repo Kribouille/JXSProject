@@ -156,7 +156,14 @@ public class GDriveUnifier extends CloudUnifier {
 
     @Override
     public Response isConnected() {
-        return null;
+        JSONObject res = new JSONObject();
+        if(!m_token.equals("")){
+            res.put("isConnected", "true");
+        }
+        else{
+            res.put("isConnected", "false");
+        }
+        return Response.status(200).entity(res.toString()).build();
     }
 
     @Override
