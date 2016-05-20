@@ -43,7 +43,7 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                 AllFilesComponent.prototype.getFiles = function (path) {
                     //on remet files à null pour refaire l'arborescence
                     this.files = null;
-                    this.getFilesDrive(path);
+                    //  this.getFilesDrive(path);
                     this.getFilesDropbox(path);
                 };
                 AllFilesComponent.prototype.onShare = function (f) {

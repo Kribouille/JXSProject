@@ -35,7 +35,7 @@ export class AllFilesComponent{
     getFiles(path:string){
       //on remet files à null pour refaire l'arborescence
       this.files = null;
-      this.getFilesDrive(path);
+    //  this.getFilesDrive(path);
       this.getFilesDropbox(path);
     }
 
