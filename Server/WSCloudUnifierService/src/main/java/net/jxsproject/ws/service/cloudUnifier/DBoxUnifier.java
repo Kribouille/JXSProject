@@ -86,6 +86,10 @@ public class DBoxUnifier extends CloudUnifier {
       return Response.status(500).entity("Error config").build();
     }
     else {
+      System.out.println(path);
+      path = this.formatPath(path);
+
+      System.out.println(path);
       String url = String.format("https://api.dropboxapi.com/1/metadata/auto/%s?access_token=%s", path, this.m_token);
       String res = this.get(url, new HashMap<String, String>());
       JSONObject json = new JSONObject(res);

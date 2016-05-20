@@ -25,10 +25,10 @@ public abstract class CloudUnifier implements ICloudUnifier{
   protected String callbackUri = "";
   protected String m_token = ""; //[PUT TOKEN HERE]
 
-  //To transform an ID to a File with some infos
- //protected  Map<String, GoogleFile> _IdToFile = null;
+
+ protected  Map<String, GFile> files = null;
  //To transform a path to an ID
- //protected Map<String, String> _pathToId = null;
+protected Map<String, String> paths = null;
 
   protected String readF(String path) {
     try {
@@ -98,6 +98,14 @@ public abstract class CloudUnifier implements ICloudUnifier{
     if (this.m_clientId == null || this.m_clientSecret == null || this.callbackUri == null)
       return true;
     return false;
+  }
+
+  protected String formatPath(String oldPath) {
+    String newPath = new String(oldPath);
+
+    newPath = newPath.replace(" ", "%20");
+
+    return newPath;
   }
 
   public abstract Response cloudAuthorize(String callbackUri);
