@@ -1,5 +1,6 @@
 package net.jxsproject.ws.service.cloudUnifier;
 import java.util.List;
+
 public class GFile {
   private String id;
   private String title;

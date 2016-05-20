@@ -18,146 +18,149 @@ import java.util.ArrayList;
 
 public class GDriveUnifier extends CloudUnifier {
 
-    private static GDriveUnifier instance;
+  private static GDriveUnifier instance;
 
-    public static ICloudUnifier getInstance() {
-        if (instance == null)
-            instance = new GDriveUnifier();
+  public static ICloudUnifier getInstance() {
+    if (instance == null)
+    instance = new GDriveUnifier();
 
-        return instance;
+    return instance;
+  }
+
+  private GDriveUnifier() {
+    try {
+      JSONObject config = new JSONObject(this.readF("./gDriveConfig.json"));
+
+      this.m_clientId = (String) config.get("client_id");
+      this.m_clientSecret = (String) config.get("client_secret");
+      this.callbackUri = (String) config.get("callback_uri");
+    } catch (Exception e) {
+      e.printStackTrace();
+      this.m_clientId = null;
+      this.m_clientSecret = null;
+      this.callbackUri = null;
+    }
+  }
+
+  @Override
+  public Response cloudAuthorize(String callbackUri) {
+    Map<String, String> jsonContent = new HashMap();
+
+    if (isBadConfig()) {
+      return Response.status(500).entity("Error config").build();
+    } else {
+      String url = new StringBuilder(
+      "https://accounts.google.com/o/oauth2/v2/auth"
+      + "?response_type=code&scope=https://www.googleapis.com/auth/drive&")
+      .append("client_id=").append(this.m_clientId)
+      .append("&redirect_uri=").append(this.callbackUri)
+      .toString();
+      jsonContent.put("url", url);
     }
 
-    private GDriveUnifier() {
-        try {
-            JSONObject config = new JSONObject(this.readF("./gDriveConfig.json"));
+    JSONObject result = new JSONObject(jsonContent);
+    return Response.status(200).entity(result.toString()).build();
+  }
 
-            this.m_clientId = (String) config.get("client_id");
-            this.m_clientSecret = (String) config.get("client_secret");
-            this.callbackUri = (String) config.get("callback_uri");
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.m_clientId = null;
-            this.m_clientSecret = null;
-            this.callbackUri = null;
-        }
+  @Override
+  public Response authenticate(String code) {
+    Map<String, String> jsonContent = new HashMap();
+
+    String accessToken = null;
+
+    try {
+      Map<String, String> m = new HashMap<String, String>();
+      m.put("code", code);
+      m.put("client_id", this.m_clientId);
+      m.put("client_secret", this.m_clientSecret);
+      m.put("redirect_uri", this.callbackUri);
+      m.put("grant_type", "authorization_code");
+
+      String body = this.post("https://www.googleapis.com/oauth2/v4/token", m);
+
+      JSONObject obj = new JSONObject(body);
+
+      this.m_token = obj.getString("access_token");
+      jsonContent.put("token", accessToken);
+    } catch (Exception e) {
+      jsonContent.put("err", "Unable to parse json " + e.toString());
+      return Response.status(200).entity(jsonContent.toString()).build();
     }
 
-    @Override
-    public Response cloudAuthorize(String callbackUri) {
-        Map<String, String> jsonContent = new HashMap();
-
-        if (isBadConfig()) {
-            return Response.status(500).entity("Error config").build();
-        } else {
-            String url = new StringBuilder(
-                    "https://accounts.google.com/o/oauth2/v2/auth"
-                            + "?response_type=code&scope=https://www.googleapis.com/auth/drive&")
-                    .append("client_id=").append(this.m_clientId)
-                    .append("&redirect_uri=").append(this.callbackUri)
-                    .toString();
-            jsonContent.put("url", url);
-        }
-
-        JSONObject result = new JSONObject(jsonContent);
-        return Response.status(200).entity(result.toString()).build();
+    JSONObject result = new JSONObject(jsonContent);
+    try {
+      URI uri = new URI("http://localhost:3000/allFiles");
+      return Response.seeOther(uri).build();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return Response.status(500).entity("Error redirection").build();
     }
+  }
 
-    @Override
-    public Response authenticate(String code) {
-        Map<String, String> jsonContent = new HashMap();
+  @Override
+  public Response getFileDetails(String path) {
+    this.synchronize();
+    Map<String, String> jsonContent = new HashMap();
+    String json = null;
+    try {
+      String id = this.paths.get(path);
+      //System.out.println(paths);
+      //System.out.println(files.get(1).getTitle());
+      //System.out.println(paths);
+      String url = new StringBuilder("https://www.googleapis.com/drive/v2/files/" + id + "?access_token=").append(this.m_token).toString();
+      //System.out.println(id);
+      HttpGet request = new HttpGet(url);
+      HttpClient httpclient = HttpClients.createDefault();
+      HttpResponse response = httpclient.execute(request);
 
-        String accessToken = null;
-
-        try {
-            Map<String, String> m = new HashMap<String, String>();
-            m.put("code", code);
-            m.put("client_id", this.m_clientId);
-            m.put("client_secret", this.m_clientSecret);
-            m.put("redirect_uri", this.callbackUri);
-            m.put("grant_type", "authorization_code");
-
-            String body = this.post("https://www.googleapis.com/oauth2/v4/token", m);
-
-            JSONObject obj = new JSONObject(body);
-
-            this.m_token = obj.getString("access_token");
-            jsonContent.put("token", accessToken);
-        } catch (Exception e) {
-            jsonContent.put("err", "Unable to parse json " + e.toString());
-            return Response.status(200).entity(jsonContent.toString()).build();
-        }
-
-        JSONObject result = new JSONObject(jsonContent);
-        try {
-            URI uri = new URI("http://localhost:3000/allFiles");
-            return Response.seeOther(uri).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.status(500).entity("Error redirection").build();
-        }
+      HttpEntity entity = response.getEntity();
+      json = EntityUtils.toString(entity);
+    } catch (Exception e) {
+      jsonContent.put("err", "Unable to parse json");
+      return Response.status(200).entity(jsonContent.toString()).build();
     }
+    return Response.status(200).entity(json.toString()).build();
+  }
 
-    @Override
-    public Response getFileDetails(String path) {
-        this.synchronize();
-        Map<String, String> jsonContent = new HashMap();
-        String json = null;
-        try {
-            String id = this.paths.get(path);
-            String url = new StringBuilder("https://www.googleapis.com/drive/v2/files/" + id + "?access_token=").append(this.m_token).toString();
-            System.out.println(id);
-            HttpGet request = new HttpGet(url);
-            HttpClient httpclient = HttpClients.createDefault();
-            HttpResponse response = httpclient.execute(request);
+  @Override
+  public Response getUserDetails() {
+    return null;
+  }
 
-            HttpEntity entity = response.getEntity();
-            json = EntityUtils.toString(entity);
-        } catch (Exception e) {
-            jsonContent.put("err", "Unable to parse json");
-            return Response.status(200).entity(jsonContent.toString()).build();
-        }
-        return Response.status(200).entity(json.toString()).build();
-    }
+  @Override
+  public Response deleteFile(String file) {
+    return null;
+  }
 
-    @Override
-    public Response getUserDetails() {
-        return null;
-    }
+  @Override
+  public Response moveFile(final String pathFrom, final String pathTo) {
+    return null;
+  }
 
-    @Override
-    public Response deleteFile(String file) {
-        return null;
-    }
+  @Override
+  public Response addFile(final String pathFrom, final String pathTo) {
+    return null;
+  }
 
-    @Override
-    public Response moveFile(final String pathFrom, final String pathTo) {
-        return null;
-    }
+  @Override
+  public Response getTree(final String path) {
+    return null;
+  }
 
-    @Override
-    public Response addFile(final String pathFrom, final String pathTo) {
-        return null;
-    }
+  @Override
+  public Response isConnected() {
+    return null;
+  }
 
-    @Override
-    public Response getTree(final String path) {
-        return null;
-    }
+  @Override
+  public Response share(final String path) {
+    return null;
+  }
 
-    @Override
-    public Response isConnected() {
-        return null;
-    }
-
-    @Override
-    public Response share(final String path) {
-        return null;
-    }
-
-    @Override
-    public Response download(String path) {
-        return null;
-    }
+  @Override
+  public Response download(String path) {
+    return null;
+  }
 
   public void synchronize(){
     try {
@@ -191,20 +194,22 @@ public class GDriveUnifier extends CloudUnifier {
 
       //Build pathToId
       for (String key : this.files.keySet()) {
+
         GFile gf = this.files.get(key);
         String finalPath = gf.getTitle();
         String id = gf.getId();
         GFolder parent = gf.getParents().get(0);
+        System.out.println(parent.getId());
         while (!parent.getIsRoot()) {
-          GFile parentFile = this.files.get(parent.getId());
-          finalPath = parentFile.getTitle() + "/" + finalPath;
-          parent = parentFile.getParents().get(0);
-        }
-        this.paths.put(finalPath, id);
+        GFile parentFile = this.files.get(parent.getId());
+        finalPath = parentFile.getTitle() + "/" + finalPath;
+        parent = parentFile.getParents().get(0);
       }
-    } catch (Exception e) {
-      e.getMessage();
+      this.paths.put(finalPath, id);
     }
+  } catch (Exception e) {
+    e.getMessage();
   }
+}
 
 }
