@@ -93,9 +93,6 @@ public class GDriveUnifier extends CloudUnifier {
     String json = null;
     try {
       String id = this.paths.get(path);
-      //System.out.println(paths);
-      //System.out.println(files.get(1).getTitle());
-      //System.out.println(paths);
       String url = new StringBuilder("https://www.googleapis.com/drive/v2/files/" + id + "?access_token=").append(this.m_token).toString();
       //System.out.println(id);
       HttpGet request = new HttpGet(url);
@@ -146,7 +143,27 @@ public class GDriveUnifier extends CloudUnifier {
 
   @Override
   public Response getTree(final String path) {
-    return null;
+    this.synchronize();
+    List<GFile> tmpL = new ArrayList<GFile>();
+
+    for (Map.Entry<String, String> e : this.paths.entrySet()) {
+      if (e.getKey().contains(path)) {
+        String tmp = e.getKey().substring(e.getKey().indexOf(path));
+        int index = tmp.indexOf("/");
+        if (index != -1)
+          tmp = tmp.substring(0, tmp.indexOf("/"));
+        System.out.println(tmp);
+        if (!tmp.equals("path"))
+          tmpL.add(this.files.get(tmp));
+      }
+    }
+
+    JSONArray tab = new JSONArray();
+    tab.put(tmpL);
+
+    JSONObject json = new JSONObject();
+    json.put("res", tab);
+    return Response.status(200).entity(json.toString()).build();
   }
 
   @Override
