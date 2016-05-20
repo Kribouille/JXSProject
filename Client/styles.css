@@ -24,6 +24,11 @@ body, input[text], button {
 {
   text-align: center;
   display: block;
+  
+}
+.navbar .navbar-nav > li > a:hover, .navbar .navbar-nav > li > a:focus {
+    background-color: white;
+    color: #337ab7;
 }
 
 
