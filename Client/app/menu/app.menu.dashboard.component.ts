@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 import {Http, Headers, HTTP_PROVIDERS, HTTP_BINDINGS} from '@angular/http';
 import {CORE_DIRECTIVES, FORM_DIRECTIVES} from '@angular/common';
 @Component({
-	selector:"dashboard",
-	template:`
+	selector: "dashboard",
+	template: `
 	<table class="table table-bordered table-responsive table-hover results" >
 	<thead><tr>
 	<th>#</th>
@@ -58,7 +58,7 @@ import {CORE_DIRECTIVES, FORM_DIRECTIVES} from '@angular/common';
 	</div>
 	`
 })
-export class DashBoardComponent{
+export class DashBoardComponent {
 	url: string;
 	nameDB: string;
 	surnameDB: string;
@@ -75,7 +75,7 @@ export class DashBoardComponent{
 	ratioGD: number;
 	';
 
-	constructor(private http:Http){
+	constructor(private http: Http) {
 		this.getUserInfoDropbox();
 		this.getUserInfoDrive();
 
@@ -84,8 +84,8 @@ export class DashBoardComponent{
 	getUserInfoDropbox() {
 		this.url = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/getUDetails?cloud=db';
 		this.http.get(this.url)
-		.map(res => res.json())
-		.subscribe(
+			.map(res => res.json())
+			.subscribe(
 			data => {
 				this.nameDB = data.name_details.familiar_name;
 				this.surnameDB = data.name_details.surname;
@@ -93,17 +93,17 @@ export class DashBoardComponent{
 				this.spaceUsedDB = data.quota_info.normal;
 				this.spaceAvailableDB = data.quota_info.quota;
 				this.countryDB = data.country;
-				this.ratio = Math.floor((this.spaceUsedDB / this.spaceAvailableDB)*100000);
+				this.ratio = Math.floor((this.spaceUsedDB / this.spaceAvailableDB) * 100000);
 			},
 			err => this.logError(err),
-			() => {}
+			() => { }
 			);
 	}
-	getUserInfoDrive(){
+	getUserInfoDrive() {
 		this.url = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/getUDetails?cloud=drive';
 		this.http.get(this.url)
-		.map(res => res.json())
-		.subscribe(
+			.map(res => res.json())
+			.subscribe(
 			data => {
 				this.nameDR = data.name;
 				this.mailDR = data.user.emailAddress;
@@ -113,7 +113,7 @@ export class DashBoardComponent{
 				this.ratioGD = Math.floor((this.spaceUsedDR / this.spaceTotalDR) * 10000000);
 			},
 			err => this.logError(err),
-			() => {}
+			() => { }
 			);
 	}
 
