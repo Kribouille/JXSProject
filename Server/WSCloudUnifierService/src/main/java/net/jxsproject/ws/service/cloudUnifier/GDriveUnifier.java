@@ -153,7 +153,7 @@ public class GDriveUnifier extends CloudUnifier {
         int index = tmp.indexOf("/");
         if (index != -1)
           tmp = tmp.substring(0, tmp.indexOf("/"));
-        
+        System.out.println(tmp);
         if (!tmp.equals("path"))
           tmpL.add(this.files.get(tmp));
       }
