@@ -1,4 +1,4 @@
-System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/router', './app.menu.allFiles.service', '../explorer/app.explorer.fileExplorer.component'], function(exports_1, context_1) {
+System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/router', './app.menu.allFiles.service'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, http_1, router_1, app_menu_allFiles_service_1, app_explorer_fileExplorer_component_1;
+    var core_1, common_1, http_1, router_1, app_menu_allFiles_service_1;
     var AllFilesComponent, FileFolder;
     return {
         setters:[
@@ -28,11 +28,9 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
             },
             function (app_menu_allFiles_service_1_1) {
                 app_menu_allFiles_service_1 = app_menu_allFiles_service_1_1;
-            },
-            function (app_explorer_fileExplorer_component_1_1) {
-                app_explorer_fileExplorer_component_1 = app_explorer_fileExplorer_component_1_1;
             }],
         execute: function() {
+            //import {UPLOAD_DIRECTIVES} from 'ng2-file-upload/ng2-file-upload';
             AllFilesComponent = (function () {
                 function AllFilesComponent(http) {
                     this.http = http;
@@ -43,11 +41,20 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                     this.getFiles('/');
                 }
                 AllFilesComponent.prototype.getFiles = function (path) {
-                    //dropbox for now
-                    return this.getFilesDropbox(path);
+                    //on remet files à null pour refaire l'arborescence
+                    this.files = null;
+                    this.getFilesDrive(path);
+                    this.getFilesDropbox(path);
                 };
                 AllFilesComponent.prototype.onShare = function (f) {
                     f.getSharedLink();
+                };
+                AllFilesComponent.prototype.uploadFile = function (filePath) {
+                    var _this = this;
+                    var nameNewFile = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
+                    console.log("Ajout file");
+                    this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/addFile?cloud=db&pathFrom=/' + filePath + '&pathTo=' + this._currentPath + '/' + nameNewFile).map(function (res) { return res.json(); })
+                        .subscribe(function (data) { return _this.getFiles(_this._currentPath); }, function (err) { return _this.logError(err); });
                 };
                 AllFilesComponent.prototype.getFilesDropbox = function (path) {
                     var _this = this;
@@ -55,9 +62,9 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                     console.log("path :" + this._currentPath);
                     this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/getTree?cloud=db&path=' + path)
                         .map(function (res) { return res.json(); })
-                        .subscribe(function (data) { return _this.files = data; }, function (err) { return _this.logError(err); }, function () { return _this.getFilesFromDropbox(); });
+                        .subscribe(function (data) { return _this.files = data; }, function (err) { return _this.logError(err); }, function () { return _this.addFiles(); });
                 };
-                AllFilesComponent.prototype.getFilesFromDropbox = function () {
+                AllFilesComponent.prototype.addFiles = function () {
                     var details = this.files.files;
                     this.folders = new Array();
                     for (var i = 0; i < details.length; i++) {
@@ -66,6 +73,14 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                         this.nbFolders++;
                     }
                     console.log(this);
+                };
+                AllFilesComponent.prototype.getFilesDrive = function (path) {
+                    var _this = this;
+                    this._currentPath = path;
+                    console.log("path :" + this._currentPath);
+                    this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/getTree?cloud=drive&path=' + path)
+                        .map(function (res) { return res.json(); })
+                        .subscribe(function (data) { return _this.files = data; }, function (err) { return _this.logError(err); }, function () { return _this.addFiles(); });
                 };
                 AllFilesComponent.prototype.onSelectFolder = function (f) { this._selected = f; this.getFiles(f._name); };
                 AllFilesComponent.prototype.onSelectInfo = function (f) { console.log("info"); this._selected = f; f.requestInfos(); };
@@ -82,7 +97,7 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                 AllFilesComponent = __decorate([
                     core_1.Component({
                         selector: "all-files",
-                        directives: [common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES, router_1.ROUTER_DIRECTIVES, app_explorer_fileExplorer_component_1.FileExplorer],
+                        directives: [common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES, router_1.ROUTER_DIRECTIVES],
                         providers: [app_menu_allFiles_service_1.AllFilesService],
                         templateUrl: './app/menu/displayFiles.html'
                     }), 
@@ -103,7 +118,7 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                     fileName = fileName.substr(path.length + 1, fileName.length);
                     if (fileName.indexOf('/') > -1) {
                         this._toDisplay = false;
-                        if (fileName.indexOf('.') > -1) {
+                        if (this._name.indexOf('.') > -1) {
                             this._isFolder = false;
                         } //le fichier est dans un sous-dossier
                         else {
@@ -111,7 +126,7 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                         } // sous-dossier
                     }
                     else {
-                        if (fileName.indexOf('.') > -1) {
+                        if (this._name.indexOf('.') > -1) {
                             this._isFolder = false;
                         } // cas ou le fichier est a la racine
                         else {

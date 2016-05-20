@@ -4,6 +4,7 @@
     'app':                        'app', // 'dist',
     'rxjs':                       'node_modules/rxjs',
     'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
+    'ng2-uploader': 'node_modules/ng2-uploader',
     '@angular':                   'node_modules/@angular',
     'symbol-observable': 'node_modules/symbol-observable'
   };
@@ -12,6 +13,7 @@
     'app':                        { main: 'boot.js',  defaultExtension: 'js' },
     'rxjs':                       { defaultExtension: 'js' },
     'angular2-in-memory-web-api': { defaultExtension: 'js' },
+    'ng2-uploader':{ defaultExtension: 'js' },
     'symbol-observable': { defaultExtension: 'js', main: 'index.js'},
   };
   var packageNames = [
@@ -25,6 +27,7 @@
     '@angular/router-deprecated',
     '@angular/testing',
     '@angular/upgrade',
+    'ng2-uploader'
   ];
   // add package entries for angular packages in the form '@angular/common': { main: 'index.js', defaultExtension: 'js' }
   packageNames.forEach(function(pkgName) {

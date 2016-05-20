@@ -6,11 +6,11 @@ import {NgForm} from '@angular/common';
 import {Router} from '@angular/router';
 import { ROUTER_DIRECTIVES, Routes } from '@angular/router';
 import {AllFilesService} from './app.menu.allFiles.service';
-import {FileExplorer} from '../explorer/app.explorer.fileExplorer.component';
+//import {UPLOAD_DIRECTIVES} from 'ng2-file-upload/ng2-file-upload';
 
 @Component({
   selector:"all-files",
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, FileExplorer ],
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES ],
   providers:[AllFilesService],
   templateUrl:'./app/menu/displayFiles.html'
 })
@@ -22,6 +22,8 @@ export class AllFilesComponent{
   private _selected : FileFolder;
   private _currentPath : string;
 
+
+
   constructor(public http: Http){
     this.folders = new Array<FileFolder>();
     this.http=http;
@@ -31,12 +33,24 @@ export class AllFilesComponent{
 }
 
     getFiles(path:string){
-      //dropbox for now
-      return this.getFilesDropbox(path);
+      //on remet files à null pour refaire l'arborescence
+      this.files = null;
+      this.getFilesDrive(path);
+      this.getFilesDropbox(path);
     }
 
     onShare(f: FileFolder){
       f.getSharedLink();
+    }
+
+    uploadFile(filePath : string){
+      var nameNewFile = filePath.substring(filePath.lastIndexOf('/')+1, filePath.length);
+      console.log("Ajout file");
+      this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/addFile?cloud=db&pathFrom=/'+filePath+'&pathTo=' + this._currentPath +'/'+ nameNewFile).map(res => res.json())
+      .subscribe(
+        data => this.getFiles(this._currentPath),
+        err => this.logError(err)
+      );
     }
 
     getFilesDropbox(path: string) {
@@ -47,11 +61,12 @@ export class AllFilesComponent{
         .subscribe(
           data => this.files = data,
           err => this.logError(err),
-          () => this.getFilesFromDropbox()
+          () => this.addFiles()
         );
     }
 
-    getFilesFromDropbox(){
+
+    addFiles(){
         var details = this.files.files;
         this.folders = new Array<FileFolder>();
         for(var i = 0; i < details.length; i++){
@@ -61,6 +76,21 @@ export class AllFilesComponent{
         }
         console.log(this);
     }
+
+
+    getFilesDrive(path: string) {
+        this._currentPath=path;
+        console.log("path :" + this._currentPath);
+        this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/getTree?cloud=drive&path='+path)
+        .map(res => res.json())
+        .subscribe(
+          data => this.files = data,
+          err => this.logError(err),
+          () => this.addFiles()
+        );
+    }
+
+
 
     onSelectFolder (f: FileFolder){ this._selected = f; this.getFiles(f._name);}
     onSelectInfo(f : FileFolder) { console.log("info");this._selected = f; f.requestInfos();}
@@ -130,12 +160,12 @@ class FileFolder{
         if(fileName.indexOf('/') > -1){  //on n'affiche pas
 
           this._toDisplay = false;
-          if (fileName.indexOf('.')> -1) { this._isFolder = false;} //le fichier est dans un sous-dossier
+          if (this._name.indexOf('.')> -1) { this._isFolder = false;} //le fichier est dans un sous-dossier
           else { this._isFolder = true; }// sous-dossier
 
         }
         else{//on affiche
-          if(fileName.indexOf('.')> -1) {   this._isFolder = false;} // cas ou le fichier est a la racine
+          if(this._name.indexOf('.')> -1) {   this._isFolder = false;} // cas ou le fichier est a la racine
           else{ this._isFolder = true;}//dossier dans la racine
 
         }
