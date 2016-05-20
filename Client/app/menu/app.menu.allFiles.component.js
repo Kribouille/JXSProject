@@ -127,7 +127,10 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                     this.http.get(url)
                         .map(function (res) { return res.json(); })
                         .subscribe(function (data) { return _this.setInfos(data); }, function (err) { return _this.logError(err); });
-                    console.log("infos : " + this._informations);
+                    if (this._informations != null) {
+                        this._size = this._informations.size;
+                        console.log("infos : " + this._informations.size);
+                    }
                     return this._informations;
                 };
                 FileFolder.prototype.replaceAll = function (strFrom, c, sub) {

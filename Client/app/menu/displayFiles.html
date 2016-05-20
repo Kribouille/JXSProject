@@ -40,8 +40,8 @@
         </tr>
         <tbody>
           <tr>
-            <td >
-              <div *ngIf="folders._selected">{{folders._selected.getInfos()}}</div>
+            <td *ngIf="_selected">
+              <div >{{_selected.getInfos()}}</div>
             </td>
           </tr>
 
