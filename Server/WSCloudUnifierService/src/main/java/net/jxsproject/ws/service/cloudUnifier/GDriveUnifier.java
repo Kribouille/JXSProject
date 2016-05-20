@@ -108,7 +108,7 @@ public class GDriveUnifier extends CloudUnifier {
       jsonContent.put("err", "Unable to parse json");
       return Response.status(200).entity(jsonContent.toString()).build();
     }
-      return Response.status(200).entity(json.toString()).build();
+    return Response.status(200).entity(json.toString()).build();
   }
 
 
@@ -125,100 +125,105 @@ public class GDriveUnifier extends CloudUnifier {
       err.put("err", e.toString());
       return Response.status(500).entity(err).build();
     }
-}
-
-
-@Override
-public Response deleteFile(String file) {
-  return null;
-}
-
-@Override
-public Response moveFile(final String pathFrom, final String pathTo) {
-  return null;
-}
-
-@Override
-public Response addFile(final String pathFrom, final String pathTo) {
-  return null;
-}
-
-
-@Override
-public Response getTree(final String path) {
-  return null;
-}
-
-@Override
-public Response isConnected() {
-  JSONObject res = new JSONObject();
-  if(!m_token.equals("")){
-    res.put("isConnected", "true");
   }
-  else{
-    res.put("isConnected", "false");
+
+
+  @Override
+  public Response deleteFile(String file) {
+    return null;
   }
-  return Response.status(200).entity(res.toString()).build();
-}
 
-@Override
-public Response share(final String path) {
-  return null;
-}
+  @Override
+  public Response moveFile(final String pathFrom, final String pathTo) {
+    return null;
+  }
 
-@Override
-public Response download(String path) {
-  return null;
-}
+  @Override
+  public Response addFile(final String pathFrom, final String pathTo) {
+    return null;
+  }
 
-public void synchronize(){
-  try {
-    JSONObject content = new JSONObject(this.get(
-    new StringBuilder("https://www.googleapis.com/drive/v2/files")
-    .append("?access_token=").append(this.m_token)
-    .append("&spaces=drive")
-    .toString(), new HashMap<String,String>()));
 
-    JSONArray items = content.getJSONArray("items");
-    this.files = new HashMap<String, GFile>();
-    this.paths = new HashMap<String, String>();
-    //Build IdToFile
-    for (int i = 0; i < items.length(); ++i) {
-      JSONObject item = items.getJSONObject(i);
-      String id = item.getString("id");
-      String title = item.getString("title");
-      //String link = item.getString("alternateLink");
-      List<GFolder> parents = new ArrayList<GFolder>();
-      JSONArray parentsArray = item.getJSONArray("parents");
-      for (int j = 0; j < parentsArray.length(); ++j) {
-        JSONObject parent = parentsArray.getJSONObject(j);
-        parents.add(new GFolder(parent.getString("id"),
-        parent.getBoolean("isRoot")));
-        if (parent.getBoolean("isRoot")) {
-          this.paths.put("/", parent.getString("id"));
+  @Override
+  public Response getTree(final String path) {
+    return null;
+  }
+
+  @Override
+  public Response isConnected() {
+    JSONObject res = new JSONObject();
+    if(!m_token.equals("")){
+      res.put("isConnected", "true");
+    }
+    else{
+      res.put("isConnected", "false");
+    }
+    return Response.status(200).entity(res.toString()).build();
+  }
+
+  @Override
+  public Response share(final String path) {
+    return null;
+  }
+
+  @Override
+  public Response download(String path) {
+    return null;
+  }
+
+  public void synchronize(){
+    try {
+      JSONObject content = new JSONObject(this.get(
+      new StringBuilder("https://www.googleapis.com/drive/v2/files")
+      .append("?access_token=").append(this.m_token)
+      .append("&spaces=drive")
+      .toString(), new HashMap<String,String>()));
+
+      JSONArray items = content.getJSONArray("items");
+      this.files = new HashMap<String, GFile>();
+      this.paths = new HashMap<String, String>();
+      //Build files
+      for (int i = 0; i < items.length(); ++i) {
+        JSONObject item = items.getJSONObject(i);
+        String id = item.getString("id");
+        String title = item.getString("title");
+        //String link = item.getString("alternateLink");
+        JSONArray parents = item.getJSONArray("parents");
+        JSONObject parent = null;
+        if(parents.length()!=0){
+          for (int j = 0; j < parents.length(); ++j) {
+            parent = parents.getJSONObject(j);
+            if (parent.getBoolean("isRoot")) {
+              this.paths.put("/", parent.getString("id"));
+            }
+          }
         }
+        else {
+          parent = new JSONObject();
+          parent.put("id", this.paths.get("/"));
+          parent.put("isRoot", "true");
+        }
+        this.files.put(id, new GFile(id, title, new GFolder(parent.getString("id"), parent.getBoolean("isRoot"))));
       }
-      this.files.put(id, new GFile(id, title, parents));
-    }
 
-    //Build pathToId
-    for (String key : this.files.keySet()) {
+      //Build pathToId
+      System.out.println(files.size());
+      for (String key : this.files.keySet()) {
 
-      GFile gf = this.files.get(key);
-      String finalPath = gf.getTitle();
-      String id = gf.getId();
-      GFolder parent = gf.getParents().get(0);
-      System.out.println(parent.getId());
-      while (!parent.getIsRoot()) {
-        GFile parentFile = this.files.get(parent.getId());
-        finalPath = parentFile.getTitle() + "/" + finalPath;
-        parent = parentFile.getParents().get(0);
+        GFile gf = this.files.get(key);
+        String finalPath = gf.getTitle();
+        String id = gf.getId();
+        GFolder parent = gf.getParent();
+        while (!parent.getIsRoot()) {
+          GFile parentFile = this.files.get(parent.getId());
+          finalPath = parentFile.getTitle() + "/" + finalPath;
+          parent = parentFile.getParent();
+        }
+        this.paths.put(finalPath, id);
       }
-      this.paths.put(finalPath, id);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-  } catch (Exception e) {
-    e.getMessage();
   }
-}
 
 }

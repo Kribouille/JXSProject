@@ -15,13 +15,11 @@
                     <!--icone fichier / dossier-->
                     <td *ngIf="filefolder._toDisplayAndIsFolder" class="folder" (click)="onSelectFolder(filefolder)">
                         <span class="glyphicon glyphicon-folder-close" style="font-size: 3em;"></span>  {{ filefolder.name }}<br><br>
-                        <span class="glyphicon glyphicon-trash" title="Supprimer" style="font-size: 1.5em;"></span>
-                        <span class="glyphicon glyphicon-link" title="Partager" style="font-size: 1.5em; margin-left: 30px;"></span>
                     </td>
                     <td *ngIf="filefolder._toDisplayAndIsFile" class="file">
                       <span class="glyphicon glyphicon-file" style="font-size: 3em;"></span>{{ filefolder.name }} <br><br>
-                      <span class="glyphicon glyphicon-trash" title="Supprimer" style="font-size: 1.5em;"></span>
-                      <span class="glyphicon glyphicon-link" title="Partager" style="font-size: 1.5em; margin-left: 30px;"></span>
+                      <span class="glyphicon glyphicon-trash" (click)="removeFile(filefolder)" title="Supprimer" style="font-size: 1.5em;"></span>
+                      <span class="glyphicon glyphicon-link" (click)="onShare(filefolder)" title="Partager" style="font-size: 1.5em; margin-left: 30px;"></span>
                     </td>
 
                     <!--icone pour avoir les infos-->
@@ -45,6 +43,7 @@
               <div >Taille : {{_selected._size}}</div>
               <div >Type : {{_selected._type}}</div>
               <div >Origine  : {{_selected._cloudFrom}}</div>
+              <div *ngIf="_selected._link">Lien de partage : {{_selected._link}}</div>
               <div >Date de dernière modification : {{_selected._modified}}</div>
             </td>
           </tr>
@@ -54,3 +53,4 @@
     </div>
   </div>
 </div>
+<router-outlet></router-outlet>

@@ -4,11 +4,11 @@ import java.util.List;
 public class GFile {
   private String id;
   private String title;
-  private List<GFolder> parents;
-  public GFile(String id, String title, List<GFolder> parents){
+  private GFolder parent;
+  public GFile(String id, String title, GFolder parent){
     this.id = id;
     this.title = title;
-    this.parents = parents;
+    this.parent = parent;
   }
 
   public String getTitle(){
@@ -17,7 +17,7 @@ public class GFile {
   public String getId(){
     return this.id;
   }
-  public List<GFolder> getParents(){
-    return this.parents;
+  public GFolder getParent(){
+    return this.parent;
   }
 }
