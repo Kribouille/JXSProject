@@ -148,8 +148,9 @@ public class GDriveUnifier extends CloudUnifier {
 
     for (Map.Entry<String, String> e : this.paths.entrySet()) {
       System.out.println(e.getKey());
-      if (e.getKey().contains(path))
-        tmpL.add(this.files.get(e.getValue()));
+      if (e.getKey().contains(path)) {
+          tmpL.add(this.files.get(e.getValue().substring(e.getKey().indexOf(path))));
+      }
     }
 
     System.out.println(tmpL);
