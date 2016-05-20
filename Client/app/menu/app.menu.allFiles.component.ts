@@ -12,42 +12,17 @@ import {FileExplorer} from '../explorer/app.explorer.fileExplorer.component';
   selector:"all-files",
   directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, FileExplorer ],
   providers:[AllFilesService],
-  template:`
-  <div class="panel panel-default">
-        <div class="panel-heading">
-          <h2 class="panel-title">Documents </h2>
-        </div>
-        <div class="panel-body">
-          <span class="counter pull-right"></span>
-          <table class="table table-bordered table-responsive table-hover results" id="dataTables-example">
-              <tr>
-                <th>Nom</th> <th>taille</th> <th>Date de Modification</th> <th>Provenance</th> <th>Propriétaire</th><th>Lien</th>
-              </tr>
-            <tbody>
-
-                  <tr *ngFor="let folder of folders" >
-
-                    <td> <h1><span class="glyphicon glyphicon-file"></span></h1>{{ folder.name }} </td>
-                    <td> {{ folder.size }} </td>
-                    <td> {{ folder.date }}</td>
-                    <td> {{ folder.provide }}</td>
-                    <td> {{ folder.owner }}</td>
-                    <td> <a href="{{ folder.link }}" class="glyphicon glyphicon-download-alt" style="margin:auto;"> </a></td>
-                  </tr>
-
-            </tbody>
-          </table>
-        </div>
-      </div>
-  `
+  templateUrl:'./app/menu/displayFiles.html'
 })
 export class AllFilesComponent{
 
-  public folders : Array<Folder>;
+  public folders : Array<FileFolder>;
   public files;
+  private nbFolders = 0;
+  private _selected : FileFolder;
 
   constructor(public http: Http){
-    this.folders = new Array<Folder>();
+    this.folders = new Array<FileFolder>();
     this.http=http;
     this.getFiles();
 
@@ -72,35 +47,70 @@ export class AllFilesComponent{
         var details = this.files.files;
         for(var i = 0; i < details.length; i++){
             var name = details[i].path;
-            var size = details[i].size;
-            var date = details[i].modified;
-            var prov = "dropbox"
-            var own = "Proprietaire";
-            var lien = details[i].path;
-            this.folders.push(new Folder(name,size,date,prov,own,lien));
+            this.folders.push(new FileFolder(name, this.http));
+            this.nbFolders++;
         }
         console.log(this.folders[0]);
     }
 
+    onSelect(f : FileFolder) { this._selected = f; f.getInfos();}
 
     logError(err) {
-        console.error('ERROR get all files ' + err);
+        console.error('ERROR get all files/folders ' + err);
     }
 }
 
-class Folder{
+
+
+class FileFolder{
     _name: String;
-    _size: String;
-    _date: String;
-    _provide: String;
-    _own: String;
-    _link: String;
-    constructor(public name : String, public size : String, public date: String, public provide : String, public own : String, public link : String){
+    _isFolder : boolean; // true si folder false si file
+    _toDisplay : boolean = true;
+
+    _toDisplayAndIsFolder : boolean; // = toDisplay And
+    _toDisplayAndIsFile : boolean;
+    private _informations;
+
+    constructor(public name : String, public http: Http){
+
+        //inititalisation du type
         this._name = name;
-        this._size = size;
-        this._date = date;
-        this._provide =provide;
-        this._own = own;
-        this._link = link;
+        if(this._name.indexOf('/') > -1){  //on n'affiche pas
+
+          this._toDisplay = false;
+          if (this._name.indexOf('.')> -1) { this._isFolder = false;} //le fichier est dans un sous-dossier
+          else { this._isFolder = true; }// sous-dossier
+
+        }
+        else{//on affiche
+          if(this._name.indexOf('.')> -1) {   this._isFolder = false;} // cas ou le fichier est a la racine
+          else{ this._isFolder = true;}//dossier dans la racine
+
+        }
+
+        this._toDisplayAndIsFolder = this._toDisplay && this._isFolder;
+        this._toDisplayAndIsFile = this._toDisplay && !this._isFolder;
+
+        //console.log("name : " + this._name +"is Dir :" + informations[0]);
+    }
+
+    private setInfos(infos){
+      this._informations = infos;
+    }
+    getInfos(){
+      var url = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/getFDetails?cloud=db&path=' + this._name;
+      this.http.get(url)
+      .map(res => res.json())
+      .subscribe(
+        data =>  this.setInfos(data),
+        err => this.logError(err)
+      );
+      console.log("infos : " + this._informations);
+      return this._informations;
+    }
+
+
+    logError(err) {
+        console.error('ERROR get infos of file or folder ' + err);
     }
 }
