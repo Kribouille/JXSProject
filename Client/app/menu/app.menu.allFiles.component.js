@@ -56,6 +56,13 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                     this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/addFile?cloud=db&pathFrom=/' + filePath + '&pathTo=' + this._currentPath + '/' + nameNewFile).map(function (res) { return res.json(); })
                         .subscribe(function (data) { return _this.getFiles(_this._currentPath); }, function (err) { return _this.logError(err); });
                 };
+                AllFilesComponent.prototype.back = function () {
+                    var newPath = this._currentPath.substring(0, this._currentPath.lastIndexOf('/'));
+                    this.getFiles(newPath);
+                    if (this._currentPath == "") {
+                        this._currentPath = "/";
+                    }
+                };
                 AllFilesComponent.prototype.getFilesDropbox = function (path) {
                     var _this = this;
                     this._currentPath = path;

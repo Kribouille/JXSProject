@@ -73,7 +73,7 @@ export class DashBoardComponent {
 	spaceTotalDR: number;
 	ratio: number;
 	ratioGD: number;
-	';
+	';'
 
 	constructor(private http: Http) {
 		this.getUserInfoDropbox();

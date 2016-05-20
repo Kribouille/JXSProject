@@ -53,6 +53,15 @@ export class AllFilesComponent{
       );
     }
 
+    back(){
+      var newPath = this._currentPath.substring(0,this._currentPath.lastIndexOf('/'));
+      this.getFiles(newPath);
+      if(this._currentPath==""){
+        this._currentPath = "/";
+      }
+
+    }
+
     getFilesDropbox(path: string) {
         this._currentPath=path;
         console.log("path :" + this._currentPath);

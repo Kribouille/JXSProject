@@ -1,6 +1,7 @@
 <div class="panel panel-default">
       <div class="panel-heading">
-        <h2 class="panel-title">{{_currentPath}} </h2>
+        <span><h2 class="panel-title">{{_currentPath}} </h2></span>
+        <span *ngIf="_currentPath!=='/'" style="font-size:2em;"class="glyphicon glyphicon-circle-arrow-left" (click)="back()"></span>
       </div>
       <div id= "upload">
         <input #filePath placeholder="filePath"/>
@@ -27,7 +28,7 @@
                     </td>
 
                     <!--icone pour avoir les infos-->
-                    <td *ngIf="filefolder._toDisplayAndIsFile" class="infosFileFolder" (click)="onSelectInfo(filefolder)"><span class="glyphicon glyphicon-info-sign"></span></td>
+                    <td *ngIf="filefolder._toDisplayAndIsFile" class="infosFileFolder" (click)="onSelectInfo(filefolder)"><span style="font-size: 2em;" class="glyphicon glyphicon-info-sign"></span></td>
                   </tr>
 
         </tbody>
