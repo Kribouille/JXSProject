@@ -39,29 +39,33 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                     this.nbFolders = 0;
                     this.folders = new Array();
                     this.http = http;
-                    this.getFiles();
+                    this._currentPath = '/';
+                    this.getFiles('/');
                 }
-                AllFilesComponent.prototype.getFiles = function () {
+                AllFilesComponent.prototype.getFiles = function (path) {
                     //dropbox for now
-                    return this.getFilesDropbox();
+                    return this.getFilesDropbox(path);
                 };
-                AllFilesComponent.prototype.getFilesDropbox = function () {
+                AllFilesComponent.prototype.getFilesDropbox = function (path) {
                     var _this = this;
-                    this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/getTree?cloud=db&path=/')
+                    this._currentPath = path;
+                    console.log("path :" + this._currentPath);
+                    this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/getTree?cloud=db&path=' + path)
                         .map(function (res) { return res.json(); })
                         .subscribe(function (data) { return _this.files = data; }, function (err) { return _this.logError(err); }, function () { return _this.getFilesFromDropbox(); });
                 };
                 AllFilesComponent.prototype.getFilesFromDropbox = function () {
-                    // console.log(this.files);
                     var details = this.files.files;
+                    this.folders = new Array();
                     for (var i = 0; i < details.length; i++) {
                         var name = details[i].path;
-                        this.folders.push(new FileFolder(name, this.http));
+                        this.folders.push(new FileFolder(name, this.http, this._currentPath));
                         this.nbFolders++;
                     }
-                    console.log(this.folders[0]);
+                    console.log(this);
                 };
-                AllFilesComponent.prototype.onSelect = function (f) { this._selected = f; f.getInfos(); };
+                AllFilesComponent.prototype.onSelectFolder = function (f) { this._selected = f; this.getFiles(f._name); };
+                AllFilesComponent.prototype.onSelectInfo = function (f) { this._selected = f; f.requestInfos(); };
                 AllFilesComponent.prototype.logError = function (err) {
                     console.error('ERROR get all files/folders ' + err);
                 };
@@ -78,15 +82,18 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
             }());
             exports_1("AllFilesComponent", AllFilesComponent);
             FileFolder = (function () {
-                function FileFolder(name, http) {
+                function FileFolder(name, http, path) {
                     this.name = name;
                     this.http = http;
                     this._toDisplay = true;
-                    //inititalisation du type
+                    //inititalisation du name
                     this._name = name;
-                    if (this._name.indexOf('/') > -1) {
+                    //initialisation pour l'affichage, et le type
+                    var fileName = this._name;
+                    fileName = fileName.substr(path.length + 1, fileName.length);
+                    if (fileName.indexOf('/') > -1) {
                         this._toDisplay = false;
-                        if (this._name.indexOf('.') > -1) {
+                        if (fileName.indexOf('.') > -1) {
                             this._isFolder = false;
                         } //le fichier est dans un sous-dossier
                         else {
@@ -94,7 +101,7 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                         } // sous-dossier
                     }
                     else {
-                        if (this._name.indexOf('.') > -1) {
+                        if (fileName.indexOf('.') > -1) {
                             this._isFolder = false;
                         } // cas ou le fichier est a la racine
                         else {
@@ -109,13 +116,31 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                     this._informations = infos;
                 };
                 FileFolder.prototype.getInfos = function () {
+                    return this._informations;
+                };
+                FileFolder.prototype.requestInfos = function () {
                     var _this = this;
-                    var url = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/getFDetails?cloud=db&path=' + this._name;
+                    var fileName = this._name;
+                    fileName = this.replaceAll(fileName, " ", "%20");
+                    var url = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/getFDetails?cloud=db&path=' + fileName;
+                    console.log(url);
                     this.http.get(url)
                         .map(function (res) { return res.json(); })
                         .subscribe(function (data) { return _this.setInfos(data); }, function (err) { return _this.logError(err); });
                     console.log("infos : " + this._informations);
                     return this._informations;
+                };
+                FileFolder.prototype.replaceAll = function (strFrom, c, sub) {
+                    var res = "";
+                    for (var i = 0; i < strFrom.length; i++) {
+                        if (strFrom.charAt(i) != c) {
+                            res = res + strFrom.charAt(i);
+                        }
+                        else {
+                            res += sub;
+                        }
+                    }
+                    return res;
                 };
                 FileFolder.prototype.logError = function (err) {
                     console.error('ERROR get infos of file or folder ' + err);
