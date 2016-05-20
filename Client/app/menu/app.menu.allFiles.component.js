@@ -46,6 +46,9 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                     //dropbox for now
                     return this.getFilesDropbox(path);
                 };
+                AllFilesComponent.prototype.onShare = function (f) {
+                    f.getSharedLink();
+                };
                 AllFilesComponent.prototype.getFilesDropbox = function (path) {
                     var _this = this;
                     this._currentPath = path;
@@ -65,9 +68,16 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                     console.log(this);
                 };
                 AllFilesComponent.prototype.onSelectFolder = function (f) { this._selected = f; this.getFiles(f._name); };
-                AllFilesComponent.prototype.onSelectInfo = function (f) { this._selected = f; f.requestInfos(); };
+                AllFilesComponent.prototype.onSelectInfo = function (f) { console.log("info"); this._selected = f; f.requestInfos(); };
                 AllFilesComponent.prototype.logError = function (err) {
                     console.error('ERROR get all files/folders ' + err);
+                };
+                AllFilesComponent.prototype.removeFile = function (f) {
+                    var _this = this;
+                    var path = f.replaceAll(f._name, " ", "%20");
+                    console.log("Suppression");
+                    this.http.get('http://localhost:8080/WSCloudUnifierService/cloudUnifier/deleteFile?cloud=db&path=' + f._name).map(function (res) { return res.json(); })
+                        .subscribe(function (data) { return _this.getFiles(_this._currentPath); }, function (err) { return _this.logError(err); });
                 };
                 AllFilesComponent = __decorate([
                     core_1.Component({
@@ -147,6 +157,14 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                         }
                     }
                     return res;
+                };
+                FileFolder.prototype.getSharedLink = function () {
+                    var _this = this;
+                    this._url = 'http://localhost:8080/WSCloudUnifierService/cloudUnifier/share?cloud=db&path=';
+                    this._url = this._url + this.replaceAll(this._name, " ", "%20");
+                    this.http.get(this._url)
+                        .map(function (res) { return res.json(); })
+                        .subscribe(function (data) { _this._link = data.url; }, function (err) { return _this.logError(err); }, function () { });
                 };
                 FileFolder.prototype.logError = function (err) {
                     console.error('ERROR get infos of file or folder ' + err);
