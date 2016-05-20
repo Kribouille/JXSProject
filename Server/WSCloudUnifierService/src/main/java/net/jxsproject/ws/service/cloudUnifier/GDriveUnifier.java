@@ -27,9 +27,9 @@ public class GDriveUnifier extends CloudUnifier {
     return instance;
   }
 
-    private GDriveUnifier() {
-        super("./gDriveConfig.json");
-    }
+  private GDriveUnifier() {
+    super("./gDriveConfig.json");
+  }
 
   @Override
   public Response cloudAuthorize(String callbackUri) {
@@ -146,15 +146,41 @@ public class GDriveUnifier extends CloudUnifier {
     this.synchronize();
     List<GFile> tmpL = new ArrayList<GFile>();
 
-    for (Map.Entry<String, String> e : this.paths.entrySet()) {
-      if (e.getKey().contains(path)) {
-        String tmp = e.getKey().substring(e.getKey().indexOf(path));
-        int index = tmp.indexOf("/");
-        if (index != -1)
-          tmp = tmp.substring(0, tmp.indexOf("/"));
-        System.out.println(tmp);
-        if (!tmp.equals("path"))
-          tmpL.add(this.files.get(tmp));
+    if(path.equals("/")) {
+      for (Map.Entry<String, String> e : this.paths.entrySet()) {
+        if (e.getKey().contains(path)) {
+          System.out.println(e.getKey());
+          String tmp = e.getKey().substring(0, e.getKey().indexOf(path));
+
+          String id = e.getValue();
+          if (!tmp.equals("") && !tmpL.contains(this.files.get(id))) {
+            tmpL.add(this.files.get(id));
+          }
+
+        } else {
+          String id = e.getValue();
+          tmpL.add(this.files.get(id));
+        }
+      }
+    } else {
+      for (Map.Entry<String, String> e : this.paths.entrySet()) {
+        if (e.getKey().contains(path)) {
+          System.out.println(e.getKey());
+          String tmp = e.getKey().substring(e.getKey().indexOf(path) + path.length());
+          int index = tmp.indexOf("/");
+          if (index == 0) {
+            tmp = tmp.substring(1); //Suppression du slash
+          }
+          index = tmp.indexOf("/");
+
+          if (index == -1) {
+            System.out.println(tmp + e.getValue());
+            String id = e.getValue();
+            if (!tmp.equals(path) && !tmp.equals("") && !tmpL.contains(this.files.get(id))) {
+              tmpL.add(this.files.get(id));
+            }
+          }
+        }
       }
     }
 
