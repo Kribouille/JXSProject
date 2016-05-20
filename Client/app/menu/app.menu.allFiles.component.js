@@ -129,7 +129,10 @@ System.register(['@angular/core', '@angular/common', '@angular/http', '@angular/
                         .subscribe(function (data) { return _this.setInfos(data); }, function (err) { return _this.logError(err); });
                     if (this._informations != null) {
                         this._size = this._informations.size;
-                        console.log("infos : " + this._informations.size);
+                        this._path = this._informations.path;
+                        this._type = this._informations.is_dir == true ? "Dossier" : "Fichier";
+                        this._cloudFrom = this._informations.root;
+                        this._modified = this._informations.modified;
                     }
                     return this._informations;
                 };

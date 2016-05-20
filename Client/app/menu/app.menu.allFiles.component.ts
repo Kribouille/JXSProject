@@ -77,7 +77,12 @@ class FileFolder{
     _toDisplayAndIsFile : boolean;
     private _informations ;
 
-    public _size;
+    public _size; //affichage de la taille
+    public _path; //affichage du chemin
+    public _type; //affichage du type -> folder ou fichier
+    public _cloudFrom; //affichage du cloud d'ou vient le fileName
+    public _modified; //affichage de date derniere modif
+
 
     constructor(public name : string, public http: Http, path:string){
 
@@ -127,7 +132,10 @@ class FileFolder{
       );
       if(this._informations != null){
         this._size = this._informations.size;
-        console.log("infos : " + this._informations.size);
+        this._path = this._informations.path;
+        this._type = this._informations.is_dir == true ? "Dossier" : "Fichier";
+        this._cloudFrom = this._informations.root;
+        this._modified = this._informations.modified;
       }
 
       return this._informations;
